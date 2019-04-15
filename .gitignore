@@ -1,0 +1,12 @@
+
+data
+*.h5
+*.pb
+
+docker
+
+__feeder__
+__logs__
+__pycache__
+
+pretrained_model
