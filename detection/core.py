@@ -5,19 +5,18 @@ import random
 import re
 import sys
 import time
-sys.path.append('detection')
 import cv2
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-from dataset import FoodDataset
-from configs import *
-
-from mrcnn import utils, visualize
-import mrcnn.model as modellib
-from mrcnn.model import log
+sys.path.append('.')
+from detection.configs import *
+from detection.dataset import FoodDataset
+from detection.mrcnn import utils, visualize
+import detection.mrcnn.model as modellib
+from detection.mrcnn.model import log
 
 # %matplotlib inline
 inter_num = 0

@@ -1,11 +1,11 @@
-
+import sys
 import os
-
 import numpy as np
 import yaml
 from PIL import Image
 
-from mrcnn import utils, visualize
+sys.path.append(".")
+from detection.mrcnn import utils, visualize
 
 
 class FoodDataset(utils.Dataset):
