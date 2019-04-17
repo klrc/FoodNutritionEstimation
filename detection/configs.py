@@ -1,4 +1,4 @@
-from mrcnn.config import Config
+from .mrcnn.config import Config
 
 
 class BaseConfig(Config):

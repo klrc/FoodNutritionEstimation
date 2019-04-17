@@ -4,8 +4,7 @@ import numpy as np
 import yaml
 from PIL import Image
 
-sys.path.append(".")
-from detection.mrcnn import utils, visualize
+from .mrcnn import utils, visualize
 
 
 class FoodDataset(utils.Dataset):

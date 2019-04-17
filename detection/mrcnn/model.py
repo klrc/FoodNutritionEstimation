@@ -23,7 +23,7 @@ import keras.layers as KL
 import keras.engine as KE
 import keras.models as KM
 
-import utils
+from . import utils
 
 # Requires TensorFlow 1.3+ and Keras 2.0.8+.
 from distutils.version import LooseVersion
@@ -2309,7 +2309,7 @@ class MaskRCNN():
         train_dataset, val_dataset: Training and validation Dataset objects.
         learning_rate: The learning rate to train with
         epochs: Number of training epochs. Note that previous training epochs
-                are considered to be done alreay, so this actually determines
+                are considered to be done already, so this actually determines
                 the epochs to train in total rather than in this particaular
                 call.
         layers: Allows selecting wich layers to train. It can be:
