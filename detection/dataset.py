@@ -1,4 +1,3 @@
-import sys
 import os
 import numpy as np
 import yaml
@@ -21,6 +20,7 @@ class FoodDataset(utils.Dataset):
         self.prepare()
 
     def get_dirs(path, train):
+        mark = 'train' if train else 'test'
         path = f'{path}/{mark}'
         img_dir = f'{path}/img'  # 存放原图片的文件夹
         mask_dir = f'{path}/mask'
