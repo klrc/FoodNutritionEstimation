@@ -2546,6 +2546,11 @@ class MaskRCNN():
         anchors = np.broadcast_to(
             anchors, (self.config.BATCH_SIZE,) + anchors.shape)
 
+        # print anchors
+        # import json
+        # with open('extra_info.json', 'w') as f:
+        #     json.dump({'image_metas': image_metas.tolist(), 'anchors': anchors.tolist()}, f)
+
         if verbose:
             log("molded_images", molded_images)
             log("image_metas", image_metas)
