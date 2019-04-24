@@ -1,14 +1,5 @@
-import math
-import os
 import random
-import re
-import sys
-import time
-import cv2
-import matplotlib
-import matplotlib.pyplot as plt
 import numpy as np
-from PIL import Image
 
 from . import configs
 from .dataset import FoodDataset
@@ -41,7 +32,7 @@ class Workbench():
         self.inference_config = configs.InferenceConfig()
         self.model = None
 
-    def init_model(self, mode='init', model_dir=None):
+    def init_model(self, mode='init', model_dir=None, path=None):
         """
             mode:
                 'init': start with COCO pretrained model.
@@ -54,7 +45,7 @@ class Workbench():
             # Create model in training mode
             model = modellib.MaskRCNN(
                 mode="training", config=self.config, model_dir=model_dir)
-
+            
             # Which weights to start with?
             init_with = "coco"  # imagenet, coco
             if init_with == "imagenet":
@@ -74,6 +65,7 @@ class Workbench():
             # Recreate the model in inference mode
             model = modellib.MaskRCNN(
                 mode="inference", config=self.inference_config, model_dir=model_dir)
+            model.load_weights(path, by_name=True)
         self.model = model
         return model
 
@@ -124,6 +116,32 @@ class Workbench():
                                         self.dataset_train.class_names, figsize=(8, 8))
         return original_image
 
+    @staticmethod
+    def resize(input_img, output_img, width=128, height=128):
+        from PIL import Image
+        img = Image.open(input_img)
+        try:
+            img = img.resize((width, height), Image.BILINEAR)
+            img.save(output_img)
+            img.close()
+        except Exception as e:
+            print(e)
+
+    @staticmethod
+    def read_image(path):
+        """Load the specified image and return a [H,W,3] Numpy array.
+        """
+        import skimage
+        # Load image
+        image = skimage.io.imread(path)
+        # If grayscale. Convert to RGB for consistency.
+        if image.ndim != 3:
+            image = skimage.color.gray2rgb(image)
+        # If has an alpha channel, remove it for consistency
+        if image.shape[-1] == 4:
+            image = image[..., :3]
+        return image
+
     def detect(self, img):
         # Get path to saved weights
         # Either set a specific path or find last trained weights
@@ -144,8 +162,8 @@ class Workbench():
             image, image_meta, gt_class_id, gt_bbox, gt_mask = \
                 modellib.load_image_gt(self.dataset_val, self.inference_config,
                                        image_id, use_mini_mask=False)
-            molded_images = np.expand_dims(
-                modellib.mold_image(image, self.inference_config), 0)
+            # molded_images = np.expand_dims(
+            #     modellib.mold_image(image, self.inference_config), 0)
             # Run object detection
             results = self.model.detect([image], verbose=0)
             r = results[0]

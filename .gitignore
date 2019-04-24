@@ -7,6 +7,10 @@ docker
 
 __feeder__
 __logs__
+__cache__
 __pycache__
 
 pretrained_model
+
+.vscode
+settings.json

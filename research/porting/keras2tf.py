@@ -1,12 +1,11 @@
 import os
-from detection.configs import InferenceConfig
-from keras.models import Model
-from keras.layers import *
+from keras import backend as K
 import tensorflow as tf
+
 
 def keras_to_tensorflow(keras_model, output_dir, model_name, out_prefix="output_", log_tensorboard=True):
 
-    if os.path.exists(output_dir) == False:
+    if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
     out_nodes = []
@@ -33,17 +32,3 @@ def keras_to_tensorflow(keras_model, output_dir, model_name, out_prefix="output_
         import_pb_to_tensorboard.import_to_tensorboard(
             os.path.join(output_dir, model_name),
             output_dir)
-
-
-inference_config = InferenceConfig()
-# Recreate the model in inference mode
-model = modellib.MaskRCNN(
-    mode="inference", config=inference_config, model_dir=f'{MODEL_DIR}')
-
-
-# keras_model = SqueezeNet()
-# keras_model.load_weights("squeezenet.h5")
-# output_dir = os.path.join(os.getcwd(), "checkpoint")
-# keras_to_tensorflow(keras_model, output_dir=output_dir,
-#                     model_name="squeezenet.pb")
-# print("MODEL SAVED")
