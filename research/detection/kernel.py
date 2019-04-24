@@ -12,10 +12,13 @@ from .mrcnn.model import log
 # np.set_printoptions(threshold=np.inf)
 
 
-class Workbench():
-    FEEDER_DIR = 'detection/__feeder__'
+class Kernel():
+    # Directory to cached data
+    CACHE_DIR = 'data/__cache__/detection'
+    # Preprocessed training data here
+    FEEDER_DIR = f'{CACHE_DIR}/__feeder__'
     # Directory to save logs and trained model
-    MODEL_DIR = 'detection/__logs__'
+    LOGS_DIR = f'{CACHE_DIR}/__logs__'
     # Local path to trained weights file
     COCO_MODEL_PATH = 'data/mask_rcnn_coco.h5'
     # Download COCO trained weights from Releases if needed
@@ -32,42 +35,32 @@ class Workbench():
         self.inference_config = configs.InferenceConfig()
         self.model = None
 
-    def init_model(self, mode='init', model_dir=None, path=None):
-        """
-            mode:
-                'init': start with COCO pretrained model.
-                'training': load the last model you trained and continue training.
-                'inference': load saved weights for inference.
-        """
-        if not model_dir:
-            model_dir = self.MODEL_DIR
-        if mode == 'init':
-            # Create model in training mode
-            model = modellib.MaskRCNN(
-                mode="training", config=self.config, model_dir=model_dir)
-            
-            # Which weights to start with?
-            init_with = "coco"  # imagenet, coco
-            if init_with == "imagenet":
-                model.load_weights(model.get_imagenet_weights(), by_name=True)
-            elif init_with == "coco":
-                # Load weights trained on MS COCO, but skip layers that
-                # are different due to the different number of classes
-                # See README for instructions to download the COCO weights
-                model.load_weights(self.COCO_MODEL_PATH, by_name=True,
-                                   exclude=["mrcnn_class_logits", "mrcnn_bbox_fc",
-                                            "mrcnn_bbox", "mrcnn_mask"])
+    def build(self, mode, logs_dir=None):
+        '''
+            mode: training/ inference
+        '''
+        if not logs_dir:
+            logs_dir = self.LOGS_DIR
+        if mode == 'inference':
+            config = self.inference_config
         elif mode == 'training':
-            model = modellib.MaskRCNN(
-                mode="training", config=self.config, model_dir=model_dir)
-            model.load_weights(model.find_last(), by_name=True)
-        elif mode == 'inference':
-            # Recreate the model in inference mode
-            model = modellib.MaskRCNN(
-                mode="inference", config=self.inference_config, model_dir=model_dir)
-            model.load_weights(path, by_name=True)
+            config = self.config
+        model = modellib.MaskRCNN(
+            mode=mode, config=config, model_dir=logs_dir)
         self.model = model
         return model
+
+    def load_weights(self, path=None, special='default'):
+        # if special.lower() == "imagenet":
+        #     model.load_weights(model.get_imagenet_weights(), by_name=True)
+
+        # path = model.find_last()
+        if special.lower() == 'coco':
+            self.model.load_weights(self.COCO_MODEL_PATH, by_name=True,
+                                    exclude=["mrcnn_class_logits", "mrcnn_bbox_fc",
+                                             "mrcnn_bbox", "mrcnn_mask"])
+        else:
+            self.model.load_weights(path, by_name=True)
 
     def train(self, epoch=1, learning_rate_coefficient=0.1, layers="all"):
         """
@@ -117,7 +110,7 @@ class Workbench():
         return original_image
 
     @staticmethod
-    def resize(input_img, output_img, width=128, height=128):
+    def resize_image(input_img, output_img, width=128, height=128):
         from PIL import Image
         img = Image.open(input_img)
         try:
