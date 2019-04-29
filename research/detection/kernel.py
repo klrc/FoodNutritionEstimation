@@ -135,6 +135,26 @@ class Kernel():
             image = image[..., :3]
         return image
 
+    def mold_inputs(self, images):
+        return self.model.mold_inputs(images)
+
+    def get_extra_infos(self, images):
+        molded_images, image_metas, _ = self.mold_inputs(images)
+        # Validate image sizes
+        # All images in a batch MUST be of the same size
+        image_shape = molded_images[0].shape
+        for g in molded_images[1:]:
+            assert g.shape == image_shape,\
+                "After resizing, all images must have the same size. Check IMAGE_RESIZE_MODE and image sizes."
+
+        # Anchors
+        anchors = self.model.get_anchors(image_shape)
+        # Duplicate across the batch dimension because Keras requires it
+        # TODO: can this be optimized to avoid duplicating the anchors?
+        anchors = np.broadcast_to(
+            anchors, (self.model.config.BATCH_SIZE,) + anchors.shape)
+        return molded_images, image_metas, anchors
+
     def detect(self, img):
         # Get path to saved weights
         # Either set a specific path or find last trained weights
