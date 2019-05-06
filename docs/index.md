@@ -34,7 +34,7 @@
 
 ---
 ## 5.6.d detection tensorflow .pb 输出测试
-
+[code](../demo/test_pb_model.py)
     测试了压缩后的.pb模型性能
     正常输出情况下 基本没问题
     不太乐观的情况是 对于识别效果较差的图 网络没有任何输出
