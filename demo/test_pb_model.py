@@ -25,7 +25,7 @@ with open('data/extra_info.json', 'r') as f:
 import skimage  # noqa: E402
 
 # Load image
-sample_img_path = 'data/__cache__/detection/__feeder__/test/img/baozi4.png'
+sample_img_path = 'data/__cache__/tmp_resized.png'
 img = skimage.io.imread(sample_img_path)
 img = skimage.transform.resize(img, (128, 128))
 # If grayscale. Convert to RGB for consistency.
