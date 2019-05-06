@@ -50,6 +50,8 @@
 
 ---
 ## 5.6.e detection .pb 转 tensorflow lite 测试
+    
+    可能要把预参数的计算也放到图里 有点复杂
 
 ---
 ## 5.6.f 体积估算 torch 转 keras .h5 测试
