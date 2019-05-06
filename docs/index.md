@@ -50,3 +50,9 @@
 
 ---
 ## 5.6.e detection .pb 转 tensorflow lite 测试
+
+---
+## 5.6.f 体积估算 torch 转 keras .h5 测试
+
+---
+## 5.6.g 体积估算 准确率测试
