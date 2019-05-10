@@ -59,6 +59,8 @@ class Kernel():
             self.model.load_weights(self.COCO_MODEL_PATH, by_name=True,
                                     exclude=["mrcnn_class_logits", "mrcnn_bbox_fc",
                                              "mrcnn_bbox", "mrcnn_mask"])
+        elif special.lower() == 'last':
+            self.model.load_weights(self.model.find_last(), by_name=True)
         else:
             self.model.load_weights(path, by_name=True)
 
