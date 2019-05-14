@@ -41,6 +41,8 @@ for i in x:
     k.load_weights(path=f'{prefix}/mask_rcnn_detection_{mid}.h5')
     y.append(k.eval())
 plt.plot(x, y)
+
+plt.savefig("train_res_1000_3000.png")
 # 下面行不写会出现 [<matplotlib.lines.Line2D at 0x111814390>] 字样
 plt.show()
 
