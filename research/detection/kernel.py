@@ -170,7 +170,8 @@ class Kernel():
     def eval(self):
         # Compute VOC-Style mAP @ IoU=0.5
         # Running on 10 images. Increase for better accuracy.
-        image_ids = np.random.choice(self.dataset_val.image_ids, 10)
+        # image_ids = np.random.choice(self.dataset_val.image_ids, 10)
+        image_ids = self.dataset_val.image_ids
         APs = []
         for image_id in image_ids:
             # Load image and ground truth data
@@ -187,4 +188,5 @@ class Kernel():
                 utils.compute_ap(gt_bbox, gt_class_id, gt_mask,
                                  r["rois"], r["class_ids"], r["scores"], r['masks'])
             APs.append(AP)
-        return f'mAP: {np.mean(APs)}'
+        m_ap = np.mean(APs)
+        return m_ap
