@@ -2,23 +2,67 @@ import os
 import json
 import shutil
 import datetime
+import random
 
 
 class Kernel:
 
-    def __init__(self, frozen_core=None, storage_path='.'):
+    def __init__(self, frozen_core=None, storage_dir=None):
         self.logs = []
         self.resources = []
         self.data = []
-        self.physical_storage = self.create_physical_storage(storage_path)
+        self.physical_storage = None
 
         self.frozen_core = frozen_core
         if frozen_core:
             try:
                 self.load(frozen_core)
+                if storage_dir:
+                    self.physical_storage = self.create_physical_storage(storage_dir)
+                else:
+                    self.log('physical storage', self.physical_storage)
             except:  # noqa: E722
                 self.log('failed to load existing archive.', frozen_core)
+        else:
+            storage_dir = storage_dir if storage_dir else '.'
+            self.physical_storage = self.create_physical_storage(storage_dir)
         self.log('Kernel online', 'ready for request.')
+
+    def build(self, shuffle=True, horizontal_split=True, augmentor=True):
+        pass
+
+    def clear_data(self):
+        self.data = []
+
+    def select(self, num=None, requirements=['png', 'yaml']):
+        table = {}
+        for x in self.resources:
+            if x[0] not in table.keys():
+                table[x[0]] = {}
+            table[x[0]][x[1]] = x[2]
+        for x in table.keys():
+            for req in requirements:
+                if req not in table[x].keys():
+                    break
+            else:
+                if x not in [t[0] for t in self.data]:
+                    self.data.append((x, table[x]))
+        if num:
+            num = len(self.data) if num > len(self.data) else num
+            self.data = random.sample(self.data, num)
+        self.log('Selected samples',
+                 f'{len(self.data)} items of {len(table.keys())} selected.')
+
+    def create_cache(self):
+        storage = self.physical_storage
+        if not os.path.exists(f'{storage}/.cache'):
+            os.makedirs(f'{storage}/.cache')
+        self.log('using cache', f'{storage}/.cache')
+        return f'{storage}/.cache'
+
+    def clear_cache(self):
+        os.removedirs(f'{self.physical_storage}/.cache')
+        self.log('Cleared cache at', f'{self.physical_storage}/.cache')
 
     def clean_kernel(self):
         raw_len = len(self.resources)
@@ -44,6 +88,7 @@ class Kernel:
             xtype = name.split('.')[1]
             xpath = f'{path}/{name}'
             self.add(xhash, xtype, xpath, copy=copy, verbose=verbose)
+        self.clean_kernel()
 
     def scan(self, path, recursive=True, check_flag=None):
         self.log('Scanning started at', path)
@@ -94,7 +139,6 @@ class Kernel:
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         with open(path, 'w') as f:
-            self.clean_kernel()
             self.log('.frozen saved at', path)
             json.dump(self.freeze(), f)
 
@@ -132,9 +176,6 @@ class Kernel:
         fp_file = path.split('/')[-1]
         return fp_dir, fp_file
 
-    # def build():
-    #     pass
-
     # def seed():
     #     pass
 
@@ -151,10 +192,8 @@ class Kernel:
     #     return self.db['data'][hash]
 
 
-# k = Kernel('test/core.db')
-# k.add('tmp_resized', {'path': 'data/__cache__/tmp_resized.png'}, copy=True)
-# k.remove('tmp_resize')
-# k.remove('tmp_resized')
-k = Kernel(frozen_core='test/auto.frozen', storage_path='test/storage')
-k.auto_scan('data', copy=False, check_flag='yaml')
+k = Kernel(frozen_core='data/db/core.frozen')
+# k.auto_scan('data/__cache__/', copy=True, check_flag='yaml', verbose=1)
+# k.auto_scan('data/__cache__/', copy=True, check_flag='png', verbose=1)
+k.select(400)
 k.save()
