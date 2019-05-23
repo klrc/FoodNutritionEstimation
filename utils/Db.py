@@ -3,6 +3,7 @@ import json
 import shutil
 import datetime
 import random
+import yaml
 
 
 class Kernel:
@@ -10,7 +11,7 @@ class Kernel:
     def __init__(self, frozen_core=None, storage_dir=None):
         self.logs = []
         self.resources = []
-        self.data = []
+        self.data = {}
         self.physical_storage = None
 
         self.frozen_core = frozen_core
@@ -18,7 +19,8 @@ class Kernel:
             try:
                 self.load(frozen_core)
                 if storage_dir:
-                    self.physical_storage = self.create_physical_storage(storage_dir)
+                    self.physical_storage = self.create_physical_storage(
+                        storage_dir)
                 else:
                     self.log('physical storage', self.physical_storage)
             except:  # noqa: E722
@@ -28,11 +30,53 @@ class Kernel:
             self.physical_storage = self.create_physical_storage(storage_dir)
         self.log('Kernel online', 'ready for request.')
 
-    def build(self, shuffle=True, horizontal_split=True, augmentor=True):
-        pass
+    def from_yaml_read_cls(self, yaml_path):
+        with open(yaml_path) as f:
+            temp = yaml.load(f.read(), Loader=yaml.FullLoader)
+            labels = temp['label_names']
+            del labels[0]
+        return labels[0]
 
-    def clear_data(self):
-        self.data = []
+    def build(self, test=0.1, horizontal_split=True, augmentor=True, num=None):
+        if len(self.data.keys()) == 0:
+            self.select(requirements=['png', 'yaml'])
+        if horizontal_split:
+            cls_container = {}
+            for h in self.data.keys():
+                h_cls = self.from_yaml_read_cls(self.data[h]['yaml'])
+                if h_cls not in cls_container.keys():
+                    cls_container[h_cls] = []
+                cls_container[h_cls].append(h)
+            test_set = []
+            train_set = []
+            for cls in cls_container.keys():
+                size = len(cls_container[cls])
+                test_size = int(size*test)
+                test_sub_set = random.sample(cls_container[cls], test_size)
+                train_sub_set = [x for x in cls_container[cls]
+                                 if x not in test_sub_set]
+                test_set.extend(test_sub_set)
+                train_set.extend(train_sub_set)
+                print(cls, len(train_sub_set), len(test_sub_set), size)
+            build_path = f'{self.__get_dir(self.physical_storage)}/build'
+            if not os.path.exists(build_path):
+                os.makedirs(build_path)
+            for f1 in ['train', 'test']:
+                for f2 in ['img', 'mask', 'yaml']:
+                    sub_build_path = f'{build_path}/{f1}/{f2}'
+                    if not os.path.exists(sub_build_path):
+                        os.makedirs(sub_build_path)
+            for h in test_set:
+                print(h)
+
+    def clean(self):
+        self.data = {}
+        self.log('kernel sources cleaned', 'self.data')
+
+        build_path = f'{self.__get_dir(self.physical_storage)}/build'
+        if os.path.exists(build_path):
+            os.removedirs(build_path)
+        self.log('kernel sources cleaned', build_path)
 
     def select(self, num=None, requirements=['png', 'yaml']):
         table = {}
@@ -40,18 +84,24 @@ class Kernel:
             if x[0] not in table.keys():
                 table[x[0]] = {}
             table[x[0]][x[1]] = x[2]
+        pre_targets = [x for x in self.data.keys()]
         for x in table.keys():
             for req in requirements:
                 if req not in table[x].keys():
                     break
             else:
-                if x not in [t[0] for t in self.data]:
-                    self.data.append((x, table[x]))
+                if x not in pre_targets:
+                    pre_targets.append(x)
         if num:
-            num = len(self.data) if num > len(self.data) else num
-            self.data = random.sample(self.data, num)
+            num = len(pre_targets) if num > len(pre_targets) else num
+            pre_targets = random.sample(pre_targets, num)
+
+        for x in pre_targets:
+            if x in table.keys():
+                self.data[x] = table[x]
+
         self.log('Selected samples',
-                 f'{len(self.data)} items of {len(table.keys())} selected.')
+                 f'{len(self.data.keys())} items of {len(table.keys())} selected.')
 
     def create_cache(self):
         storage = self.physical_storage
@@ -79,14 +129,13 @@ class Kernel:
             self.resources.append((xhash, xtype, target_path))
         else:
             self.resources.append((xhash, xtype, xpath))
-        self.log('Add rec', xpath, verbose=verbose)
+        self.log('Add rec', (xhash, xtype, xpath), verbose=verbose)
 
     def auto_scan(self, path, recursive=True, copy=True, check_flag=None, verbose=0):
-        for x in self.scan(path, recursive=recursive, check_flag=check_flag):
-            path, name = x
+        for full_path, name in self.scan(path, recursive=recursive, check_flag=check_flag):
             xhash = name.split('.')[0]
             xtype = name.split('.')[1]
-            xpath = f'{path}/{name}'
+            xpath = full_path
             self.add(xhash, xtype, xpath, copy=copy, verbose=verbose)
         self.clean_kernel()
 
@@ -97,14 +146,22 @@ class Kernel:
             for x in os.walk(path):
                 if len(x[2]) > 0:
                     for item in x[2]:
-                        if self.check(item, check_flag):
+                        full_path = f'{x[0]}/{item}'
+                        if self.check(full_path, check_flag):
                             counter += 1
-                            yield(x[0], item)
+                            suffix = check_flag.split('.')[-1]
+                            name = self.__get_file(full_path.replace(
+                                check_flag, '')) + '.' + suffix
+                            yield (full_path, name)
         else:
             for x in os.listdir(path):
-                if self.check(x, check_flag):
+                full_path = f'{path}/{x}'
+                if self.check(full_path, check_flag):
                     counter += 1
-                    yield (path, x)
+                    suffix = check_flag.split('.')[-1]
+                    name = self.__get_file(full_path.replace(
+                        check_flag, '')) + '.' + suffix
+                    yield (full_path, name)
         self.log('Scanning finished with',
                  f'{counter} results. (check_flag={check_flag})')
 
@@ -192,8 +249,19 @@ class Kernel:
     #     return self.db['data'][hash]
 
 
+# k = Kernel(storage_dir='data/db/storage')
 k = Kernel(frozen_core='data/db/core.frozen')
-# k.auto_scan('data/__cache__/', copy=True, check_flag='yaml', verbose=1)
-# k.auto_scan('data/__cache__/', copy=True, check_flag='png', verbose=1)
-k.select(400)
-k.save()
+# k.auto_scan('/home/sh/Downloads/netfood2/', copy=True,
+#             check_flag='_json/info.yaml', verbose=1)
+# k.auto_scan('/home/sh/Downloads/netfood2/', copy=True,
+#             check_flag='_json/img.png', verbose=1)
+k.select(requirements=['png', 'yaml'])
+k.build()
+# k.save()
+# k.clean()
+
+
+'''
+ TODO:
+    inner func / outer
+'''

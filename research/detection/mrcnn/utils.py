@@ -250,6 +250,7 @@ class Dataset(object):
 
     See COCODataset and ShapesDataset as examples.
     """
+    
 
     def __init__(self, class_map=None):
         self._image_ids = []
