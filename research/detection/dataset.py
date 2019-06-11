@@ -11,34 +11,80 @@ class FoodDataset(utils.Dataset):
                   'mdcrs', 'gbrice', 'khs', 'currybeef', 'beef', 'hsyk', 'hstddpg', 'hspg', 'hsjy', 'hsjt',
                   'chiken', 'hsdy', 'hsdp', 'dtj', 'cyszx', 'cdj', 'crht', 'bdcrs', 'bun', 'bzhx']
 
-    def __init__(self, path, size=(200, 150), train=True):
+    def __init__(self, path, width=200, height=150, for_train=True):
         super().__init__()
-        # Add classes
-        for i, x in enumerate(self.label_list):
-            self.add_class('food', i + 1, x)
-        self.load_info(path, size, train)
+        self.load_classes()
+        self.load_images(path, width, height, for_train)
         self.prepare()
 
-    def get_dirs(path, train):
-        mark = 'train' if train else 'test'
+    # non-native
+    def load_classes(self):
+        # Add classes
+        for i, _class in enumerate(self.label_list):
+            self.add_class('food', i + 1, _class)
+
+    # non-native
+    def load_images(self, path, width, height, for_train):
+        """Generate the requested number of synthetic images.
+        path: built dataset dir.
+        height, width: the size of the generated images.
+        for_train: gen trainset or testset.
+        """
+        mark = 'train' if for_train else 'test'
         path = f'{path}/{mark}'
-        img_dir = f'{path}/img'  # 存放原图片的文件夹
-        mask_dir = f'{path}/mask'
-        yaml_dir = f'{path}/yaml'
-        return img_dir, mask_dir, yaml_dir
+        imglist = os.listdir(path)
+        for index, _hash in enumerate(imglist):
+            self.add_image(
+                source="food",
+                image_id=index,
+                width=width,
+                height=height,
+                path=f'{path}/{_hash}/raw.png',
+                mask=f'{path}/{_hash}/mask.png',
+                yaml=f'{path}/{_hash}/yaml.yaml',
+                hash=_hash,
+            )
 
-    def get_obj_index(self, image):
-        n = np.max(image)
-        return n
+    # override
+    def load_mask(self, image_id):
+        """Generate instance masks for shapes of the given image ID.
+        """
+        _info = self.image_info[image_id]
+        count = 1  # number of object ?
+        _image = Image.open(_info['mask'])
+        num_obj = np.max(_image)
 
+        # get masks
+        mask = np.zeros(
+            [_info['height'], _info['width'], num_obj], dtype=np.uint8)
+        mask = self.draw_mask(num_obj, mask, _image, image_id)
+        occlusion = np.logical_not(mask[:, :, -1]).astype(np.uint8)
+        for i in range(count - 2, -1, -1):
+            mask[:, :, i] = mask[:, :, i] * occlusion
+            occlusion = np.logical_and(
+                occlusion, np.logical_not(mask[:, :, i]))
+
+        # get labels
+        _labels = self.from_yaml_get_class(image_id)
+        labels_form = []
+        for i in range(len(_labels)):
+            for x in self.label_list:
+                if _labels[i].find(x) != -1:
+                    labels_form.append(x)
+                    break
+        class_ids = np.array([self.class_names.index(s) for s in labels_form])
+        return mask, class_ids.astype(np.int32)
+
+    # non-native
     def from_yaml_get_class(self, image_id):
         info = self.image_info[image_id]
-        with open(info['yaml_path']) as f:
+        with open(info['yaml']) as f:
             temp = yaml.load(f.read())
             labels = temp['label_names']
             del labels[0]
         return labels
 
+    # non-native
     def draw_mask(self, num_obj, mask, image, image_id):
         info = self.image_info[image_id]
         for index in range(num_obj):
@@ -49,59 +95,13 @@ class FoodDataset(utils.Dataset):
                         mask[j, i, index] = 1
         return mask
 
-    def load_info(self, path, size, train):
-        """Generate the requested number of synthetic images.
-        count: number of images to generate.
-        height, width: the size of the generated images.
-        """
-        mark = 'train' if train else 'test'
-        path = f'{path}/{mark}'
-        imglist = os.listdir(f'{path}/img')
-        for index, img in enumerate(imglist):
-            img_id = imglist[index].split(".")[0]
-            img_path = f'{path}/img/{img_id}.png'
-            mask_path = f'{path}/mask/{img_id}.png'
-            yaml_path = f'{path}/yaml/{img_id}.yaml'
-            self.add_image(source="food", image_id=index, path=img_path,
-                           width=size[0], height=size[1], mask_path=mask_path, yaml_path=yaml_path)
-
-    def load_mask(self, image_id):
-        """Generate instance masks for shapes of the given image ID.
-        """
-        info = self.image_info[image_id]
-        count = 1  # number of object
-        img = Image.open(info['mask_path'])
-        num_obj = self.get_obj_index(img)
-        mask = np.zeros(
-            [info['height'], info['width'], num_obj], dtype=np.uint8)
-        mask = self.draw_mask(num_obj, mask, img, image_id)
-        occlusion = np.logical_not(mask[:, :, -1]).astype(np.uint8)
-        for i in range(count - 2, -1, -1):
-            mask[:, :, i] = mask[:, :, i] * occlusion
-            occlusion = np.logical_and(
-                occlusion, np.logical_not(mask[:, :, i]))
-        labels = self.from_yaml_get_class(image_id)
-        labels_form = []
-        for i in range(len(labels)):
-            for x in self.label_list:
-                if labels[i].find(x) != -1:
-                    labels_form.append(x)
-                    break
-        class_ids = np.array([self.class_names.index(s) for s in labels_form])
-        return mask, class_ids.astype(np.int32)
-
     def display(self, num=4):
         # Load and display random samples
         image_ids = np.random.choice(self.image_ids, num)
         for image_id in image_ids:
+
             image = self.load_image(image_id)
             mask, class_ids = self.load_mask(image_id)
+
             visualize.display_top_masks(
                 image, mask, class_ids, self.class_names)
-
-
-if __name__ == "__main__":
-    feeder_path = 'detection/__feeder__'
-    ds = FoodDataset(path=feeder_path)
-    ds.display()
-    print('finish')

@@ -1,16 +1,18 @@
 
-data
 *.h5
 *.pb
+*.gz
+*.zip
 
+build
 docker
 
 __feeder__
 __logs__
 __cache__
 __pycache__
-
-pretrained_model
+__input__
+__output__
 
 vscode
 settings.json
