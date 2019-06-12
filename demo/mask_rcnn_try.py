@@ -52,13 +52,16 @@ while(1):
     ret, frame = cap.read()
     # show a frame
     start = time.clock()
-    results = model.detect([frame], verbose=1)
+    results = model.detect([frame])
     r = results[0]
     # cv2.imshow("capture", frame)
-    visualize.display_instances(frame, r['rois'], r['masks'], r['class_ids'],
-                                class_names, r['scores'])
+    # visualize.display_instances(frame, r['rois'], r['masks'], r['class_ids'],
+    #                             class_names, r['scores'])
+    img = visualize.syn_mask(
+        frame, r['rois'], r['masks'], r['class_ids'], class_names, r['scores'])
+    cv2.imshow('capture', img)
     end = time.clock()
-    print(end-start)
+    # print(end-start)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 

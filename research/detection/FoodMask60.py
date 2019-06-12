@@ -6,7 +6,7 @@ from PIL import Image
 from .mrcnn import utils, visualize
 
 
-class FoodDataset(utils.Dataset):
+class FoodMask60(utils.Dataset):
     label_list = ['dumpling', 'tcpg', 'sm', 'qzly', 'potato', 'qchx', 'beefpotato', 'noodles', 'bread', 'mdcsg',
                   'mdcrs', 'gbrice', 'khs', 'currybeef', 'beef', 'hsyk', 'hstddpg', 'hspg', 'hsjy', 'hsjt',
                   'chiken', 'hsdy', 'hsdp', 'dtj', 'cyszx', 'cdj', 'crht', 'bdcrs', 'bun', 'bzhx']
@@ -17,13 +17,11 @@ class FoodDataset(utils.Dataset):
         self.load_images(path, width, height, for_train)
         self.prepare()
 
-    # non-native
     def load_classes(self):
         # Add classes
         for i, _class in enumerate(self.label_list):
             self.add_class('food', i + 1, _class)
 
-    # non-native
     def load_images(self, path, width, height, for_train):
         """Generate the requested number of synthetic images.
         path: built dataset dir.
@@ -44,6 +42,7 @@ class FoodDataset(utils.Dataset):
                 yaml=f'{path}/{_hash}/yaml.yaml',
                 hash=_hash,
             )
+            print(index, _hash)
 
     # override
     def load_mask(self, image_id):
@@ -75,7 +74,6 @@ class FoodDataset(utils.Dataset):
         class_ids = np.array([self.class_names.index(s) for s in labels_form])
         return mask, class_ids.astype(np.int32)
 
-    # non-native
     def from_yaml_get_class(self, image_id):
         info = self.image_info[image_id]
         with open(info['yaml']) as f:
@@ -84,7 +82,6 @@ class FoodDataset(utils.Dataset):
             del labels[0]
         return labels
 
-    # non-native
     def draw_mask(self, num_obj, mask, image, image_id):
         info = self.image_info[image_id]
         for index in range(num_obj):
@@ -102,6 +99,5 @@ class FoodDataset(utils.Dataset):
 
             image = self.load_image(image_id)
             mask, class_ids = self.load_mask(image_id)
-
             visualize.display_top_masks(
                 image, mask, class_ids, self.class_names)
