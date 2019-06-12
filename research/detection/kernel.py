@@ -2,7 +2,7 @@ import random
 import numpy as np
 
 from . import configs
-from .dataset import FoodDataset
+from .FoodMask60 import FoodMask60
 from .mrcnn import utils, visualize
 from .mrcnn import model as modellib
 from .mrcnn.model import log
@@ -16,9 +16,9 @@ class Kernel():
     # Directory to cached data
     CACHE_DIR = 'data/__cache__/detection'
     # Preprocessed training data here
-    FEEDER_DIR = f'{CACHE_DIR}/__feeder__'
+    FEEDER_DIR = f'data/FoodMask60/build'
     # Directory to save logs and trained model
-    LOGS_DIR = f'{CACHE_DIR}/__logs__'
+    LOGS_DIR = f'{CACHE_DIR}/logs'
     # Local path to trained weights file
     COCO_MODEL_PATH = 'data/mask_rcnn_coco.h5'
     # Download COCO trained weights from Releases if needed
@@ -28,8 +28,8 @@ class Kernel():
     def __init__(self):
         self.config = configs.BaseConfig()
         self.config.display()
-        self.dataset_train = FoodDataset(self.FEEDER_DIR, train=True)
-        self.dataset_val = FoodDataset(self.FEEDER_DIR, train=False)
+        self.dataset_train = FoodMask60(self.FEEDER_DIR, train=True)
+        self.dataset_val = FoodMask60(self.FEEDER_DIR, train=False)
         # Display some images of the food dataset
         # self.dataset_train.display(1)
         self.inference_config = configs.InferenceConfig()
