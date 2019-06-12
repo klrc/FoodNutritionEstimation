@@ -42,7 +42,6 @@ class FoodMask60(utils.Dataset):
                 yaml=f'{path}/{_hash}/yaml.yaml',
                 hash=_hash,
             )
-            print(index, _hash)
 
     # override
     def load_mask(self, image_id):
@@ -77,7 +76,7 @@ class FoodMask60(utils.Dataset):
     def from_yaml_get_class(self, image_id):
         info = self.image_info[image_id]
         with open(info['yaml']) as f:
-            temp = yaml.load(f.read())
+            temp = yaml.load(f.read(), Loader=yaml.FullLoader)
             labels = temp['label_names']
             del labels[0]
         return labels

@@ -28,8 +28,8 @@ class Kernel():
     def __init__(self):
         self.config = configs.BaseConfig()
         self.config.display()
-        self.dataset_train = FoodMask60(self.FEEDER_DIR, train=True)
-        self.dataset_val = FoodMask60(self.FEEDER_DIR, train=False)
+        self.dataset_train = FoodMask60(self.FEEDER_DIR, for_train=True)
+        self.dataset_val = FoodMask60(self.FEEDER_DIR, for_train=False)
         # Display some images of the food dataset
         # self.dataset_train.display(1)
         self.inference_config = configs.InferenceConfig()
