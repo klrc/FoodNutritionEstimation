@@ -18,9 +18,15 @@ k = Kernel()
 k.build('training')
 k.load_weights(special='coco')
 # k.load_weights('data/__cache__/detection/__logs__/' +
+<<<<<<< HEAD
 #    'detection20190509T1729/mask_rcnn_detection_3000.h5')
 k.train(epoch=50, layers='all')
 # # k.train(epoch=3000, learning_rate_coefficient=1, layers='heads')
+=======
+#                'detection20190509T1729/mask_rcnn_detection_3000.h5')
+k.train(epoch=50, layers='all')
+# k.train(epoch=3000, learning_rate_coefficient=1, layers='heads')
+>>>>>>> f4c11e6b4ef5eb354d8b231731d84d12d48ae6c5
 
 # %%
 # 读取训练模型并评估
