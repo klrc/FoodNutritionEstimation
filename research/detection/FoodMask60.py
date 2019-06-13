@@ -7,9 +7,8 @@ from .mrcnn import utils, visualize
 
 
 class FoodMask60(utils.Dataset):
-    label_list = ['dumpling', 'tcpg', 'sm', 'qzly', 'potato', 'qchx', 'beefpotato', 'noodles', 'bread', 'mdcsg',
-                  'mdcrs', 'gbrice', 'khs', 'currybeef', 'beef', 'hsyk', 'hstddpg', 'hspg', 'hsjy', 'hsjt',
-                  'chiken', 'hsdy', 'hsdp', 'dtj', 'cyszx', 'cdj', 'crht', 'bdcrs', 'bun', 'bzhx']
+    label_list = ['bdcrs', 'beef', 'beefpotato', 'bread', 'bun', 'bzhx', 'cdj', 'chiken', 'crht', 'currybeef', 'cyszx', 'dtj', 'dumpling', 'gbrice',
+                  'hsdp', 'hsdy', 'hsjt', 'hsjy', 'hspg', 'hstddpg', 'hsyk', 'khs', 'mdcrs', 'mdcsg', 'noodles', 'potato', 'qchx', 'qzly', 'sm', 'tcpg']
 
     def __init__(self, path, width=200, height=150, for_train=True):
         super().__init__()
@@ -76,7 +75,7 @@ class FoodMask60(utils.Dataset):
     def from_yaml_get_class(self, image_id):
         info = self.image_info[image_id]
         with open(info['yaml']) as f:
-            temp = yaml.load(f.read(), Loader=yaml.FullLoader)
+            temp = yaml.load(f.read())
             labels = temp['label_names']
             del labels[0]
         return labels

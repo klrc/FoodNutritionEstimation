@@ -149,7 +149,7 @@ class DatabaseKernel(KernelEnv):
 
     def __from_yaml_read_cls(self, yaml_path):
         with open(yaml_path) as f:
-            temp = yaml.load(f.read(), Loader=yaml.FullLoader)
+            temp = yaml.load(f.read())
             labels = temp['label_names']
             del labels[0]
         return labels[0]
@@ -243,7 +243,9 @@ class DatabaseKernel(KernelEnv):
         raw = self.data[_hash]['raw']
         mask = self.data[_hash]['mask']
         images = [[raw, mask]]
-        images = [[np.asarray(Image.open(x).convert('RGB')) for x in image]
+        # images = [[np.asarray(Image.open(x).convert('RGB')) for x in image]
+        #           for image in images]
+        images = [[np.asarray(Image.open(x)) for x in image]
                   for image in images]
 
         p = Augmentor.DataPipeline(images)
@@ -251,7 +253,7 @@ class DatabaseKernel(KernelEnv):
         p.flip_top_bottom(0.5)
         p.zoom_random(1, percentage_area=0.5)
 
-        augmented_images = p.sample(3)
+        augmented_images = p.sample(7)
         return [{'raw': x[0], 'mask': x[1], 'yaml':self.data[_hash]['yaml']} for x in augmented_images]
 
     def random(self):
@@ -267,6 +269,8 @@ class DatabaseKernel(KernelEnv):
             if _class not in cans.keys():
                 cans[_class] = []
             cans[_class].append(_hash)
+
+        # print([x for x in cans.keys()])
 
         dataset = {
             'train': [],
@@ -334,4 +338,4 @@ if __name__ == "__main__":
 
     # 选择并编译
     k.select(requirements=['raw', 'mask', 'yaml'])
-    k.build(augmentor=False)
+    k.build(augmentor=True)
