@@ -17,11 +17,6 @@
         android:hint="请输入账号"
         android:inputType="textPersonName"
         android:ems="16"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
         />
 
     <EditText

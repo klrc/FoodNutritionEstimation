@@ -32,7 +32,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="登陆"
+            android:text="登录"
             android:textSize="20dp"
             android:textColor="#ffffff"
             android:background="#373cbd"

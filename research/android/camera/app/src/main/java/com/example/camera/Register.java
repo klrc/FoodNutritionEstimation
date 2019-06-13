@@ -28,7 +28,7 @@ public class Register extends AppCompatActivity {
         Log.i(TAG, "onCteate()");
         mAccount = (EditText) findViewById(R.id.register_edit_name);
         mPwd = (EditText) findViewById(R.id.register_edit_pwd_old);
-        mPwdCheck = (EditText) findViewById(R.id.register_edit_pwd_old);
+        mPwdCheck = (EditText) findViewById(R.id.register_edit_pwd_new);
 
         mSureButton = (Button) findViewById(R.id.register_btn_sure);
         mCancelButton = (Button) findViewById(R.id.register_btn_cancel);
@@ -81,7 +81,7 @@ public class Register extends AppCompatActivity {
     public void register_check() {
         Log.i(TAG, "start");
         if (isUserNameAndPwdValid()) {
-            String userName = mAccount.getText().toString().trim();
+            String userName = mAccount.getText().toString().trim(); //删除空格
             String userPwd = mPwd.getText().toString().trim();
             Log.i(TAG_Account,mAccount.getText().toString().trim());
             Log.i(TAG_Pwd,mPwd.getText().toString().trim());
@@ -104,8 +104,8 @@ public class Register extends AppCompatActivity {
                     Toast.makeText(this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
-                    Intent intent_Register_to_Login = new Intent(Register.this, Login.class);
-                    startActivity(intent_Register_to_Login);
+                    Intent intent_Register_to_UA = new Intent(Register.this, UserAttr.class);
+                    startActivity(intent_Register_to_UA);
                     finish();
                 }
             }
