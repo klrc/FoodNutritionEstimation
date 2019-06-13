@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,15 +25,18 @@ public class Login extends AppCompatActivity {
     private Button mLoginButton;//登陆
     private Button mCancelButton;//注销
     private CheckBox mRememberCheck;//记住密码
-
     private SharedPreferences login_sp;
     private String userNameValue,passwordValue;
-
     private View loginView;//登陆界面容器
     private View longinSuccessView;
     private TextView loginSuccessShow;
     private TextView mChangepwdText;
     private UserDataManager mUserDataManager;
+    //下拉框
+    private Spinner user_choose;
+    private static final String[] users = {"syh","sh","lkk"};
+    private ArrayAdapter<String> adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +59,12 @@ public class Login extends AppCompatActivity {
         login_sp = getSharedPreferences("userInfo", 0);
         String name = login_sp.getString("USER_NAME", "");
         String pwd = login_sp.getString("PASSWORD", "");
-
         boolean choseRemember = login_sp.getBoolean("mRememberCheck", false);
-
         if (choseRemember) {
             mAccount.setText(name);
             mPwd.setText(pwd);
             mRememberCheck.setChecked(true);
         }
-
         ImageView image = (ImageView) findViewById(R.id.logo);
         image.setImageResource(R.drawable.logo);
 
@@ -74,8 +77,25 @@ public class Login extends AppCompatActivity {
             mUserDataManager = new UserDataManager(this);
             mUserDataManager.openDataBase();
         }
+        //下拉框
+        user_choose = (Spinner)findViewById(R.id.user_choose);
+        adapter = new ArrayAdapter<String>(this,R.layout.user_layout,users);
+        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        user_choose.setOnItemSelectedListener(new SpinnerSelectedListener());
+        user_choose.setVisibility(View.VISIBLE);
+
 
         Log.i(TAG, "Login_onCreate()");
+    }
+    class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
+
+        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+                                   long arg3) {
+
+        }
+
+        public void onNothingSelected(AdapterView<?> arg0) {
+        }
     }
 
     OnClickListener mListener=new OnClickListener() {
