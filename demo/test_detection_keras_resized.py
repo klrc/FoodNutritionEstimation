@@ -19,9 +19,9 @@ from research.detection.kernel import Kernel  # noqa: E402
 # %%
 k = Kernel()
 k.build('inference')
-k.load_weights('data/mask_rcnn_shapes_1600.h5')
+k.load_weights('mask_rcnn_detection_0830.h5')
 
-img_path = 'data/__cache__/detection/__feeder__/test/img/baozi4.png'
+img_path = 'F:/GitHub-Package/FoodNutritionEstimation/data/__cache__/detection/__feeder__/test/img/chiken3.png'
 img_raw = k.read_image(img_path)
 resized_path = 'data/__cache__/tmp_resized.png'
 k.resize_image(img_path, resized_path, width=128, height=128)

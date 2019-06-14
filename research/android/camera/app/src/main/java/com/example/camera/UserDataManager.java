@@ -21,15 +21,16 @@ public class UserDataManager {             //用户数据管理类
     private Context mContext = null;
 
     //创建用户book表
-    private static final String DB_CREATE = "CREATE TABLE " + TABLE_NAME + " ("
-            + ID + " integer primary key," + USER_NAME + " varchar(16),"
-            + USER_PWD + " varchar(16)" + ");";
+    private static final String DB_CREATE = "CREATE TABLE " + TABLE_NAME + " (" //TABLE NAME = "users"
+            + "ID integer primary key,"
+            + "USER_NAME  varchar(16),"
+            + "USER_PWD varchar(16))";
 
     private SQLiteDatabase mSQLiteDatabase = null;
     private DataBaseManagementHelper mDatabaseHelper = null;
 
     //DataBaseManagementHelper继承自SQLiteOpenHelper
-    private static class DataBaseManagementHelper extends SQLiteOpenHelper {
+    private static class DataBaseManagementHelper extends SQLiteOpenHelper {//继承字抽象类qoh，需要重写 oncreate和 onupgrade两个方法
 
         DataBaseManagementHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
@@ -41,7 +42,7 @@ public class UserDataManager {             //用户数据管理类
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");
             db.execSQL(DB_CREATE);
             Log.i(TAG, "db.execSQL(DB_CREATE)");
-            Log.e(TAG, DB_CREATE);
+            Log.e(TAG, DB_CREATE);  //drop if 操作是为了删除原有的  创建新的，是一种常用的更新方法
         }
 
         @Override
