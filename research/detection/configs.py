@@ -10,6 +10,14 @@ class BaseConfig(Config):
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
 
+    LOSS_WEIGHTS = {
+        "rpn_class_loss": 0.8,
+        "rpn_bbox_loss": 0.8,
+        "mrcnn_class_loss": 1.,
+        "mrcnn_bbox_loss": 0.8,
+        "mrcnn_mask_loss": 0.8
+    }
+
     # Number of classes (including background)
     NUM_CLASSES = 31  # background + 3 shapes
 
@@ -33,5 +41,6 @@ class BaseConfig(Config):
 
 
 class InferenceConfig(BaseConfig):
+    DETECTION_NMS_THRESHOLD = 0.01
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1

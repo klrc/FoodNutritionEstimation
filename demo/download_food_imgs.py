@@ -81,7 +81,7 @@ def dowmloadPicture(html, keyword):
 
 if __name__ == '__main__':  # 主函数入口
     word = input("请输入搜索关键词(可以是人名，地名等): ")
-    #add = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=%E5%BC%A0%E5%A4%A9%E7%88%B1&pn=120'
+    # add = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=%E5%BC%A0%E5%A4%A9%E7%88%B1&pn=120'
     url = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + word + '&pn='
     tot = Find(url)
     Recommend = recommend(url)  # 记录相关推荐

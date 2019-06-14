@@ -1,11 +1,15 @@
 import random
 import numpy as np
 
+from matplotlib import patches
+from matplotlib.patches import Polygon
+
 from . import configs
 from .FoodMask60 import FoodMask60
 from .mrcnn import utils, visualize
 from .mrcnn import model as modellib
 from .mrcnn.model import log
+from .mrcnn.visualize import random_colors, apply_mask, find_contours
 
 # # %matplotlib inline
 # inter_num = 0
@@ -157,15 +161,100 @@ class Kernel():
             anchors, (self.model.config.BATCH_SIZE,) + anchors.shape)
         return molded_images, image_metas, anchors
 
-    def detect(self, img):
+    def detect(self, img, display=True, verbose=0):
         # Get path to saved weights
         # Either set a specific path or find last trained weights
         # model_path = os.path.join(ROOT_DIR, ".h5 file name here")
-        results = self.model.detect([img], verbose=1)
+        results = self.model.detect([img], verbose=verbose)
         r = results[0]
-        visualize.display_instances(
+        if display:
+            self.display_instances(img, r)
+        return img, r
+
+    def visualizeDrawResultOnAx(self, ax, image, result,
+                                title="", figsize=(16, 16),
+                                show_mask=True, show_bbox=True,
+                                colors=None, captions=None):
+        boxes = result['rois']
+        masks = result['masks']
+        class_ids = result['class_ids']
+        class_names = self.dataset_val.class_names
+        scores = result['scores']
+
+        # Number of instances
+        N = boxes.shape[0]
+        if not N:
+            print("\n*** No instances to display *** \n")
+        else:
+            assert boxes.shape[0] == masks.shape[-1] == class_ids.shape[0]
+
+        # Generate random colors
+        colors = colors or random_colors(N)
+
+        # Show area outside image boundaries.
+        height, width = image.shape[:2]
+        ax.set_ylim(height + 10, -10)
+        ax.set_xlim(-10, width + 10)
+        ax.axis('off')
+        ax.set_title(title)
+
+        classes = []
+        masked_image = image.astype(np.uint32).copy()
+        for i in range(N):
+            color = colors[i]
+
+            # Bounding box
+            if not np.any(boxes[i]):
+                # Skip this instance. Has no bbox. Likely lost in image cropping.
+                continue
+            y1, x1, y2, x2 = boxes[i]
+            if show_bbox:
+                p = patches.Rectangle((x1, y1), x2 - x1, y2 - y1, linewidth=2,
+                                      alpha=0.7, linestyle="dashed",
+                                      edgecolor=color, facecolor='none')
+                ax.add_patch(p)
+
+            # Label
+            if not captions:
+                class_id = class_ids[i]
+                score = scores[i] if scores is not None else None
+                label = class_names[class_id]
+                # x = random.randint(x1, (x1 + x2) // 2)
+                caption = "{} {:.3f}".format(label, score) if score else label
+            else:
+                caption = captions[i]
+            ax.text(x1, y1 + 8, caption,
+                    color='w', size=11, backgroundcolor="none")
+            classes.append(caption)
+
+            # Mask
+            mask = masks[:, :, i]
+            if show_mask:
+                masked_image = apply_mask(masked_image, mask, color)
+
+            # Mask Polygon
+            # Pad to ensure proper polygons for masks that touch image edges.
+            padded_mask = np.zeros(
+                (mask.shape[0] + 2, mask.shape[1] + 2), dtype=np.uint8)
+            padded_mask[1:-1, 1:-1] = mask
+            contours = find_contours(padded_mask, 0.5)
+            for verts in contours:
+                # Subtract the padding and flip (y, x) to (x, y)
+                verts = np.fliplr(verts) - 1
+                p = Polygon(verts, facecolor="none", edgecolor=color)
+                ax.add_patch(p)
+        ax.imshow(masked_image.astype(np.uint8))
+        return ax, classes
+
+    def display_instances(self, img, result):
+        r = result
+        return visualize.display_instances(
             img, r['rois'], r['masks'], r['class_ids'], self.dataset_val.class_names,
             r['scores'])
+
+    def display_images(self, images, titles=None, cols=4, cmap=None, norm=None,
+                       interpolation=None):
+        return visualize.display_images(images, titles, cols, cmap, norm, interpolation)
 
     def eval(self):
         # Compute VOC-Style mAP @ IoU=0.5

@@ -1,4 +1,19 @@
 # %%
+'''
+    测试了压缩后的.pb模型性能
+    正常输出情况下 基本没问题
+    不太乐观的情况是 对于识别效果较差的图 网络没有任何输出
+
+    可能需要从 output_4 关于mask的输出解决
+    只有这个输出同时含有全信息且不会全0输出
+
+    x.shape
+    (1, 100, 28, 28, 31)
+
+    也许能从这里得到次要目标
+'''
+
+# %%
 import tensorflow as tf
 from tensorflow.python.platform import gfile
 import sys

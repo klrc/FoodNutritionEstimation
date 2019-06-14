@@ -6,7 +6,7 @@ from keras.backend.tensorflow_backend import set_session
 sys.path.append('.')
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 0.8
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
 set_session(tf.Session(config=config))
 
 # %%
@@ -53,11 +53,50 @@ k.train(epoch=400, layers='all')
 
 # %%
 # 测试单张图片
-# k = Kernel()
-# k.build('inference')
-# k.load_weights('data/__cache__/detection/__logs__/' +
-#                'detection20190509T1729/mask_rcnn_detection_0830.h5')
+k = Kernel()
+k.build('inference')
 
-# img_path = 'data/__cache__/detection/__feeder__/test/img/baozi4.png'
-# img_raw = k.read_image(img_path)
-# k.detect(img_raw)
+'''
+    (no augmentation)
+    LOSS_WEIGHTS = (default)
+    learning_rate_coefficient = 1 (default)
+'''
+detection_control_sample_0 = '/home/sh/github/FoodNutritionEstimation/data/__cache__/detection/logs/detection20190612T1906/mask_rcnn_detection_0400.h5'
+
+'''
+    LOSS_WEIGHTS = {
+        "rpn_class_loss": 0.8,
+        "rpn_bbox_loss": 0.8,
+        "mrcnn_class_loss": 1.,
+        "mrcnn_bbox_loss": 0.8,
+        "mrcnn_mask_loss": 0.8
+    }
+    learning_rate_coefficient = 1 (default)
+'''
+detection_control_sample_1 = '/home/sh/github/FoodNutritionEstimation/data/__cache__/detection/logs/detection20190613T1748/mask_rcnn_detection_0400.h5'
+
+
+test_list = [
+    detection_control_sample_0,
+    detection_control_sample_1,
+]
+
+img_samples = [k.random_img() for x in range(8)]
+k.display_images(img_samples, cols=8)
+
+# %%
+# 绘制图表
+import matplotlib.pyplot as plt  # noqa: E402
+_, axes = plt.subplots(2, 8, figsize=(128, 32))
+
+for cor_x, sample in enumerate(test_list):
+    print(f'INF\t{sample}')
+    k.load_weights(sample)
+    for cor_y, img in enumerate(img_samples):
+        img, r = k.detect(img, display=False)
+        ax, classes = k.visualizeDrawResultOnAx(axes[cor_x, cor_y], img, r)
+        print(f'cls\t[{cor_x}, {cor_y}]\t{classes}')
+
+plt.show()
+
+# %%
