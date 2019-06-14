@@ -33,10 +33,15 @@ public class Login extends AppCompatActivity {
     private TextView mChangepwdText;
     private UserDataManager mUserDataManager;
     //下拉框
-    private Spinner user_choose;
-    private static final String[] users = {"syh","sh","lkk"};
-    private ArrayAdapter<String> adapter;
 
+//    private static final String[] user_list={"syh","sh","lkk"};
+//    private TextView user_view;
+//    private Spinner user_choose;
+//    private ArrayAdapter<String> user_adapter;
+    private static final String[] user_list={"syh","sh","lkk"};
+    private TextView view ;
+    private Spinner user_spinner;
+    private ArrayAdapter<String> user_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +75,6 @@ public class Login extends AppCompatActivity {
 
         mRegisterButton.setOnClickListener(mListener);
         mLoginButton.setOnClickListener(mListener);
-        // mCancelButton.setOnClickListener(mListener);
         mChangepwdText.setOnClickListener(mListener);
 
         if (mUserDataManager == null) {
@@ -78,25 +82,45 @@ public class Login extends AppCompatActivity {
             mUserDataManager.openDataBase();
         }
         //下拉框
-        user_choose = (Spinner)findViewById(R.id.user_choose);
-        adapter = new ArrayAdapter<String>(this,R.layout.user_layout,users);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        user_choose.setOnItemSelectedListener(new SpinnerSelectedListener());
-        user_choose.setVisibility(View.VISIBLE);
+//        user_view = (TextView)findViewById(R.id.user_text);
+//        user_choose = (Spinner) findViewById(R.id.user_choose);
+
+//        user_adapter = new ArrayAdapter<String>(this,R.layout.login_layout,user_list);
+//        user_adapter.setDropDownViewResource(R.layout.login_layout);
+//        user_choose.setAdapter(user_adapter);
+//        user_choose.setOnItemSelectedListener(new SpinnerSelectedListener());
+//        user_choose.setVisibility(View.VISIBLE);
+        view = (TextView) findViewById(R.id.spinnerText);
+        user_spinner = (Spinner) findViewById(R.id.user_choose);
+        //将可选内容与ArrayAdapter连接起来
+        user_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,user_list);
+
+        //设置下拉列表的风格
+        user_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        //将adapter 添加到spinner中
+        user_spinner.setAdapter(user_adapter);
+
+        //添加事件Spinner事件监听
+        user_spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+
+        //设置默认值
+        user_spinner.setVisibility(View.VISIBLE);
 
 
         Log.i(TAG, "Login_onCreate()");
-    }
+}
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
                                    long arg3) {
-
+            view.setText("你的用户是："+user_list[arg2]);
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
+
 
     OnClickListener mListener=new OnClickListener() {
         @Override
