@@ -32,7 +32,8 @@ class OnnxKernel():
     def clean_build(self):
         if os.path.exists(self._dir):
             shutil.rmtree(self._dir)
-        self.log('kernel builds cleaned', self._dir)
+        self.log('kerne
+        l builds cleaned', self._dir)
 
     def __create_dir(self, path=None):
         if not os.path.exists(path):

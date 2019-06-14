@@ -8,6 +8,8 @@ import yaml
 import numpy as np
 from PIL import Image
 import Augmentor
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
 class KernelEnv():
@@ -147,10 +149,17 @@ class DatabaseKernel(KernelEnv):
 
     def __from_yaml_read_cls(self, yaml_path):
         with open(yaml_path) as f:
-            temp = yaml.load(f.read(), Loader=yaml.FullLoader)
+            temp = yaml.load(f.read())
             labels = temp['label_names']
             del labels[0]
         return labels[0]
+
+    @staticmethod
+    def resize(input_img, output_img, width=128, height=128):
+        img = Image.open(input_img)
+        img = img.resize((width, height), Image.BILINEAR)
+        img.save(output_img)
+        img.close()
 
     def __scan_solo(self, address, pattern, _filter, _type):
         if _filter and _filter not in address:
@@ -214,6 +223,7 @@ class DatabaseKernel(KernelEnv):
         for _hash in self.data.keys():
             for req in requirements:
                 if req not in self.data[_hash].keys():
+                    print(f'denied {_hash} {req} / {[x for x in self.data[_hash].keys()]}')
                     break
             else:
                 for _type in self.data[_hash].keys():
@@ -233,7 +243,9 @@ class DatabaseKernel(KernelEnv):
         raw = self.data[_hash]['raw']
         mask = self.data[_hash]['mask']
         images = [[raw, mask]]
-        images = [[np.asarray(Image.open(x).convert('RGB')) for x in image]
+        # images = [[np.asarray(Image.open(x).convert('RGB')) for x in image]
+        #           for image in images]
+        images = [[np.asarray(Image.open(x)) for x in image]
                   for image in images]
 
         p = Augmentor.DataPipeline(images)
@@ -241,13 +253,13 @@ class DatabaseKernel(KernelEnv):
         p.flip_top_bottom(0.5)
         p.zoom_random(1, percentage_area=0.5)
 
-        augmented_images = p.sample(3)
+        augmented_images = p.sample(7)
         return [{'raw': x[0], 'mask': x[1], 'yaml':self.data[_hash]['yaml']} for x in augmented_images]
 
     def random(self):
         return random.choice([x for x in self.data.keys()])
 
-    def build(self, test=0.1, augmentor=True):
+    def build(self, test=0.1, augmentor=True, width=200, height=150):
         self.clean_build()
         build_path = self.create_build()
 
@@ -257,6 +269,8 @@ class DatabaseKernel(KernelEnv):
             if _class not in cans.keys():
                 cans[_class] = []
             cans[_class].append(_hash)
+
+        # print([x for x in cans.keys()])
 
         dataset = {
             'train': [],
@@ -279,7 +293,13 @@ class DatabaseKernel(KernelEnv):
                 for _type in self.data[_hash]:
                     _addr = self.data[_hash][_type]
                     suffix = _addr.split('.')[-1]
-                    shutil.copy(_addr, f'{item_path}/{_type}.{suffix}')
+                    if _type == 'yaml':
+                        shutil.copy(
+                            _addr, f'{item_path}/{_type}.yaml'
+                        )
+                    else:
+                        self.resize(
+                            _addr, f'{item_path}/{_type}.{suffix}', width, height)
                 if augmentor:
                     augmented_images = self.augment(_hash)
                     for index, augmented_image in enumerate(augmented_images):
@@ -292,7 +312,9 @@ class DatabaseKernel(KernelEnv):
                                     augmented_image[_type], f'{auged_item_path}/{_type}.yaml')
                             else:
                                 _img = Image.fromarray(augmented_image[_type])
-                                _img.save(f'{auged_item_path}/{_type}.png')
+                                _tmp_fp = f'{auged_item_path}/{_type}.png'
+                                _img.save(_tmp_fp)
+                                self.resize(_tmp_fp, _tmp_fp, width, height)
         self.log('build finished at', build_path)
 
 
@@ -303,12 +325,12 @@ if __name__ == "__main__":
     k = DatabaseKernel(frozen_core=f'data/{dbname}/{dbname}.frozen',
                        storage_dir=f'data/{dbname}/storage')
 
-    # 直接从总文件夹读取各类数据
-    # k.auto_scan(path='data/__cache__/detection', pattern='.png', _filter='mask', _type='mask', copy=True, verbose=1)
-    # k.auto_scan(path='data/__cache__/detection', pattern='.png', _filter='img', _type='raw', copy=True, verbose=1)
-    # k.auto_scan(path='data/__cache__/detection', pattern='.yaml', _type='yaml', copy=True, verbose=1)
+    # # 直接从总文件夹读取各类数据
+    # k.auto_scan(path='data/FoodMask60/storage', pattern='.mask.png', _type='mask', copy=False, verbose=1)
+    # k.auto_scan(path='data/FoodMask60/storage', pattern='.raw.png', _type='raw', copy=False, verbose=1)
+    # k.auto_scan(path='data/FoodMask60/storage', pattern='.yaml.yaml', _type='yaml', copy=False, verbose=1)
 
-    # 保存内核状态
+    # # 保存内核状态
     # k.save()
 
     # 清空编译结果
@@ -316,4 +338,4 @@ if __name__ == "__main__":
 
     # 选择并编译
     k.select(requirements=['raw', 'mask', 'yaml'])
-    k.build(augmentor=False)
+    k.build(augmentor=True)
