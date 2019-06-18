@@ -1,15 +1,10 @@
 # Food Nutrition Estimation
 [img NA]
 
-<<<<<<< HEAD
 
 test From A Star/
 Into the past/
 git 
-=======
-test From Afar
-
->>>>>>> 908947068c12b05910c163845ed4f33db5633919
 ## What does FNE do ? 
 患糖尿病的孩子往往需要在各种限制下摄取营养，对于每份食物，都需要严格控制热量、碳水化合物等营养成分。
 本项目与儿科医院合作，旨在为糖尿病人家庭估算食物营养提供帮助。
