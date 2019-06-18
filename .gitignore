@@ -1,0 +1,9 @@
+.downloads/
+.vscode/
+
+build/
+db/
+log/
+
+__pycache__
+pretrained_model
