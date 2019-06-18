@@ -1,3 +1,4 @@
+import sys
 import argparse
 import os
 
@@ -10,8 +11,7 @@ from model_def import modules, net, resnet, senet, densenet
 from mask import get_mask
 from volume import get_volume
 
-
-import sys
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 sys.path.append('.')
 
 
@@ -51,26 +51,28 @@ def main():
         print("Output directory doesn't exist! Creating...")
         os.makedirs(args.output)
 
-    # model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
+    model = define_model(is_resnet=False, is_densenet=False, is_senet=True)
     # model = torch.nn.DataParallel(model).cuda()
-    # model.load_state_dict(torch.load('./pretrained_model/model_senet'))
+    # model.load_state_dict(torch.load('bin/build/model_senet'))
 
-    # state_dict = torch.load('.downloads/pretrained_model/model_senet')
-    model = torch.load('/home/sh/Github/FoodNutritionEstimation/research/volume/pretrained_model/non_para_model.torch')
-    # from collections import OrderedDict
-    # new_state_dict = OrderedDict()
-    # for k, v in state_dict.items():
-    #     name = k[7:]  # remove module.
-    #     new_state_dict[name] = v
-    # model.load_state_dict(state_dict)
+    state_dict = torch.load('bin/build/model_senet')
+    # model = torch.load('bin/build/non_para_model.torch')
+    # model = torch.nn.DataParallel(model, device_ids=[0]).cuda()
+    from collections import OrderedDict
+    new_state_dict = OrderedDict()
+    for k, v in state_dict.items():
+        name = k[7:]  # remove module.
+        new_state_dict[name] = v
+    model.load_state_dict(new_state_dict)
     # torch.save(model, 'non_para_model.torch')
 
-    # model.cpu()
+    model.cuda()
     model.eval()
     # print
     from utils.kernel_onnx import Config, OnnxKernel  # noqa: E402
     onnx = OnnxKernel(Config())
     onnx.from_torch(model, name='volinf')
+    print('onnx built')
     onnx.to_tensorflow()
     # test(args.img, model)
 

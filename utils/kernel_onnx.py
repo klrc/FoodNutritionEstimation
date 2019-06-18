@@ -52,7 +52,7 @@ class OnnxKernel():
     def from_torch(self, torch_model, dummy_input=None, name=None):
         if not dummy_input:
             # dummy_input = torch.randn(10, 3, 224, 224)
-            dummy_input = torch.randn(10, 3, 224, 224, device='cuda')
+            dummy_input = torch.randn(10, 3, 128, 128, device='cuda')
         if name:
             self._path = f'{self.config.onnx_cache_dir}/{name}'
         else:
