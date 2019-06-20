@@ -1,14 +1,12 @@
 import torch
 import torch.nn as nn
-from . import modules
+from . import modules, senet
 
 
-class model(nn.Module):
-    def __init__(self, Encoder, num_features, block_channel):
-
-        super(model, self).__init__()
-
-        self.E = Encoder
+class SIDE(nn.Module):
+    def __init__(self, encoder, num_features, block_channel):
+        super().__init__()
+        self.E = encoder
         self.D = modules.D(num_features)
         self.MFF = modules.MFF(block_channel)
         self.R = modules.R(block_channel)
@@ -21,3 +19,12 @@ class model(nn.Module):
         out = self.R(torch.cat((x_decoder, x_mff), 1))
 
         return out
+
+
+class SIDE_senet(SIDE):
+    def __init__(self):
+        original_model = senet.senet154(pretrained='imagenet')
+        encoder = modules.E_senet(original_model)
+
+        super().__init__(encoder, num_features=2048,
+                         block_channel=[256, 512, 1024, 2048])

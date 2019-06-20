@@ -64,7 +64,11 @@ def main():
         name = k[7:]  # remove module.
         new_state_dict[name] = v
     model.load_state_dict(new_state_dict)
-    # torch.save(model, 'non_para_model.torch')
+    # torch.save(        original_model = senet.senet154(pretrained='imagenet')
+        Encoder = modules.E_senet(original_model)
+        model = net.model(Encoder, num_features=2048,
+                          block_channel=[256, 512, 1024, 2048])
+model, 'non_para_model.torch')
 
     model.cuda()
     model.eval()
