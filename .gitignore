@@ -3,7 +3,7 @@
 # .junk
 .vscode
 
-db/
+storage
 
 __pycache__
 pretrained_model

@@ -28,7 +28,7 @@ class Config():
     """
 
     # basic defs.
-    root = 'bin/db'
+    root = 'bin'
     database_id = 'FoodMask60'
 
     # db dirs.
@@ -39,10 +39,10 @@ class Config():
     log_id = f'{database_id}.log'
     core_id = f'{database_id}.core'
 
-    log_path = f'log/{log_id}'
+    log_path = f'.log/{log_id}'
     core_path = f'{database_root}/{core_id}'
 
-    build_path = f'bin/build/{database_id}'
+    build_path = f'.build/{database_id}'
 
 
 class KernelEnv():
@@ -294,9 +294,9 @@ if __name__ == "__main__":
     # # 保存内核状态
     # k.save()
 
-    # 清空编译结果
-    k.clean_build()
+    # # 清空编译结果
+    # k.clean_build()
 
-    # 选择并编译
+    # # 选择并编译
     k.select(requirements=['raw', 'mask', 'yaml'])
-    k.build(augmentor=True)
+    # k.build(augmentor=True)

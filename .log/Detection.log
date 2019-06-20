@@ -1,0 +1,407 @@
+[2019-06-20 16:59:40]	build MaskRCNN in inference mode.:
+[2019-06-20 16:59:40]	load weights from coco:
+[2019-06-20 16:59:45]	
+Configurations:
+BACKBONE                       resnet101
+BACKBONE_STRIDES               [4, 8, 16, 32, 64]
+BBOX_STD_DEV                   [0.1 0.1 0.2 0.2]
+BUILD_DIR                      .build/MaskRCNN
+COCO_MODEL_PATH                .downloads/mask_rcnn_coco.h5
+COMPUTE_BACKBONE_SHAPE         None
+DETECTION_MAX_INSTANCES        100
+DETECTION_MIN_CONFIDENCE       0
+DETECTION_NMS_THRESHOLD        0.01
+DISPLAY_SELF                   True
+FEEDER_DIR                     .build/FoodMask60
+FPN_CLASSIF_FC_LAYERS_SIZE     1024
+GPU_COUNT                      1
+GRADIENT_CLIP_NORM             5.0
+IMAGES_PER_GPU                 1
+IMAGE_CHANNEL_COUNT            3
+IMAGE_MAX_DIM                  128
+IMAGE_MIN_DIM                  128
+IMAGE_MIN_SCALE                0
+IMAGE_RESIZE_MODE              square
+LEARNING_MOMENTUM              0.9
+LEARNING_RATE                  None
+LOAD_PATH                      coco
+LOG_PATH                       .log/Detection.log
+LOSS_WEIGHTS                   {'rpn_class_loss': 0.8, 'rpn_bbox_loss': 0.8, 'mrcnn_class_loss': 1.0, 'mrcnn_bbox_loss': 0.8, 'mrcnn_mask_loss': 0.8}
+MASK_POOL_SIZE                 14
+MASK_SHAPE                     [28, 28]
+MAX_GT_INSTANCES               100
+MEAN_PIXEL                     [123.7 116.8 103.9]
+MINI_MASK_SHAPE                (56, 56)
+NAME                           detection
+NUM_CLASSES                    31
+POOL_SIZE                      7
+POST_NMS_ROIS_INFERENCE        1000
+POST_NMS_ROIS_TRAINING         2000
+PRE_NMS_LIMIT                  6000
+ROI_POSITIVE_RATIO             0.33
+RPN_ANCHOR_RATIOS              [0.5, 1, 2]
+RPN_ANCHOR_SCALES              (8, 16, 32, 64, 128)
+RPN_ANCHOR_STRIDE              1
+RPN_BBOX_STD_DEV               [0.1 0.1 0.2 0.2]
+RPN_NMS_THRESHOLD              0.7
+RPN_TRAIN_ANCHORS_PER_IMAGE    256
+STEPS_PER_EPOCH                100
+TOP_DOWN_PYRAMID_SIZE          256
+TRAIN_BN                       False
+TRAIN_EPOCHS                   10
+TRAIN_LAYERS                   all
+TRAIN_ROIS_PER_IMAGE           32
+USE_MINI_MASK                  True
+USE_RPN_ROIS                   True
+VALIDATION_STEPS               5
+VERBOSE                        True
+WEIGHT_DECAY                   0.0001
+dataset_train                  <Detection.FoodMask60.FoodMask60 object at 0x7f109c290940>
+dataset_val                    <Detection.FoodMask60.FoodMask60 object at 0x7f109c290898>
+mode                           inference
+model                          <Detection.model_def.model.MaskRCNN object at 0x7f110cd49710>
+:
+[2019-06-20 17:08:00]	build MaskRCNN in inference mode:
+[2019-06-20 17:08:00]	load weights from coco:
+[2019-06-20 17:08:04]	
+Configurations:
+BACKBONE                       resnet101
+BACKBONE_STRIDES               [4, 8, 16, 32, 64]
+BBOX_STD_DEV                   [0.1 0.1 0.2 0.2]
+BUILD_DIR                      .build/MaskRCNN
+CHECKPOINT_INTERVAL            2
+COCO_MODEL_PATH                .downloads/mask_rcnn_coco.h5
+COMPUTE_BACKBONE_SHAPE         None
+DETECTION_MAX_INSTANCES        100
+DETECTION_MIN_CONFIDENCE       0
+DETECTION_NMS_THRESHOLD        0.01
+DISPLAY_SELF                   True
+FEEDER_DIR                     .build/FoodMask60
+FPN_CLASSIF_FC_LAYERS_SIZE     1024
+GPU_COUNT                      1
+GRADIENT_CLIP_NORM             5.0
+IMAGES_PER_GPU                 1
+IMAGE_CHANNEL_COUNT            3
+IMAGE_MAX_DIM                  128
+IMAGE_MIN_DIM                  128
+IMAGE_MIN_SCALE                0
+IMAGE_RESIZE_MODE              square
+LEARNING_MOMENTUM              0.9
+LEARNING_RATE                  None
+LOAD_PATH                      coco
+LOG_PATH                       .log/Detection.log
+LOSS_WEIGHTS                   {'rpn_class_loss': 0.8, 'rpn_bbox_loss': 0.8, 'mrcnn_class_loss': 1.0, 'mrcnn_bbox_loss': 0.8, 'mrcnn_mask_loss': 0.8}
+MASK_POOL_SIZE                 14
+MASK_SHAPE                     [28, 28]
+MAX_GT_INSTANCES               100
+MEAN_PIXEL                     [123.7 116.8 103.9]
+MINI_MASK_SHAPE                (56, 56)
+NAME                           detection
+NUM_CLASSES                    31
+POOL_SIZE                      7
+POST_NMS_ROIS_INFERENCE        1000
+POST_NMS_ROIS_TRAINING         2000
+PRE_NMS_LIMIT                  6000
+ROI_POSITIVE_RATIO             0.33
+RPN_ANCHOR_RATIOS              [0.5, 1, 2]
+RPN_ANCHOR_SCALES              (8, 16, 32, 64, 128)
+RPN_ANCHOR_STRIDE              1
+RPN_BBOX_STD_DEV               [0.1 0.1 0.2 0.2]
+RPN_NMS_THRESHOLD              0.7
+RPN_TRAIN_ANCHORS_PER_IMAGE    256
+STEPS_PER_EPOCH                100
+TOP_DOWN_PYRAMID_SIZE          256
+TRAIN_BN                       False
+TRAIN_EPOCHS                   10
+TRAIN_LAYERS                   all
+TRAIN_ROIS_PER_IMAGE           32
+USE_MINI_MASK                  True
+USE_RPN_ROIS                   True
+VALIDATION_STEPS               5
+VERBOSE                        True
+WEIGHT_DECAY                   0.0001
+dataset_train                  <Detection.FoodMask60.FoodMask60 object at 0x7f03a4691a20>
+dataset_val                    <Detection.FoodMask60.FoodMask60 object at 0x7f03a4691978>
+mode                           inference
+model                          <Detection.model_def.model.MaskRCNN object at 0x7f042fc99828>
+:
+[2019-06-20 17:08:04]	training started:
+			learning_rate = None
+[2019-06-20 17:10:32]	build MaskRCNN in inference mode:
+[2019-06-20 17:10:32]	load weights from coco:
+[2019-06-20 17:10:37]	
+Configurations:
+BACKBONE                       resnet101
+BACKBONE_STRIDES               [4, 8, 16, 32, 64]
+BBOX_STD_DEV                   [0.1 0.1 0.2 0.2]
+BUILD_DIR                      .build/MaskRCNN
+CHECKPOINT_INTERVAL            2
+COCO_MODEL_PATH                .downloads/mask_rcnn_coco.h5
+COMPUTE_BACKBONE_SHAPE         None
+DETECTION_MAX_INSTANCES        100
+DETECTION_MIN_CONFIDENCE       0
+DETECTION_NMS_THRESHOLD        0.01
+DISPLAY_SELF                   True
+FEEDER_DIR                     .build/FoodMask60
+FPN_CLASSIF_FC_LAYERS_SIZE     1024
+GPU_COUNT                      1
+GRADIENT_CLIP_NORM             5.0
+IMAGES_PER_GPU                 1
+IMAGE_CHANNEL_COUNT            3
+IMAGE_MAX_DIM                  128
+IMAGE_MIN_DIM                  128
+IMAGE_MIN_SCALE                0
+IMAGE_RESIZE_MODE              square
+LEARNING_MOMENTUM              0.9
+LEARNING_RATE                  None
+LOAD_PATH                      coco
+LOG_PATH                       .log/Detection.log
+LOSS_WEIGHTS                   {'rpn_class_loss': 0.8, 'rpn_bbox_loss': 0.8, 'mrcnn_class_loss': 1.0, 'mrcnn_bbox_loss': 0.8, 'mrcnn_mask_loss': 0.8}
+MASK_POOL_SIZE                 14
+MASK_SHAPE                     [28, 28]
+MAX_GT_INSTANCES               100
+MEAN_PIXEL                     [123.7 116.8 103.9]
+MINI_MASK_SHAPE                (56, 56)
+NAME                           detection
+NUM_CLASSES                    31
+POOL_SIZE                      7
+POST_NMS_ROIS_INFERENCE        1000
+POST_NMS_ROIS_TRAINING         2000
+PRE_NMS_LIMIT                  6000
+ROI_POSITIVE_RATIO             0.33
+RPN_ANCHOR_RATIOS              [0.5, 1, 2]
+RPN_ANCHOR_SCALES              (8, 16, 32, 64, 128)
+RPN_ANCHOR_STRIDE              1
+RPN_BBOX_STD_DEV               [0.1 0.1 0.2 0.2]
+RPN_NMS_THRESHOLD              0.7
+RPN_TRAIN_ANCHORS_PER_IMAGE    256
+STEPS_PER_EPOCH                100
+TOP_DOWN_PYRAMID_SIZE          256
+TRAIN_BN                       False
+TRAIN_EPOCHS                   10
+TRAIN_LAYERS                   all
+TRAIN_ROIS_PER_IMAGE           32
+USE_MINI_MASK                  True
+USE_RPN_ROIS                   True
+VALIDATION_STEPS               5
+VERBOSE                        True
+WEIGHT_DECAY                   0.0001
+dataset_train                  <Detection.FoodMask60.FoodMask60 object at 0x7f0e58699390>
+dataset_val                    <Detection.FoodMask60.FoodMask60 object at 0x7f0e4fb4d710>
+mode                           inference
+model                          <Detection.model_def.model.MaskRCNN object at 0x7f0e4c170f98>
+:
+[2019-06-20 17:10:40]	build MaskRCNN in training mode:
+[2019-06-20 17:10:40]	load weights from coco:
+[2019-06-20 17:10:44]	training started:
+			learning_rate = None
+[2019-06-20 17:13:14]	build MaskRCNN in inference mode:
+[2019-06-20 17:13:14]	load weights from coco:
+[2019-06-20 17:13:19]	
+Configurations:
+BACKBONE                       resnet101
+BACKBONE_STRIDES               [4, 8, 16, 32, 64]
+BBOX_STD_DEV                   [0.1 0.1 0.2 0.2]
+BUILD_DIR                      .build/MaskRCNN
+CHECKPOINT_INTERVAL            2
+COCO_MODEL_PATH                .downloads/mask_rcnn_coco.h5
+COMPUTE_BACKBONE_SHAPE         None
+DETECTION_MAX_INSTANCES        100
+DETECTION_MIN_CONFIDENCE       0
+DETECTION_NMS_THRESHOLD        0.01
+DISPLAY_SELF                   True
+FEEDER_DIR                     .build/FoodMask60
+FPN_CLASSIF_FC_LAYERS_SIZE     1024
+GPU_COUNT                      1
+GRADIENT_CLIP_NORM             5.0
+IMAGES_PER_GPU                 1
+IMAGE_CHANNEL_COUNT            3
+IMAGE_MAX_DIM                  128
+IMAGE_MIN_DIM                  128
+IMAGE_MIN_SCALE                0
+IMAGE_RESIZE_MODE              square
+LEARNING_MOMENTUM              0.9
+LEARNING_RATE                  0.001
+LOAD_PATH                      coco
+LOG_PATH                       .log/Detection.log
+LOSS_WEIGHTS                   {'rpn_class_loss': 0.8, 'rpn_bbox_loss': 0.8, 'mrcnn_class_loss': 1.0, 'mrcnn_bbox_loss': 0.8, 'mrcnn_mask_loss': 0.8}
+MASK_POOL_SIZE                 14
+MASK_SHAPE                     [28, 28]
+MAX_GT_INSTANCES               100
+MEAN_PIXEL                     [123.7 116.8 103.9]
+MINI_MASK_SHAPE                (56, 56)
+NAME                           detection
+NUM_CLASSES                    31
+POOL_SIZE                      7
+POST_NMS_ROIS_INFERENCE        1000
+POST_NMS_ROIS_TRAINING         2000
+PRE_NMS_LIMIT                  6000
+ROI_POSITIVE_RATIO             0.33
+RPN_ANCHOR_RATIOS              [0.5, 1, 2]
+RPN_ANCHOR_SCALES              (8, 16, 32, 64, 128)
+RPN_ANCHOR_STRIDE              1
+RPN_BBOX_STD_DEV               [0.1 0.1 0.2 0.2]
+RPN_NMS_THRESHOLD              0.7
+RPN_TRAIN_ANCHORS_PER_IMAGE    256
+STEPS_PER_EPOCH                100
+TOP_DOWN_PYRAMID_SIZE          256
+TRAIN_BN                       False
+TRAIN_EPOCHS                   10
+TRAIN_LAYERS                   all
+TRAIN_ROIS_PER_IMAGE           32
+USE_MINI_MASK                  True
+USE_RPN_ROIS                   True
+VALIDATION_STEPS               5
+VERBOSE                        True
+WEIGHT_DECAY                   0.0001
+dataset_train                  <Detection.FoodMask60.FoodMask60 object at 0x7f4cca84e390>
+dataset_val                    <Detection.FoodMask60.FoodMask60 object at 0x7f4cc1d08710>
+mode                           inference
+model                          <Detection.model_def.model.MaskRCNN object at 0x7f4cc032ff98>
+:
+[2019-06-20 17:13:22]	build MaskRCNN in training mode:
+[2019-06-20 17:13:22]	load weights from coco:
+[2019-06-20 17:13:25]	training started:
+			learning_rate = 0.001
+[2019-06-20 17:15:23]	build MaskRCNN in inference mode:
+[2019-06-20 17:15:23]	load weights from coco:
+[2019-06-20 17:19:37]	build MaskRCNN in inference mode:
+[2019-06-20 17:19:37]	load weights from coco:
+[2019-06-20 17:19:45]	
+Configurations:
+BACKBONE                       resnet101
+BACKBONE_STRIDES               [4, 8, 16, 32, 64]
+BBOX_STD_DEV                   [0.1 0.1 0.2 0.2]
+BUILD_DIR                      .build/MaskRCNN
+CHECKPOINT_INTERVAL            2
+COCO_MODEL_PATH                .downloads/mask_rcnn_coco.h5
+COMPUTE_BACKBONE_SHAPE         None
+DETECTION_MAX_INSTANCES        100
+DETECTION_MIN_CONFIDENCE       0
+DETECTION_NMS_THRESHOLD        0.01
+DISPLAY_SELF                   True
+FEEDER_DIR                     .build/FoodMask60
+FPN_CLASSIF_FC_LAYERS_SIZE     1024
+GPU_COUNT                      1
+GRADIENT_CLIP_NORM             5.0
+IMAGES_PER_GPU                 1
+IMAGE_CHANNEL_COUNT            3
+IMAGE_MAX_DIM                  128
+IMAGE_MIN_DIM                  128
+IMAGE_MIN_SCALE                0
+IMAGE_RESIZE_MODE              square
+LEARNING_MOMENTUM              0.9
+LEARNING_RATE                  0.001
+LOAD_PATH                      coco
+LOG_PATH                       .log/Detection.log
+LOSS_WEIGHTS                   {'rpn_class_loss': 0.8, 'rpn_bbox_loss': 0.8, 'mrcnn_class_loss': 1.0, 'mrcnn_bbox_loss': 0.8, 'mrcnn_mask_loss': 0.8}
+MASK_POOL_SIZE                 14
+MASK_SHAPE                     [28, 28]
+MAX_GT_INSTANCES               100
+MEAN_PIXEL                     [123.7 116.8 103.9]
+MINI_MASK_SHAPE                (56, 56)
+NAME                           detection
+NUM_CLASSES                    31
+POOL_SIZE                      7
+POST_NMS_ROIS_INFERENCE        1000
+POST_NMS_ROIS_TRAINING         2000
+PRE_NMS_LIMIT                  6000
+ROI_POSITIVE_RATIO             0.33
+RPN_ANCHOR_RATIOS              [0.5, 1, 2]
+RPN_ANCHOR_SCALES              (8, 16, 32, 64, 128)
+RPN_ANCHOR_STRIDE              1
+RPN_BBOX_STD_DEV               [0.1 0.1 0.2 0.2]
+RPN_NMS_THRESHOLD              0.7
+RPN_TRAIN_ANCHORS_PER_IMAGE    256
+STEPS_PER_EPOCH                100
+TOP_DOWN_PYRAMID_SIZE          256
+TRAIN_BN                       False
+TRAIN_EPOCHS                   20
+TRAIN_LAYERS                   all
+TRAIN_ROIS_PER_IMAGE           32
+USE_MINI_MASK                  True
+USE_RPN_ROIS                   True
+VALIDATION_STEPS               5
+VERBOSE                        True
+WEIGHT_DECAY                   0.0001
+dataset_train                  <Detection.FoodMask60.FoodMask60 object at 0x7f638ef9c550>
+dataset_val                    <Detection.FoodMask60.FoodMask60 object at 0x7f638ef9c5f8>
+mode                           inference
+model                          <Detection.model_def.model.MaskRCNN object at 0x7f638c5bfe10>
+:
+[2019-06-20 17:19:49]	build MaskRCNN in training mode:
+[2019-06-20 17:19:49]	load weights from coco:
+[2019-06-20 17:19:52]	training started:
+			learning_rate = 0.001
+[2019-06-20 17:20:41]	build MaskRCNN in inference mode:
+[2019-06-20 17:20:41]	load weights from coco:
+[2019-06-20 17:22:12]	build MaskRCNN in inference mode:
+[2019-06-20 17:22:12]	load weights from coco:
+[2019-06-20 17:22:19]	
+Configurations:
+BACKBONE                       resnet101
+BACKBONE_STRIDES               [4, 8, 16, 32, 64]
+BBOX_STD_DEV                   [0.1 0.1 0.2 0.2]
+BUILD_DIR                      .build/MaskRCNN
+CHECKPOINT_INTERVAL            2
+COCO_MODEL_PATH                .downloads/mask_rcnn_coco.h5
+COMPUTE_BACKBONE_SHAPE         None
+DETECTION_MAX_INSTANCES        100
+DETECTION_MIN_CONFIDENCE       0
+DETECTION_NMS_THRESHOLD        0.01
+DISPLAY_SELF                   True
+FEEDER_DIR                     .build/FoodMask60
+FPN_CLASSIF_FC_LAYERS_SIZE     1024
+GPU_COUNT                      1
+GRADIENT_CLIP_NORM             5.0
+IMAGES_PER_GPU                 1
+IMAGE_CHANNEL_COUNT            3
+IMAGE_MAX_DIM                  128
+IMAGE_MIN_DIM                  128
+IMAGE_MIN_SCALE                0
+IMAGE_RESIZE_MODE              square
+LEARNING_MOMENTUM              0.9
+LEARNING_RATE                  0.001
+LOAD_PATH                      coco
+LOG_PATH                       .log/Detection.log
+LOSS_WEIGHTS                   {'rpn_class_loss': 0.8, 'rpn_bbox_loss': 0.8, 'mrcnn_class_loss': 1.0, 'mrcnn_bbox_loss': 0.8, 'mrcnn_mask_loss': 0.8}
+MASK_POOL_SIZE                 14
+MASK_SHAPE                     [28, 28]
+MAX_GT_INSTANCES               100
+MEAN_PIXEL                     [123.7 116.8 103.9]
+MINI_MASK_SHAPE                (56, 56)
+NAME                           detection
+NUM_CLASSES                    31
+POOL_SIZE                      7
+POST_NMS_ROIS_INFERENCE        1000
+POST_NMS_ROIS_TRAINING         2000
+PRE_NMS_LIMIT                  6000
+ROI_POSITIVE_RATIO             0.33
+RPN_ANCHOR_RATIOS              [0.5, 1, 2]
+RPN_ANCHOR_SCALES              (8, 16, 32, 64, 128)
+RPN_ANCHOR_STRIDE              1
+RPN_BBOX_STD_DEV               [0.1 0.1 0.2 0.2]
+RPN_NMS_THRESHOLD              0.7
+RPN_TRAIN_ANCHORS_PER_IMAGE    256
+STEPS_PER_EPOCH                100
+TOP_DOWN_PYRAMID_SIZE          256
+TRAIN_BN                       False
+TRAIN_EPOCHS                   20
+TRAIN_LAYERS                   all
+TRAIN_ROIS_PER_IMAGE           32
+USE_MINI_MASK                  True
+USE_RPN_ROIS                   True
+VALIDATION_STEPS               5
+VERBOSE                        True
+WEIGHT_DECAY                   0.0001
+dataset_train                  <Detection.FoodMask60.FoodMask60 object at 0x7fc2b8ca4550>
+dataset_val                    <Detection.FoodMask60.FoodMask60 object at 0x7fc2b8ca45f8>
+mode                           inference
+model                          <Detection.model_def.model.MaskRCNN object at 0x7fc2b82cbe10>
+:
+[2019-06-20 17:22:23]	build MaskRCNN in training mode:
+[2019-06-20 17:22:23]	load weights from coco:
+[2019-06-20 17:22:26]	training started:
+			learning_rate = 0.001
+[2019-06-20 17:30:24]	build MaskRCNN in inference mode:
+[2019-06-20 17:30:24]	load weights from coco:
