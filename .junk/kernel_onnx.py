@@ -57,8 +57,7 @@ class OnnxKernel():
             self._path = f'{self.config.onnx_cache_dir}/{name}'
         else:
             self._path = f'{self.config.onnx_cache_dir}/{torch_model._get_name()}'
-        torch.onnx.export(torch_model, dummy_input,
-                          f'{self._path}.onnx', verbose=True)
+        torch.onnx.export(torch_model, dummy_input, f'{self._path}.onnx', verbose=True)
         self.onnx_model = onnx.load(f'{self._path}.onnx')
         return self.onnx_model
 

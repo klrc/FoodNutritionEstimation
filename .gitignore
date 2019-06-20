@@ -1,9 +1,9 @@
-.downloads/
-.vscode/
+.build
+.downloads
+# .junk
+.vscode
 
-build/
 db/
-log/
 
 __pycache__
 pretrained_model
