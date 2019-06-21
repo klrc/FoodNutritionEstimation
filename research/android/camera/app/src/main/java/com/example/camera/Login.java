@@ -1,6 +1,8 @@
 package com.example.camera;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,9 +18,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Login extends AppCompatActivity {
     private String TAG = "Login.Class";
-    public int pwdresetFlag=0;
+    public int pwdresetFlag = 0;
     private EditText mAccount;//账号
     private EditText mPwd;//密码
     private Button mRegisterButton;//注册
@@ -26,33 +31,26 @@ public class Login extends AppCompatActivity {
     private Button mCancelButton;//注销
     private CheckBox mRememberCheck;//记住密码
     private SharedPreferences login_sp;
-    private String userNameValue,passwordValue;
+    private String userNameValue, passwordValue;
     private View loginView;//登陆界面容器
     private View longinSuccessView;
     private TextView loginSuccessShow;
     private TextView mChangepwdText;
     private UserDataManager mUserDataManager;
     //下拉框
-
-//    private static final String[] user_list={"syh","sh","lkk"};
-//    private TextView user_view;
-//    private Spinner user_choose;
-//    private ArrayAdapter<String> user_adapter;
-    private static final String[] user_list={"syh","sh","lkk"};
-    private TextView view ;
+//    private List<String> ul = mUserDataManager.showUserName("USER_NAME");
+//    private static final String[] user_list ={"syh", "sh", "lkk","cm","zxw"};//ul.toArray(new String[ul.size()]);//{"syh", "sh", "lkk"};
+    private TextView view;
     private Spinner user_spinner;
-    private ArrayAdapter<String> user_adapter;
+
+//    private ArrayAdapter<String> user_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        //找到对应控件
-        mAccount = (EditText) findViewById(R.id.login_edit_account);
-        mPwd = (EditText) findViewById(R.id.login_edit_pwd);
-        mRememberCheck = (CheckBox) findViewById(R.id.login_remember);
-        mChangepwdText = (TextView) findViewById(R.id.login_text_change_pwd);
+        ArrayAdapter<String> user_adapter;
         mLoginButton = (Button) findViewById(R.id.login_btn_login);
         mRegisterButton = (Button) findViewById(R.id.login_btn_register);
         //  mCancelButton=(Button)findViewById(R.id.login_btn_cancel);  //登录界面注销
@@ -75,25 +73,23 @@ public class Login extends AppCompatActivity {
 
         mRegisterButton.setOnClickListener(mListener);
         mLoginButton.setOnClickListener(mListener);
-        mChangepwdText.setOnClickListener(mListener);
+//        mChangepwdText.setOnClickListener(mListener);
 
         if (mUserDataManager == null) {
             mUserDataManager = new UserDataManager(this);
             mUserDataManager.openDataBase();
         }
         //下拉框
-//        user_view = (TextView)findViewById(R.id.user_text);
-//        user_choose = (Spinner) findViewById(R.id.user_choose);
-
-//        user_adapter = new ArrayAdapter<String>(this,R.layout.login_layout,user_list);
-//        user_adapter.setDropDownViewResource(R.layout.login_layout);
-//        user_choose.setAdapter(user_adapter);
-//        user_choose.setOnItemSelectedListener(new SpinnerSelectedListener());
-//        user_choose.setVisibility(View.VISIBLE);
         view = (TextView) findViewById(R.id.spinnerText);
         user_spinner = (Spinner) findViewById(R.id.user_choose);
         //将可选内容与ArrayAdapter连接起来
-        user_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,user_list);
+        List<String> ul = mUserDataManager.showUserName("USER_NAME");
+        String[] user_list2 = new String[ul.size()];
+        ul.toArray(user_list2);
+        final String[] user_list ={"syh", "sh", "lkk","cm","zxw"};
+        Log.i(TAG,"111");
+        //Log.i(TAG,);
+        user_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ul);
 
         //设置下拉列表的风格
         user_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -109,12 +105,17 @@ public class Login extends AppCompatActivity {
 
 
         Log.i(TAG, "Login_onCreate()");
-}
+    }
+
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
+
+        //Log.i("USERSHOW",ul);
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
                                    long arg3) {
-            view.setText("你的用户是："+user_list[arg2]);
+            //Log.i(TAG,user_list2[1]);
+            view.setText("你的用户是：");
+            //Log.i(TAG,"user_list2");
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
@@ -122,7 +123,7 @@ public class Login extends AppCompatActivity {
     }
 
 
-    OnClickListener mListener=new OnClickListener() {
+    OnClickListener mListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -135,14 +136,16 @@ public class Login extends AppCompatActivity {
                 case R.id.login_btn_login:
                     login();
                     break;
+                case R.id.user_choose:
+
                 //case R.id.login_btn_cancel:
                 //   cancel();
                 //    break;
-                case R.id.login_text_change_pwd:
-                    Intent intent_Login_to_reset = new Intent(Login.this, Resetpwd.class);
-                    startActivity(intent_Login_to_reset);
-                    finish();
-                    break;
+//                case R.id.login_text_change_pwd:
+//                    Intent intent_Login_to_reset = new Intent(Login.this, Resetpwd.class);
+//                    startActivity(intent_Login_to_reset);
+//                    finish();
+//                    break;
             }
             Log.i(TAG, "Login_OnClickListener()");
         }
@@ -151,10 +154,10 @@ public class Login extends AppCompatActivity {
     public boolean isUserNameAndPwdValid() {
 
         if (mAccount.getText().toString().trim().equals("")) {
-            Toast.makeText(this, "用户不存在，请重新输入",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "用户不存在，请重新输入", Toast.LENGTH_SHORT).show();
             return false;
         } else if (mPwd.getText().toString().trim().equals("")) {
-            Toast.makeText(this, "请输入密码",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "请输入密码", Toast.LENGTH_SHORT).show();
             return false;
         }
         Log.i(TAG, "Login_isUserNameAndPwdValid()");
@@ -163,12 +166,12 @@ public class Login extends AppCompatActivity {
 
     public void login() {
 
-        if (isUserNameAndPwdValid()) {
+        if (true){    //isUserNameAndPwdValid()) {
             String userName = mAccount.getText().toString().trim();
             String userPwd = mPwd.getText().toString().trim();
-            SharedPreferences.Editor editor = login_sp.edit();////
+            SharedPreferences.Editor editor = login_sp.edit();
 
-            int result=mUserDataManager.findUserByNameAndPwd(userName, userPwd);
+            int result = mUserDataManager.findUserByNameAndPwd(userName, userPwd);
             if (result == 1) {
                 editor.putString("USER_NAME", userName);
                 editor.putString("PASSWORD", userPwd);
@@ -181,7 +184,7 @@ public class Login extends AppCompatActivity {
                 editor.apply();
 
                 Intent intent = new Intent(Login.this, User.class);
-                intent.putExtra("USER_NAME",userName);
+                intent.putExtra("USER_NAME", userName);
                 intent.putExtra("PASSWORD", userPwd);
                 startActivity(intent);
                 finish();
