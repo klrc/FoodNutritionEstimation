@@ -34,7 +34,7 @@ set_session(tf.Session(config=config))
 
 
 # %%
-from bin.Detection.kernel import Kernel  # noqa: E402
+from bin.detection.kernel import Kernel  # noqa: E402
 Kernel.TRAIN_EPOCHS = 20
 Kernel.CHECKPOINT_INTERVAL = 2
 c = Kernel()
