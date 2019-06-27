@@ -4,7 +4,6 @@ from urllib import error
 from bs4 import BeautifulSoup
 import os
 
-num = 0
 List = []
 
 
@@ -52,13 +51,14 @@ def recommend(url):
         return Re
 
 
-def dowmloadPicture(html, keyword, _dir):
-    global num
-    # t =0
+def dowmloadPicture(html, keyword, _dir, stored_imgs, max_imgs):
     pic_url = re.findall('"objURL":"(.*?)",', html, re.S)  # 先利用正则表达式找到图片url
-    print('找到关键词:' + keyword + '的图片，即将开始下载图片...')
+    print(f'Downloading page from keyword: {keyword}')
     for each in pic_url:
-        print('正在下载第' + str(num + 1) + '张图片，图片地址:' + str(each))
+        stored_imgs += 1
+        if max_imgs < stored_imgs:
+            break
+        print(f'Downloading {stored_imgs} of {max_imgs}: {each}')
         try:
             if each is not None:
                 pic = requests.get(each, timeout=7)
@@ -68,20 +68,21 @@ def dowmloadPicture(html, keyword, _dir):
             print('错误，当前图片无法下载')
             continue
         else:
-            string = f'{_dir}/{keyword}_{num}.jpg'
+            string = f'{_dir}/{keyword}_{stored_imgs}.jpg'
             fp = open(string, 'wb')
             fp.write(pic.content)
             fp.close()
-            num += 1
+    return stored_imgs
 
 
-def launch_single_word(word, path, num_pages):
+def launch_single_word(word, path, num_pages, num_imgs):
     base = 'http://image.baidu.com/search/flip?tn=baiduimage&ie=utf-8&word=' + word
     tot = Find(base)
     # _rec = recommend(base)  # 记录相关推荐
     print('经过检测%s类图片共有%d张' % (word, tot))
     if not os.path.exists(path):
         os.mkdir(path)
+    stored_imgs = 0
     for i in range(num_pages):
         try:
             url = f'{base}&pn={i}'
@@ -90,20 +91,26 @@ def launch_single_word(word, path, num_pages):
         except error.HTTPError as e:
             print(e)
         else:
-            dowmloadPicture(result.text, word, path)
+            stored_imgs += dowmloadPicture(result.text,
+                                           word, path, stored_imgs, num_imgs)
+            if stored_imgs >= num_imgs:
+                break
 
 
 class Config():
     save_path = '.downloads/unlabeled_baidu_food_imgs'
-    words = ['土豆炖牛肉', '血魔', 'NEC']
-    num_pages = 1
+    words = ['扁豆炒肉丝', '毛豆炒丝瓜', '毛豆炒肉丝', '清炒河虾', '清蒸鲈鱼', '炒豆角', '炖土鸡', '烤红薯', '烧麦', '猪肉白菜水饺', '白灼河虾', '红烧土豆炖排骨', '红烧大排', '红烧带鱼', '红烧排骨', '红烧鲫鱼', '红烧鸡块', '红烧鸡腿', '红烧鸭块', '绿豆杂粮饭', '菜肉馄饨', '葱油梭子蟹', '面包', '白面条', '水煮玉米', '炒年糕', '蒸南瓜', '炒南瓜', '糖醋藕丝',
+             '山药木耳肉片', '肉末炒粉丝', '荷包蛋', '荠菜豆腐羹', '家常豆腐', '油焖茭白', '小排汤', '西红柿炒鸡蛋', '红烧猪蹄', '红烧带鱼', '清蒸小黄鱼', '咸菜小黄鱼汤', '生三文鱼', '香煎三文鱼', '葱油花蛤', '蒸芋艿', '葱油芋艿', '水煮荸荠', '炒蚕豆', '水煮豌豆', '豌豆玉米虾仁']
+    num_pages = 5
+    target_num_imgs = 60
 
 
 def launch(config):
     path = config.save_path
     num_pages = config.num_pages
+    num_imgs = config.target_num_imgs
     for word in config.words:
-        launch_single_word(word, path, num_pages)
+        launch_single_word(word, path, num_pages, num_imgs)
 
 
 if __name__ == '__main__':  # 主函数入口
