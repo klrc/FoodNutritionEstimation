@@ -22,7 +22,7 @@ public class Splash extends AppCompatActivity {
             public void run() {
                 try {
                     sleep(500);
-                    Intent it = new Intent(getApplicationContext(), LoginList.class);
+                    Intent it = new Intent(getApplicationContext(), Login.class);
                     startActivity(it);
                     Log.i(TAG,"splash over");
                     finish();

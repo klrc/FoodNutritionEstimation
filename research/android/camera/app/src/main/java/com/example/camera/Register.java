@@ -7,8 +7,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 public class Register extends AppCompatActivity {
@@ -24,6 +27,11 @@ public class Register extends AppCompatActivity {
     private Button mSureButton;
     private Button mCancelButton;
     private UserDataManager mUserDataManager;
+    //下拉框
+    private Spinner sex_spinner;
+    public String choosed_sex;
+    private static final String[] sex_list = {"男","女"};
+    private ArrayAdapter<String>sex_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +54,29 @@ public class Register extends AppCompatActivity {
             mUserDataManager = new UserDataManager(this);
             mUserDataManager.openDataBase();
         }
+        //下拉框
+        sex_spinner = (Spinner)findViewById(R.id.sex_choose);
+        sex_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,sex_list);
+        sex_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sex_spinner.setOnItemSelectedListener(new SpinnerSexSelectedListener());
 
+        sex_spinner.setAdapter(sex_adapter);
+        //sex_spinner.setOnItemClickListener(new SpinnerSexSelectedListener());
+        sex_spinner.setVisibility(View.VISIBLE);
+        Log.i(TAG,"Register_onCreate()");
     }
+    class SpinnerSexSelectedListener implements AdapterView.OnItemSelectedListener {
+        public void onItemSelected(AdapterView<?>arg0,View arg1,int arg2,long arg3){
+            choosed_sex = sex_list[arg2];
 
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    }
     View.OnClickListener m_register_listener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -62,7 +90,7 @@ public class Register extends AppCompatActivity {
                     double userHeight = Double.parseDouble(mHeight.getText().toString().trim());
                     String userBirth = mBirth.getText().toString().trim();
                     String sex =mSex.getText().toString().trim();
-                    double BMI = userWeight/userHeight/userHeight*10000;
+                    double BMI = userWeight/userHeight/userHeight;
 
                     //float w = Float.parseFloat(userWeight);
                     //float h = Float.parseFloat(userHeight);
@@ -185,10 +213,11 @@ public class Register extends AppCompatActivity {
         }else if(mHeight.getText().toString().trim().equals("")){
             Toast.makeText(this,"请输入身高！",Toast.LENGTH_SHORT).show();
             return false;
-        }else if(mSex.getText().toString().trim().equals("")){
-            Toast.makeText(this,"请输入性别！",Toast.LENGTH_SHORT).show();
-            return false;
-        }else if(mBirth.getText().toString().trim().equals("")){
+        }
+// else if(mSex.getText().toString().trim().equals("")){
+//            Toast.makeText(this,"请输入性别！",Toast.LENGTH_SHORT).show();
+//            return false;}
+         else if(mBirth.getText().toString().trim().equals("")){
             Toast.makeText(this,"请输入生日！",Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -202,8 +231,8 @@ public class Register extends AppCompatActivity {
             double userWeight = Double.parseDouble(mWeight.getText().toString().trim());
             double userHeight = Double.parseDouble(mHeight.getText().toString().trim());
             String userBirth = mBirth.getText().toString().trim();
-            String userSex = mSex.getText().toString().trim();
-            double BMI = userWeight/userHeight/userHeight*10000;
+            String userSex = choosed_sex;
+            double BMI = userWeight/userHeight/userHeight;
             int age = Integer.parseInt(userBirth);
             double IBW = calIBW(userHeight,userSex);
             double kcal = calkcal(IBW);

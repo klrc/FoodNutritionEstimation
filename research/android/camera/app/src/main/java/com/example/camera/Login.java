@@ -37,14 +37,11 @@ public class Login extends AppCompatActivity {
     private TextView loginSuccessShow;
     private TextView mChangepwdText;
     private UserDataManager mUserDataManager;
+
     //下拉框
-//    private List<String> ul = mUserDataManager.showUserName("USER_NAME");
-//    private static final String[] user_list ={"syh", "sh", "lkk","cm","zxw"};//ul.toArray(new String[ul.size()]);//{"syh", "sh", "lkk"};
     private TextView view;
     private Spinner user_spinner;
-
-//    private ArrayAdapter<String> user_adapter;
-
+    public String choosed_user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -79,16 +76,20 @@ public class Login extends AppCompatActivity {
             mUserDataManager = new UserDataManager(this);
             mUserDataManager.openDataBase();
         }
+
+
         //下拉框
         view = (TextView) findViewById(R.id.spinnerText);
         user_spinner = (Spinner) findViewById(R.id.user_choose);
-        //将可选内容与ArrayAdapter连接起来
+        /////////////////////////////////////////////
         List<String> ul = mUserDataManager.showUserName("USER_NAME");
         String[] user_list2 = new String[ul.size()];
         ul.toArray(user_list2);
-        final String[] user_list ={"syh", "sh", "lkk","cm","zxw"};
+        //////////////////////////////////////////////////
         Log.i(TAG,"111");
-        //Log.i(TAG,);
+//        Log.i(TAG,user_list2[2]);
+        //将可选内容与ArrayAdapter连接起来
+
         user_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ul);
 
         //设置下拉列表的风格
@@ -107,14 +108,19 @@ public class Login extends AppCompatActivity {
         Log.i(TAG, "Login_onCreate()");
     }
 
+
+    //触发点击事件
     class SpinnerSelectedListener implements AdapterView.OnItemSelectedListener {
 
-
-        //Log.i("USERSHOW",ul);
         public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
                                    long arg3) {
-            //Log.i(TAG,user_list2[1]);
-            view.setText("你的用户是：");
+            List<String> ul = mUserDataManager.showUserName("USER_NAME");
+            String[] user_list2 = new String[ul.size()];
+            ul.toArray(user_list2);
+            choosed_user = user_list2[arg2];
+            Log.i(TAG,user_list2[arg2]);
+            //Log.i(TAG,user_list2[1]);ul[arg2]
+            //view.setText("你的用户是：");
             //Log.i(TAG,"user_list2");
         }
 
@@ -135,6 +141,8 @@ public class Login extends AppCompatActivity {
                     break;
                 case R.id.login_btn_login:
                     login();
+                    Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
+                    startActivity(intent_Login_to_MainInterface);
                     break;
                 case R.id.user_choose:
 
@@ -165,35 +173,51 @@ public class Login extends AppCompatActivity {
     }
 
     public void login() {
+        Log.i(TAG,choosed_user);
+        List<String> userinfo = mUserDataManager.findUserInfo(choosed_user);
+        String[] userinfo2 = new String[userinfo.size()];
+        userinfo.toArray(userinfo2);
+        //String userweight = mUserDataManager.findUserInfo2(choosed_user);
 
-        if (true){    //isUserNameAndPwdValid()) {
-            String userName = mAccount.getText().toString().trim();
-            String userPwd = mPwd.getText().toString().trim();
-            SharedPreferences.Editor editor = login_sp.edit();
+        //Log.i(TAG,userweight);
+        Log.i(TAG,userinfo2[0]);
+        Log.i(TAG,userinfo2[1]);
+        Log.i(TAG,userinfo2[2]);
+        Log.i(TAG,userinfo2[3]);
+        Log.i(TAG,userinfo2[4]);
+        Log.i(TAG,userinfo2[5]);
+        Log.i(TAG,userinfo2[6]);
+                //mDatabaseHelper = new UserDataManager.DataBaseManagementHelper(mContext);
+        //mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
 
-            int result = mUserDataManager.findUserByNameAndPwd(userName, userPwd);
-            if (result == 1) {
-                editor.putString("USER_NAME", userName);
-                editor.putString("PASSWORD", userPwd);
-
-                if (mRememberCheck.isChecked()) {
-                    editor.putBoolean("mRememberCheck", true);
-                } else {
-                    editor.putBoolean("mRememberCheck", false);
-                }
-                editor.apply();
-
-                Intent intent = new Intent(Login.this, User.class);
-                intent.putExtra("USER_NAME", userName);
-                intent.putExtra("PASSWORD", userPwd);
-                startActivity(intent);
-                finish();
-                Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
-            } else if (result == 0) {
-                Toast.makeText(this, "请输入正确的账号和密码", Toast.LENGTH_SHORT).show();
-            }
-
-        }
+//        if (true){    //isUserNameAndPwdValid()) {
+//            String userName = mAccount.getText().toString().trim();
+//            String userPwd = mPwd.getText().toString().trim();
+//            SharedPreferences.Editor editor = login_sp.edit();
+//
+//            int result = mUserDataManager.findUserByNameAndPwd(userName, userPwd);
+//            if (result == 1) {
+//                editor.putString("USER_NAME", userName);
+//                editor.putString("PASSWORD", userPwd);
+//
+//                if (mRememberCheck.isChecked()) {
+//                    editor.putBoolean("mRememberCheck", true);
+//                } else {
+//                    editor.putBoolean("mRememberCheck", false);
+//                }
+//                editor.apply();
+//
+//                Intent intent = new Intent(Login.this, User.class);
+//                intent.putExtra("USER_NAME", userName);
+//                intent.putExtra("PASSWORD", userPwd);
+//                startActivity(intent);
+//                finish();
+//                Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
+//            } else if (result == 0) {
+//                Toast.makeText(this, "请输入正确的账号和密码", Toast.LENGTH_SHORT).show();
+//            }
+//
+//        }
         Log.i(TAG, "Login_login()");
     }
 

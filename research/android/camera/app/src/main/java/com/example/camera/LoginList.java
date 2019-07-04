@@ -110,12 +110,12 @@ public class LoginList extends AppCompatActivity {
         //判断你选的下拉框中的哪个用户
 
 
-        Intent intent = new Intent(LoginList.this, User.class);
+      //  Intent intent = new Intent(LoginList.this, User.class);
 //        intent.putExtra("USER_NAME", userName);
 //        intent.putExtra("PASSWORD", userPwd);
-        startActivity(intent);
-        finish();
-        Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
-        Log.i(TAG, "Login_login()");
+     //   startActivity(intent);
+      //  finish();
+     //   Toast.makeText(this, "登陆成功", Toast.LENGTH_SHORT).show();
+     //   Log.i(TAG, "Login_login()");
     }
 }

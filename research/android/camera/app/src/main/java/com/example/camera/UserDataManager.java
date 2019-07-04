@@ -9,6 +9,7 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.EditText;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,39 +94,9 @@ public class UserDataManager {             //用户数据管理类
         mDatabaseHelper = new DataBaseManagementHelper(mContext);
         mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
     }
-    //返回一个用户名的列表
-    public List<String> showUserName(String colunmName){
-        //mDatabaseHelper = new DataBaseManagementHelper(mContext);
-        //mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
-        Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
-        List<String> userlist = new ArrayList<String>();
-        if(cursor.moveToFirst()){
-            do{
-                String username = cursor.getString(cursor.getColumnIndex(colunmName));
-                userlist.add(username);
 
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        return userlist;
-
-    }
     //log
-    public void showList(String colunmName){
-        mDatabaseHelper = new DataBaseManagementHelper(mContext);
-        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
-        Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
-        List<String> userlist = new ArrayList<String>();
-        if(cursor.moveToFirst()){
-            do{
-                String username = cursor.getString(cursor.getColumnIndex("USER_NAME"));
-                Log.d("userlist","username"+username);
 
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-
-    }
     //关闭数据库
     public void closeDataBase() throws SQLException {
         mDatabaseHelper.close();
@@ -245,6 +216,124 @@ public class UserDataManager {             //用户数据管理类
         }
         return result;
     }
+    public void showList(String colunmName){
+        mDatabaseHelper = new DataBaseManagementHelper(mContext);
+        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
+        List<String> userlist = new ArrayList<String>();
+        if(cursor.moveToFirst()){
+            do{
+                String username = cursor.getString(cursor.getColumnIndex("USER_NAME"));
+                Log.d("userlist","username"+username);
 
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+
+    }
+    //返回一个用户名的列表
+    public List<String> showUserName(String colunmName){
+        //mDatabaseHelper = new DataBaseManagementHelper(mContext);
+        //mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
+        List<String> userlist = new ArrayList<String>();
+        if(cursor.moveToFirst()){
+            do{
+                String username = cursor.getString(cursor.getColumnIndex(colunmName));
+                userlist.add(username);
+
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return userlist;
+
+    }
+    //问题记录 现在是用户名是数字的可以找到 ， AA这个字符类型的找不到。
+    public List<String> findUserInfo(String userName){
+        int result=0;
+        Log.i(TAG,"findUserInfo2");
+        Log.i(TAG, userName);
+        Cursor cursor = mSQLiteDatabase.query("users_info",null,"USER_NAME="+userName,null,null,null,null);
+        //Cursor cursor = mSQLiteDatabase.rawQuery("SELECT * FROM users_info",null);
+        Log.i(TAG,"findUserInfo3");
+        List<String> userinfo = new ArrayList<String>();
+        if(cursor.moveToFirst()) {
+            Log.i(TAG, "findUserInfo3.5");
+
+            do {
+                Log.i(TAG, "findUserInfo4");
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+
+                    Log.i(TAG, "findUserInfo6");
+                    String weight = cursor.getString(cursor.getColumnIndex("Weight"));//cursor.getString(cursor.getColumnIndex("Weight"));
+                    String height = cursor.getString(cursor.getColumnIndex("Height"));
+                    String BMI = cursor.getString(cursor.getColumnIndex("BMI"));
+                    String birth = cursor.getString(cursor.getColumnIndex("Birth"));
+                    String kcal = cursor.getString(cursor.getColumnIndex("Kcal"));
+                    String CHO = cursor.getString(cursor.getColumnIndex("CHO"));
+                    String protein = cursor.getString(cursor.getColumnIndex("Protein"));
+                    String fats = cursor.getString(cursor.getColumnIndex("Fats"));
+                    //userinfo.add(sex);
+                    userinfo.add(height);
+                    userinfo.add(weight);
+                    userinfo.add(BMI);
+                    userinfo.add(birth);
+                    userinfo.add(kcal);
+                    userinfo.add(CHO);
+                    userinfo.add(protein);
+                    userinfo.add(fats);
+
+            } while (cursor.moveToNext());}
+        //}
+        cursor.close();
+        return userinfo;
+    }
+    public String findUserInfo2(String userName){
+        Log.i(TAG,"findUserInfo");
+        int result=0;
+        Log.i(TAG,"findUserInfo2");
+        Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
+        Log.i(TAG,"findUserInfo3");
+        String userinfo="a";
+        if(cursor.moveToFirst()){
+                String username = cursor.getString(cursor.getColumnIndex("USER_NAME"));
+                Log.i(TAG, "findUserInfo3.5");
+                if(username==userName) {
+                    Log.i(TAG, "findUserInfo4");
+                    String sex = cursor.getString(cursor.getColumnIndex("Sex"));
+                    Log.i(TAG, "findUserInfo5");
+                    String weight = cursor.getString(cursor.getColumnIndex("Weight"));
+                    Log.i(TAG, "findUserInfo6");
+                    String height = cursor.getString(cursor.getColumnIndex("Height"));
+                    Log.i(TAG, "findUserInfo7");
+                    String BMI = cursor.getString(cursor.getColumnIndex("BMI"));
+                    String birth = cursor.getString(cursor.getColumnIndex("Birth"));
+                    String kcal = cursor.getString(cursor.getColumnIndex("Kcal"));
+                    Log.i(TAG, "findUserInfo10");
+                    String CHO = cursor.getString(cursor.getColumnIndex("CHO"));
+                    String protein = cursor.getString(cursor.getColumnIndex("Protein"));
+                    Log.i(TAG, "findUserInfo12");
+                    String fats = cursor.getString(cursor.getColumnIndex("Fats"));
+                    Log.i(TAG, "findUserInfo13");
+
+                Log.i("database",height);
+                Log.i("database",BMI);
+                Log.i("database",CHO);
+                Log.i("database",protein);}
+                else {
+
+                Log.i(TAG, "findUserInfoFALSE");
+                cursor.moveToNext();
+//                    userinfo.add(height);
+//                    userinfo.add(weight);
+//                    userinfo.add(BMI);
+//                    userinfo.add(birth);
+//                    userinfo.add(kcal) ;
+//                    userinfo.add(CHO);
+//                    userinfo.add(protein);
+//                    userinfo.add(fats);
+            }
+        }return userinfo;
+    }
 
 }

@@ -17,7 +17,6 @@ public class UserData {
     private double Protein;
     private double Fats;
     private double CHO;
-    private double Na;
     private String Sex;
     public int pwdresetFlag=0;
 

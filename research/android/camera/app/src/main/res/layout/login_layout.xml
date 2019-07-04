@@ -65,7 +65,7 @@
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
-            android:layout_marginBottom="-301dp"
+            android:layout_marginBottom="-267dp"
             android:background="#373cbd"
             android:onClick="finish_login"
             android:text="登录"
