@@ -19,7 +19,7 @@ public class UserDataManager {             //用户数据管理类
     private static final String DB_NAME = "user_data";
     private static final String TABLE_NAME = "users_info";
     public static final String ID = "_id";
-    public static final String USER_NAME = "user_name";
+    public static final String USER_NAME = "USER_NAME"; //啥情况嘛 数据库里列名是大写 这里是小写还能传进去？服气了  不影响。
     //public static final String USER_PWD = "user_pwd";
     public static final String USER_BIRTH = "Birth";
     public static final String USER_SEX = "Sex";
@@ -37,7 +37,7 @@ public class UserDataManager {             //用户数据管理类
     private Context mContext = null;
 
     //创建用户book表
-    private static final String DB_CREATE = "CREATE TABLE " + TABLE_NAME + " (" //TABLE NAME = "users"
+    private static final String DB_CREATE = "CREATE TABLE " + TABLE_NAME + " (" //TABLE NAME = "users_info"
             + "ID integer primary key autoincrement,"
             + "USER_NAME  varchar(100),"
             + "Sex varchar(10),"
@@ -246,7 +246,6 @@ public class UserDataManager {             //用户数据管理类
         }
         cursor.close();
         return userlist;
-
     }
     //问题记录 现在是用户名是数字的可以找到 ， AA这个字符类型的找不到。
     public List<String> findUserInfo(String userName){
