@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "/home/sh/anaconda3/envs/dl/bin/python",
+    "python.pythonPath": "/home/sh/.conda/envs/dl/bin/python",
     "python.linting.pylintEnabled": false,
     "python.linting.pep8Enabled": false,
     "python.linting.enabled": true,
