@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .build
 .downloads
 # .junk
@@ -7,3 +8,23 @@ storage
 
 __pycache__
 pretrained_model
+=======
+
+*.h5
+*.pb
+*.gz
+*.zip
+
+build
+docker
+
+__feeder__
+__logs__
+__cache__
+__pycache__
+__input__
+__output__
+
+vscode
+settings.json
+>>>>>>> refs/remotes/origin/master

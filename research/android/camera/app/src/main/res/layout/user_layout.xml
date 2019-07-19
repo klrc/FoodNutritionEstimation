@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     tools:context="com.example.camera.User">
 
+<<<<<<< HEAD
     <Button
         android:id="@+id/take_photo"
         android:layout_width="wrap_content"
@@ -63,4 +64,63 @@
         android:layout_height="wrap_content"
         android:id="@+id/picture"
         android:layout_gravity = "center_vertical"/>
+=======
+    <!--<Button-->
+        <!--android:id="@+id/take_photo"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_gravity="bottom"-->
+
+        <!--android:layout_marginLeft="209dp"-->
+        <!--android:layout_marginBottom="0dp"-->
+        <!--android:background="#f53434"-->
+        <!--android:text="拍照"-->
+        <!--android:textColor="#ffffff" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/choose_from_album"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_marginLeft="110dp"-->
+        <!--android:layout_marginBottom="1dp"-->
+        <!--android:background="#f53434"-->
+        <!--android:text="相册"-->
+        <!--android:textColor="#ffffff" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/returnback"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="#f53434"-->
+        <!--android:text="退出"-->
+        <!--android:textColor="#ffffff"-->
+        <!--/>-->
+
+    <!--<Button-->
+        <!--android:id="@+id/user_cancel"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_marginLeft="320dp"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_marginBottom="0dp"-->
+        <!--android:background="#f53434"-->
+        <!--android:text="注销"-->
+        <!--android:textColor="#ffffff" />-->
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/picture"-->
+        <!--android:layout_gravity = "center_vertical"/>-->
+>>>>>>> refs/remotes/origin/master
 </RelativeLayout>

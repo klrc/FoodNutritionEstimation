@@ -2,9 +2,12 @@
 [img NA]
 
 
+<<<<<<< HEAD
 test From A Far/
 Into the dust/
 move forward/
+=======
+>>>>>>> refs/remotes/origin/master
 
 ## What does FNE do ? 
 患糖尿病的孩子往往需要在各种限制下摄取营养，对于每份食物，都需要严格控制热量、碳水化合物等营养成分。

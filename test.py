@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from bin.FoodMask60.kernel_database import Config, DatabaseKernel
 
 # 从数据库名称启动内核
@@ -18,3 +19,14 @@ k = DatabaseKernel(config)
 # # 选择并编译
 k.select(requirements=['raw', 'mask', 'yaml'])
 k.build(augmentor=True)
+=======
+import torch
+# import collections
+import keras
+
+def main():    
+    print('tttt')
+
+if __name__ == '__main__':    
+    main()
+>>>>>>> refs/remotes/origin/master
