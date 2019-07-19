@@ -299,4 +299,4 @@ if __name__ == "__main__":
 
     # # 选择并编译
     k.select(requirements=['raw', 'mask', 'yaml'])
-    # k.build(augmentor=True)
+    k.build(augmentor=True)

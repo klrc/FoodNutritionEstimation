@@ -58,14 +58,12 @@ class InferenceConfig(BaseConfig):
 
 
 class Kernel():
-    # Directory to cached data
-    CACHE_DIR = 'data/__cache__/detection'
     # Preprocessed training data here
-    FEEDER_DIR = f'data/FoodMask60/build'
+    FEEDER_DIR = f'.build/FoodMask60'
     # Directory to save logs and trained model
-    LOGS_DIR = f'{CACHE_DIR}/logs'
+    LOGS_DIR = f'.log'
     # Local path to trained weights file
-    COCO_MODEL_PATH = 'data/mask_rcnn_coco.h5'
+    COCO_MODEL_PATH = '.downloads/mask_rcnn_coco.h5'
     # Download COCO trained weights from Releases if needed
     # if not os.path.exists(COCO_MODEL_PATH):
     #     utils.download_trained_weights(COCO_MODEL_PATH)
