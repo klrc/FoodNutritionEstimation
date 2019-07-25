@@ -72,21 +72,39 @@
         android:hint="请选择你的性别" />
 
     <EditText
-        android:id="@+id/user_birth"
+        android:id="@+id/user_year"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_height"
         android:layout_marginTop="2dp"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="16"
-        android:hint="请输入你的出生日期，例如2018" />
+        android:hint="年" />
+    <EditText
+        android:id="@+id/user_month"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_year"
+        android:layout_marginTop="2dp"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
+        android:ems="16"
+        android:hint="月" />
+    <EditText
+        android:id="@+id/user_day"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_month"
+        android:layout_marginTop="2dp"
+        android:drawableLeft="@android:drawable/ic_menu_edit"
+        android:ems="16"
+        android:hint="日" />
 
     <Button
         android:id="@+id/register_btn_sure"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/user_birth"
-        android:layout_marginTop="285dp"
+        android:layout_below="@+id/user_day"
+        android:layout_marginTop="105dp"
         android:text="确认"
         android:textColor="#ffffff"
         android:textSize="20dp" />

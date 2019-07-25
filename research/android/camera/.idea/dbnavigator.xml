@@ -23,18 +23,29 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="817686c8-e189-412a-866d-7013b0108477">
+        <schema name="main" object-types="dataset trigger, table, view, column, index, constraint" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="420fca79-0ba6-4fb1-b8e0-26fd2c8e5010">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
+    <connection id="817686c8-e189-412a-866d-7013b0108477">
+      <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="817686c8-e189-412a-866d-7013b0108477" object-ref="schemas/main/tables/users_info" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="420fca79-0ba6-4fb1-b8e0-26fd2c8e5010" />
+    <connection id="817686c8-e189-412a-866d-7013b0108477" />
+  </component>
+  <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="817686c8-e189-412a-866d-7013b0108477" dataset="main.users_info" active-filter-id="e3bcbf5a-323c-4f38-9bcc-dc9abf0eb86f">
+      <filter id="e3bcbf5a-323c-4f38-9bcc-dc9abf0eb86f" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers>
@@ -61,7 +72,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="420fca79-0ba6-4fb1-b8e0-26fd2c8e5010" active="true">
+      <connection id="817686c8-e189-412a-866d-7013b0108477" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -76,7 +87,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="E:\user_data" schema="main" />
+            <file path="D:\user_data" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

@@ -42,6 +42,7 @@ public class Login extends AppCompatActivity {
     private TextView view;
     private Spinner user_spinner;
     public String choosed_user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -86,7 +87,6 @@ public class Login extends AppCompatActivity {
         String[] user_list2 = new String[ul.size()];
         ul.toArray(user_list2);
         //////////////////////////////////////////////////
-        Log.i(TAG,"111");
 //        Log.i(TAG,user_list2[2]);
         //将可选内容与ArrayAdapter连接起来
 
@@ -104,7 +104,6 @@ public class Login extends AppCompatActivity {
         //设置默认值
         user_spinner.setVisibility(View.VISIBLE);
 
-
         Log.i(TAG, "Login_onCreate()");
     }
 
@@ -118,10 +117,8 @@ public class Login extends AppCompatActivity {
             String[] user_list2 = new String[ul.size()];
             ul.toArray(user_list2);
             choosed_user = user_list2[arg2];
-            Log.i(TAG,user_list2[arg2]);
-            //Log.i(TAG,user_list2[1]);ul[arg2]
-            //view.setText("你的用户是：");
-            //Log.i(TAG,"user_list2");
+            Log.i(TAG,"choosed"+choosed_user);
+
         }
 
         public void onNothingSelected(AdapterView<?> arg0) {
@@ -140,8 +137,10 @@ public class Login extends AppCompatActivity {
                     finish();
                     break;
                 case R.id.login_btn_login:
-                    login();
+                    String loginuser = login();
                     Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
+                    intent_Login_to_MainInterface.putExtra("user",loginuser);
+                    //Log.i(TAG,"asdas"+loginuser);
                     startActivity(intent_Login_to_MainInterface);
                     break;
                 case R.id.user_choose:
@@ -172,7 +171,7 @@ public class Login extends AppCompatActivity {
         return true;
     }
 
-    public void login() {
+    public String login() {
         Log.i(TAG,choosed_user);
         List<String> userinfo = mUserDataManager.findUserInfo(choosed_user);
         String[] userinfo2 = new String[userinfo.size()];
@@ -183,7 +182,7 @@ public class Login extends AppCompatActivity {
         Log.i(TAG,userinfo2[0]);
         Log.i(TAG,userinfo2[1]);
         Log.i(TAG,userinfo2[2]);
-        Log.i(TAG,userinfo2[3]);
+        Log.i(TAG,"age"+userinfo2[3]);
         Log.i(TAG,userinfo2[4]);
         Log.i(TAG,userinfo2[5]);
         Log.i(TAG,userinfo2[6]);
@@ -219,6 +218,7 @@ public class Login extends AppCompatActivity {
 //
 //        }
         Log.i(TAG, "Login_login()");
+        return choosed_user;
     }
 
     public void cancel() {
@@ -268,5 +268,6 @@ public class Login extends AppCompatActivity {
         super.onPause();
         Log.i(TAG, "Login_onPause()");
     }
+
 }
 
