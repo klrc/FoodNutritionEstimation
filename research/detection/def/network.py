@@ -57,7 +57,7 @@ class InferenceConfig(BaseConfig):
     IMAGES_PER_GPU = 1
 
 
-class Kernel():
+class Network():
     # Directory to cached data
     CACHE_DIR = 'data/__cache__/detection'
     # Preprocessed training data here

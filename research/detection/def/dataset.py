@@ -101,5 +101,3 @@ class FoodMask60(utils.Dataset):
             mask, class_ids = self.load_mask(image_id)
             visualize.display_top_masks(
                 image, mask, class_ids, self.class_names)
-
-

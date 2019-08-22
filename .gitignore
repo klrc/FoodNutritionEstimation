@@ -1,6 +1,6 @@
 .build
 .downloads
-# .junk
+.junk
 .vscode
 
 storage

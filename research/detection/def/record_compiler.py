@@ -45,7 +45,7 @@ class Config():
     build_path = f'.build/{database_id}'
 
 
-class KernelEnv():
+class CompilerEnv():
 
     def __init__(self, config: Config):
         self.config = config
@@ -102,7 +102,7 @@ class KernelEnv():
         return frozen
 
 
-class DatabaseKernel(KernelEnv):
+class RecordCompiler(CompilerEnv):
 
     def __init__(self, config: Config):
         super().__init__(config)
@@ -284,7 +284,7 @@ if __name__ == "__main__":
 
     # 从数据库名称启动内核
     config = Config()
-    k = DatabaseKernel(config)
+    r = RecordCompiler(config)
 
     # # 直接从总文件夹读取各类数据
     # k.auto_scan(path='data/FoodMask60/storage', pattern='.mask.png', _type='mask', copy=False, verbose=1)
@@ -298,5 +298,5 @@ if __name__ == "__main__":
     # k.clean_build()
 
     # # 选择并编译
-    k.select(requirements=['raw', 'mask', 'yaml'])
-    # k.build(augmentor=True)
+    r.select(requirements=['raw', 'mask', 'yaml'])
+    # r.build(augmentor=True)
