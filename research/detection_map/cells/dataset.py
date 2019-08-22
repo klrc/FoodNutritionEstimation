@@ -1,16 +1,15 @@
-import os
 import numpy as np
 import yaml
 from PIL import Image
 
-from .mask_rcnn_def import utils, visualize
+from .mask_rcnn_utils import utils, visualize
 
 
 class FoodMask60(utils.Dataset):
 
-    def __init__(self, path, width=200, height=150, for_train=True):
+    def __init__(self, records, size):
         super().__init__()
-        self.load_images(path, width, height, for_train)
+        self.load_images(records, size)
         self.load_classes()
         self.prepare()
 
@@ -20,27 +19,24 @@ class FoodMask60(utils.Dataset):
         for index, image in enumerate(self.image_info):
             label = self.from_yaml_get_class(index)[0]
             label_list.add(label)
-        for i, _class in enumerate(self.label_list):
+        for i, _class in enumerate(label_list):
             self.add_class('food', i + 1, _class)
 
-    def load_images(self, path, width, height, for_train):
+    def load_images(self, records, size):
         """Generate the requested number of synthetic images.
-        path: built dataset dir.
         height, width: the size of the generated images.
         for_train: gen trainset or testset.
         """
-        mark = 'train' if for_train else 'test'
-        path = f'{path}/{mark}'
-        imglist = os.listdir(path)
-        for index, _hash in enumerate(imglist):
+        for record in records:
+            _hash = record.split('/')[-1]
             self.add_image(
                 source="food",
-                image_id=index,
-                width=width,
-                height=height,
-                path=f'{path}/{_hash}/raw.png',
-                mask=f'{path}/{_hash}/mask.png',
-                yaml=f'{path}/{_hash}/yaml.yaml',
+                image_id=_hash,
+                width=size[0],
+                height=size[1],
+                path=f'{record}/img.png',
+                mask=f'{record}/mask.png',
+                yaml=f'{record}/info.yaml',
                 hash=_hash,
             )
 
@@ -77,7 +73,7 @@ class FoodMask60(utils.Dataset):
     def from_yaml_get_class(self, image_id):
         info = self.image_info[image_id]
         with open(info['yaml']) as f:
-            temp = yaml.load(f.read())
+            temp = yaml.load(f.read(), Loader=yaml.FullLoader)
             labels = temp['label_names']
             del labels[0]
         return labels
