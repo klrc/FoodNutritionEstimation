@@ -1845,7 +1845,7 @@ class MaskRCNN():
     The actual Keras model is in the keras_model property.
     """
 
-    def __init__(self, mode, config, model_dir):
+    def __init__(self, mode, config):
         """
         mode: Either "training" or "inference"
         config: A Sub-class of the Config class
@@ -1854,8 +1854,8 @@ class MaskRCNN():
         assert mode in ['training', 'inference']
         self.mode = mode
         self.config = config
-        self.model_dir = model_dir
-        self.set_log_dir()
+        # self.model_dir = model_dir
+        # self.set_log_dir()
         self.keras_model = self.build(mode=mode, config=config)
 
     def build(self, mode, config):
@@ -2092,34 +2092,34 @@ class MaskRCNN():
 
         return model
 
-    def find_last(self):
-        """Finds the last checkpoint file of the last trained model in the
-        model directory.
-        Returns:
-            The path of the last checkpoint file
-        """
-        # Get directory names. Each directory corresponds to a model
-        dir_names = next(os.walk(self.model_dir))[1]
-        key = self.config.NAME.lower()
-        dir_names = filter(lambda f: f.startswith(key), dir_names)
-        dir_names = sorted(dir_names)
-        if not dir_names:
-            import errno
-            raise FileNotFoundError(
-                errno.ENOENT,
-                "Could not find model directory under {}".format(self.model_dir))
-        # Pick last directory
-        dir_name = os.path.join(self.model_dir, dir_names[-1])
-        # Find the last checkpoint
-        checkpoints = next(os.walk(dir_name))[2]
-        checkpoints = filter(lambda f: f.startswith("mask_rcnn"), checkpoints)
-        checkpoints = sorted(checkpoints)
-        if not checkpoints:
-            import errno
-            raise FileNotFoundError(
-                errno.ENOENT, "Could not find weight files in {}".format(dir_name))
-        checkpoint = os.path.join(dir_name, checkpoints[-1])
-        return checkpoint
+    # def find_last(self):
+    #     """Finds the last checkpoint file of the last trained model in the
+    #     model directory.
+    #     Returns:
+    #         The path of the last checkpoint file
+    #     """
+    #     # Get directory names. Each directory corresponds to a model
+    #     dir_names = next(os.walk(self.model_dir))[1]
+    #     key = self.config.NAME.lower()
+    #     dir_names = filter(lambda f: f.startswith(key), dir_names)
+    #     dir_names = sorted(dir_names)
+    #     if not dir_names:
+    #         import errno
+    #         raise FileNotFoundError(
+    #             errno.ENOENT,
+    #             "Could not find model directory under {}".format(self.model_dir))
+    #     # Pick last directory
+    #     dir_name = os.path.join(self.model_dir, dir_names[-1])
+    #     # Find the last checkpoint
+    #     checkpoints = next(os.walk(dir_name))[2]
+    #     checkpoints = filter(lambda f: f.startswith("mask_rcnn"), checkpoints)
+    #     checkpoints = sorted(checkpoints)
+    #     if not checkpoints:
+    #         import errno
+    #         raise FileNotFoundError(
+    #             errno.ENOENT, "Could not find weight files in {}".format(dir_name))
+    #     checkpoint = os.path.join(dir_name, checkpoints[-1])
+    #     return checkpoint
 
     def load_weights(self, filepath, by_name=False, exclude=None):
         """Modified version of the corresponding Keras function with
@@ -2163,7 +2163,7 @@ class MaskRCNN():
             f.close()
 
         # Update the log directory
-        self.set_log_dir(filepath)
+        # self.set_log_dir(filepath)
 
     def get_imagenet_weights(self):
         """Downloads ImageNet trained weights from Keras.
@@ -2265,46 +2265,46 @@ class MaskRCNN():
                 log("{}{:20}   ({})".format(" " * indent, layer.name,
                                             layer.__class__.__name__))
 
-    def set_log_dir(self, model_path=None):
-        """Sets the model log directory and epoch counter.
+    # def set_log_dir(self, model_path=None):
+    #     """Sets the model log directory and epoch counter.
 
-        model_path: If None, or a format different from what this code uses
-            then set a new log directory and start epochs from 0. Otherwise,
-            extract the log directory and the epoch counter from the file
-            name.
-        """
-        # Set date and epoch counter as if starting a new model
-        self.epoch = 0
-        now = datetime.datetime.now()
+    #     model_path: If None, or a format different from what this code uses
+    #         then set a new log directory and start epochs from 0. Otherwise,
+    #         extract the log directory and the epoch counter from the file
+    #         name.
+    #     """
+    #     # Set date and epoch counter as if starting a new model
+    #     self.epoch = 0
+    #     now = datetime.datetime.now()
 
-        # If we have a model path with date and epochs use them
-        if model_path:
-            # Continue from we left of. Get epoch and date from the file name
-            # A sample model path might look like:
-            # \path\to\logs\coco20171029T2315\mask_rcnn_coco_0001.h5 (Windows)
-            # /path/to/logs/coco20171029T2315/mask_rcnn_coco_0001.h5 (Linux)
-            regex = r".*[/\\][\w-]+(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})[/\\]mask\_rcnn\_[\w-]+(\d{4})\.h5"
-            m = re.match(regex, model_path)
-            if m:
-                now = datetime.datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)),
-                                        int(m.group(4)), int(m.group(5)))
-                # Epoch number in file is 1-based, and in Keras code it's 0-based.
-                # So, adjust for that then increment by one to start from the next epoch
-                self.epoch = int(m.group(6)) - 1 + 1
-                print('Re-starting from epoch %d' % self.epoch)
+    #     # If we have a model path with date and epochs use them
+    #     if model_path:
+    #         # Continue from we left of. Get epoch and date from the file name
+    #         # A sample model path might look like:
+    #         # \path\to\logs\coco20171029T2315\mask_rcnn_coco_0001.h5 (Windows)
+    #         # /path/to/logs/coco20171029T2315/mask_rcnn_coco_0001.h5 (Linux)
+    #         regex = r".*[/\\][\w-]+(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})[/\\]mask\_rcnn\_[\w-]+(\d{4})\.h5"
+    #         m = re.match(regex, model_path)
+    #         if m:
+    #             now = datetime.datetime(int(m.group(1)), int(m.group(2)), int(m.group(3)),
+    #                                     int(m.group(4)), int(m.group(5)))
+    #             # Epoch number in file is 1-based, and in Keras code it's 0-based.
+    #             # So, adjust for that then increment by one to start from the next epoch
+    #             self.epoch = int(m.group(6)) - 1 + 1
+    #             print('Re-starting from epoch %d' % self.epoch)
 
-        # Directory for training logs
-        self.log_dir = os.path.join(self.model_dir, "{}{:%Y%m%dT%H%M}".format(
-            self.config.NAME.lower(), now))
+    #     # Directory for training logs
+    #     self.log_dir = os.path.join(self.model_dir, "{}{:%Y%m%dT%H%M}".format(
+    #         self.config.NAME.lower(), now))
 
-        # Path to save after each epoch. Include placeholders that get filled by Keras.
-        self.checkpoint_path = os.path.join(self.log_dir, "mask_rcnn_{}_*epoch*.h5".format(
-            self.config.NAME.lower()))
-        self.checkpoint_path = self.checkpoint_path.replace(
-            "*epoch*", "{epoch:04d}")
+    #     # Path to save after each epoch. Include placeholders that get filled by Keras.
+    #     self.checkpoint_path = os.path.join(self.log_dir, "mask_rcnn_{}_*epoch*.h5".format(
+    #         self.config.NAME.lower()))
+    #     self.checkpoint_path = self.checkpoint_path.replace(
+    #         "*epoch*", "{epoch:04d}")
 
-    def train(self, train_dataset, val_dataset, learning_rate, epochs, layers,
-              augmentation=None, custom_callbacks=None, no_augmentation_sources=None):
+    def train(self, train_dataset, val_dataset, learning_rate, epochs, layers, callbacks=None,
+              augmentation=None, no_augmentation_sources=None):
         """Train the model.
         train_dataset, val_dataset: Training and validation Dataset objects.
         learning_rate: The learning rate to train with
@@ -2362,24 +2362,12 @@ class MaskRCNN():
                                        batch_size=self.config.BATCH_SIZE)
 
         # Create log_dir if it does not exist
-        if not os.path.exists(self.log_dir):
-            os.makedirs(self.log_dir)
-
-        # Callbacks
-        callbacks = [
-            keras.callbacks.TensorBoard(log_dir=self.log_dir,
-                                        histogram_freq=0, write_graph=True, write_images=False),
-            keras.callbacks.ModelCheckpoint(self.checkpoint_path,
-                                            verbose=0, save_weights_only=True),
-        ]
-
-        # Add custom callbacks to the list
-        if custom_callbacks:
-            callbacks += custom_callbacks
+        # if not os.path.exists(self.log_dir):
+        #     os.makedirs(self.log_dir)
 
         # Train
-        log("\nStarting at epoch {}. LR={}\n".format(self.epoch, learning_rate))
-        log("Checkpoint Path: {}".format(self.checkpoint_path))
+        # log("\nStarting at epoch {}. LR={}\n".format(self.epoch, learning_rate))
+        # log("Checkpoint Path: {}".format(self.checkpoint_path))
         self.set_trainable(layers)
         self.compile(learning_rate, self.config.LEARNING_MOMENTUM)
 
@@ -2393,7 +2381,7 @@ class MaskRCNN():
 
         self.keras_model.fit_generator(
             train_generator,
-            initial_epoch=self.epoch,
+            # initial_epoch=self.epoch,
             epochs=epochs,
             steps_per_epoch=self.config.STEPS_PER_EPOCH,
             callbacks=callbacks,
@@ -2403,7 +2391,7 @@ class MaskRCNN():
             workers=workers,
             use_multiprocessing=True,
         )
-        self.epoch = max(self.epoch, epochs)
+        # self.epoch = max(self.epoch, epochs)
 
     def mold_inputs(self, images):
         """Takes a list of images and modifies them to the format expected
@@ -2522,7 +2510,8 @@ class MaskRCNN():
         masks: [H, W, N] instance binary masks
         """
         assert self.mode == "inference", "Create model in inference mode."
-        assert len(images) == self.config.BATCH_SIZE, "len(images) must be equal to BATCH_SIZE"
+        assert len(
+            images) == self.config.BATCH_SIZE, "len(images) must be equal to BATCH_SIZE"
 
         if verbose:
             log("Processing {} images".format(len(images)))

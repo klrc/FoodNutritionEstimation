@@ -19,6 +19,7 @@ class FoodMask60(utils.Dataset):
         for index, image in enumerate(self.image_info):
             label = self.from_yaml_get_class(index)[0]
             label_list.add(label)
+        self.label_list = label_list
         for i, _class in enumerate(label_list):
             self.add_class('food', i + 1, _class)
 
