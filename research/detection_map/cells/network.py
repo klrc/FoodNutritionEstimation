@@ -16,14 +16,14 @@ class EvolutionConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 4
 
     LOSS_WEIGHTS = {
-        "rpn_class_loss": 0.8,
-        "rpn_bbox_loss": 0.8,
+        "rpn_class_loss": 1.,
+        "rpn_bbox_loss": 1.,
         "mrcnn_class_loss": 1.,
-        "mrcnn_bbox_loss": 0.8,
-        "mrcnn_mask_loss": 0.8
+        "mrcnn_bbox_loss": 1.,
+        "mrcnn_mask_loss": 1.
     }
 
     # Number of classes (including background)
