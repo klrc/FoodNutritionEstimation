@@ -8,23 +8,23 @@ sys.path.append('.')
 '''
     build records.pak & divides.json
 '''
-# from cells.compiler import Compiler  # noqa: E402
-# size = (200, 150)
-# c = Compiler('.build/map_detection')
-# pure_json = c.collect('/home/sh/Downloads/数据/')
-# records = c.build_records(pure_json, size=(200, 150))
-# records = c.augments(records, batch=4)
+from cells.compiler import Compiler  # noqa: E402
+size = (200, 150)
+c = Compiler('.build/map_detection')
+pure_json = c.collect('/home/sh/Downloads/数据/')
+records = c.build_records(pure_json, size=(200, 150))
+records = c.augments(records, batch=1)
 
 
 # %%
 '''
     start from records
 '''
-from cells.compiler import Compiler  # noqa: E402
+# from cells.compiler import Compiler  # noqa: E402
 
-c = Compiler('.build/map_detection')
-base = '.build/map_detection/records.pak'
-records = [f'{base}/{x}' for x in os.listdir(base)]
+# c = Compiler('.build/map_detection')
+# base = '.build/map_detection/records.pak'
+# records = [f'{base}/{x}' for x in os.listdir(base)]
 _train, _val = c.build_dataset(records, val_prop=0.3)
 with open('.build/map_detection/divides_p30.json', 'w') as f:
     json.dump({'train': _train, 'val': _val}, f)
@@ -34,27 +34,27 @@ with open('.build/map_detection/divides_p30.json', 'w') as f:
     start from frozen datasets
     instantiate train/val
 '''
-from cells.dataset import FoodMask60  # noqa: E402
-size = (200, 150)
-with open('.build/map_detection/divides_p30.json', 'r') as f:
-    divides = json.load(f)
-    _train, _val = divides['train'], divides['val']
-print('building datasets ..')
-train, val = FoodMask60(_train, size), FoodMask60(_val, size)
+# from cells.dataset import FoodMask60  # noqa: E402
+# size = (200, 150)
+# with open('.build/map_detection/divides_p30.json', 'r') as f:
+#     divides = json.load(f)
+#     _train, _val = divides['train'], divides['val']
+# print('building datasets ..')
+# train, val = FoodMask60(_train, size), FoodMask60(_val, size)
 
 # %%
 '''
-    test batch evolution
+    batch evolution
 '''
-from cells.network import MaskRCNN  # noqa: E402
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
-evolution_list = [
-    '.build/map_detection/config_0.json',
-    '.build/map_detection/config_1.json',
-    '.build/map_detection/config_2.json'
-]
+# from cells.network import MaskRCNN  # noqa: E402
+# os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+# evolution_list = [
+#     '.build/map_detection/config_0.json',
+#     '.build/map_detection/config_1.json',
+#     '.build/map_detection/config_2.json'
+# ]
 
-network = MaskRCNN.compile('training')
-network.test_evolutions(evolution_list, train, val)
+# network = MaskRCNN.compile('training')
+# network.test_evolutions(evolution_list, train, val)
 
 # %%
