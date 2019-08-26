@@ -25,8 +25,8 @@ from cells.compiler import Compiler  # noqa: E402
 c = Compiler('.build/map_detection')
 base = '.build/map_detection/records.pak'
 records = [f'{base}/{x}' for x in os.listdir(base)]
-_train, _val = c.build_dataset(records)
-with open('.build/map_detection/divides.json', 'w') as f:
+_train, _val = c.build_dataset(records, val_prop=0.3)
+with open('.build/map_detection/divides_p30.json', 'w') as f:
     json.dump({'train': _train, 'val': _val}, f)
 
 # %%
@@ -36,7 +36,7 @@ with open('.build/map_detection/divides.json', 'w') as f:
 '''
 from cells.dataset import FoodMask60  # noqa: E402
 size = (200, 150)
-with open('.build/map_detection/divides.json', 'r') as f:
+with open('.build/map_detection/divides_p30.json', 'r') as f:
     divides = json.load(f)
     _train, _val = divides['train'], divides['val']
 print('building datasets ..')
