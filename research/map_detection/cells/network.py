@@ -22,8 +22,8 @@ class EvolutionConfig(Config):
         "rpn_class_loss": 1,
         "rpn_bbox_loss": 0.8,
         "mrcnn_class_loss": 1.,
-        "mrcnn_bbox_loss": 0.8,
-        "mrcnn_mask_loss": 0.8
+        "mrcnn_bbox_loss": 1.,
+        "mrcnn_mask_loss": 1.
     }
 
     # Number of classes (including background)
