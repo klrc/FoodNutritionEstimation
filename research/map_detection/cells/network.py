@@ -16,7 +16,7 @@ class EvolutionConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 8
+    IMAGES_PER_GPU = 4
 
     LOSS_WEIGHTS = {
         "rpn_class_loss": 1,
@@ -71,10 +71,11 @@ class Network():
         self.model = model
 
     def evolution(self, model, config, train, val):
-        dir_name = datetime.datetime.now().strftime('mask_rcnn_detection_%Y%m%d%H%M%S')
-        log_dir = f"{config['log_dir']}/{dir_name}"
+        dir_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        model_hash = f"MRCNND_{config['hash']}_{dir_name}"
+        log_dir = f"{config['log_dir']}/{model_hash}"
         checkpoint_path = config['checkpoint_path'].replace(
-            'mask_rcnn_detection', dir_name)
+            'mask_rcnn_detection', model_hash)
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
         # Callbacks
@@ -91,10 +92,8 @@ class Network():
                          layers=config['layers'],
                          callbacks=callbacks)
 
-    def test_evolutions(self, config_paths, train, val):
-        for path in config_paths:
-            with open(path, 'r') as f:
-                config = json.load(f)
+    def test_evolutions(self, configs, train, val):
+        for config in configs:
             coco_path = config['coco_path']
             start_from = config['start_from']
 
