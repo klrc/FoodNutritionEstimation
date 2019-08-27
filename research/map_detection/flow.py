@@ -84,7 +84,7 @@ train, val = FoodMask60(_train, size), FoodMask60(_val, size)
 import tensorflow as tf  # noqa:E402
 import keras.backend.tensorflow_backend as KTF  # noqa:E402
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True  # 不全部占满显存, 按需分配
 session = tf.Session(config=config)
@@ -105,9 +105,10 @@ evolution_list = [
     # 'p5_l32_e50_lyHsCrF',
     # 'p5_l34_e50_lyHsCrF',
     # 'p5_l33_e1000_lyHsCrF',
-    'p5_l33_e50_lyAsTrF',
-    'p5_l33_e50_lyAsTrF_1',
-    'p5_l33_e50_lyAsTrF_2',
+    # 'p5_l33_e50_lyAsTrF',
+    # 'p5_l33_e50_lyAsTrF_1',
+    # 'p5_l33_e50_lyAsTrF_2',
+    'p5_l33_e50_lyAsTrF_2_copy'
 ]
 evolution_list = [f'{base}/{x}.json' for x in evolution_list]
 
