@@ -10,6 +10,7 @@ from research.map_detection.cells.compiler import Compiler  # noqa: E402
 '''
     map resources check!
 '''
+
 compiler_root = '.build/map_detection'
 resources = os.listdir(compiler_root)
 forced_build = []
@@ -52,6 +53,7 @@ else:
     build datasets.pak
     start from records
 '''
+
 datasets_path = '.build/map_detection/datasets.pak/divides_p30.json'
 if 'datasets.pak' not in resources:
     os.makedirs(f'{compiler_root}/datasets.pak')
@@ -71,6 +73,7 @@ else:
     start from frozen datasets
     instantiate train/val
 '''
+
 from research.map_detection.cells.dataset import FoodMask60  # noqa: E402
 size = (200, 150)
 print('building datasets ..')
@@ -81,6 +84,7 @@ train, val = FoodMask60(_train, size), FoodMask60(_val, size)
 '''
     keras configuration
 '''
+
 import tensorflow as tf  # noqa:E402
 import keras.backend.tensorflow_backend as KTF  # noqa:E402
 
@@ -97,6 +101,7 @@ KTF.set_session(session)
     reading test configs
     test batch evolution
 '''
+
 from research.map_detection.cells.network import MaskRCNN  # noqa: E402
 base = '.build/map_detection/configs.pak'
 
@@ -152,9 +157,5 @@ for _path in evolution_list:
 network = MaskRCNN.compile('training')
 network.test_evolutions(configs, train, val)
 
-# %%
-from research.map_detection.cells.network import MaskRCNN  # noqa: E402
-network = MaskRCNN.compile('training')
-s = network.model.keras_model.summary(line_length=128)
 
 # %%

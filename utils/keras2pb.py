@@ -53,8 +53,8 @@ def h5_to_pb(h5_model, output_dir, model_name, out_prefix="output_", log_tensorb
 
 if __name__ == '__main__':
     #  .h模型文件路径参数
-    input_path = '.build/map_detection/checkpoints/'
-    weight_file = 'satellite_iv3_ft.h5'
+    input_path = '.build'
+    weight_file = 'inf_MRCNND_p10_ld003_e1000_lyAsrF_20190827162647_1000.h5'
     weight_file_path = os.path.join(input_path, weight_file)
     output_graph_name = weight_file[:-3] + '.pb'
 
