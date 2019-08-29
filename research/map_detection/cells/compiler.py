@@ -103,10 +103,11 @@ class Compiler():
 
             yield _path
 
-    def augments(self, records, batch=8):
+    def augments(self, records, batch=8, copy_raw=True, randomise_percentage_area=False):
         colormap = label_colormap(255)
         for record in records:
-            yield record
+            if copy_raw:
+                yield record
             raw = np.asarray(Image.open(f'{record}/img.png'))
             mask = np.asarray(Image.open(f'{record}/mask.png'))
 
@@ -114,16 +115,21 @@ class Compiler():
             p = Augmentor.DataPipeline([[raw, mask]])
             p.rotate(1, max_left_rotation=5, max_right_rotation=5)
             p.flip_top_bottom(0.5)
-            p.zoom_random(1, percentage_area=0.5)
+            p.zoom_random(1, percentage_area=0.5,
+                          randomise_percentage_area=randomise_percentage_area)
 
             aug_records = p.sample(batch-1)
 
             for index, (raw, mask) in enumerate(aug_records):
+                if mask.sum() == 0:
+                    print('none-object instance, abandoned ..')
+                    continue
                 print(
                     f'augmenting <{record}> [{index+1}/{len(aug_records)}]..')
                 _hash = record.split('/')[-1].split('.')[0]
                 _new_hash = f'AUG{index}f_{_hash}'
-                _path = record.replace(_hash, _new_hash)
+                _path = record.replace(_hash, _new_hash).replace(
+                    'records', 'records_sup')
                 if not os.path.exists(_path):
                     os.makedirs(_path)
 
