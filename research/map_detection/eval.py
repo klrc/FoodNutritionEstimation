@@ -73,6 +73,18 @@ if check_keras:
     if pred:
         print('\ncheck keras model: [OK]')
 
+eval_keras = True
+if eval_keras:
+    with open('.build/map_detection/datasets.pak/divides_p30.json', 'r') as f:
+        divides = json.load(f)
+        _val = divides['val']
+    from research.map_detection.cells.dataset import FoodMask60  # noqa: E402
+    size = (200, 150)
+    print('building datasets ..')
+    val = FoodMask60(_val, size)
+    print('eval mAP for model ..')
+    mAP = network.eval(val)
+    print(f'\n mAP:{mAP}')
 
 # %%
 """
