@@ -1,10 +1,13 @@
 import datetime
 from .mask_rcnn_utils.config import Config
 from .mask_rcnn_utils import model as modellib
+from .mask_rcnn_utils import utils, visualize
+# from .model_def.model import log
+# from .model_def.visualize import random_colors, apply_mask, find_contours
 
 import os
 import keras
-import json
+import numpy as np
 import sys
 sys.path.append('.')
 
@@ -27,7 +30,7 @@ class EvolutionConfig(Config):
     }
 
     # Number of classes (including background)
-    NUM_CLASSES = 79  # background + 3 shapes
+    NUM_CLASSES = 79  # background + classes
 
     # Use small images for faster training. Set the limits of the small side
     # the large side, and that determines the image shape.
@@ -63,12 +66,37 @@ class MaskRCNN():
             compile_config = EvolutionConfig()
         compile_config.display()
         model = modellib.MaskRCNN(mode=mode, config=compile_config)
-        return Network(model)
+        return Network(model, compile_config)
 
 
 class Network():
-    def __init__(self, model):
+    def __init__(self, model, compile_config):
         self.model = model
+        self.compile_config = compile_config
+
+    def eval(self, val):
+        # Compute VOC-Style mAP @ IoU=0.5
+        # Running on 10 images. Increase for better accuracy.
+        # image_ids = np.random.choice(self.dataset_val.image_ids, 10)
+        image_ids = val.image_ids
+        APs = []
+        for image_id in image_ids:
+            # Load image and ground truth data
+            image, image_meta, gt_class_id, gt_bbox, gt_mask = \
+                modellib.load_image_gt(val, self.compile_config,
+                                       image_id, use_mini_mask=False)
+            # molded_images = np.expand_dims(
+            #     modellib.mold_image(image, self.inference_config), 0)
+            # Run object detection
+            results = self.model.detect([image], verbose=0)
+            r = results[0]
+            # Compute AP
+            AP, precisions, recalls, overlaps = \
+                utils.compute_ap(gt_bbox, gt_class_id, gt_mask,
+                                 r["rois"], r["class_ids"], r["scores"], r['masks'])
+            APs.append(AP)
+        m_ap = np.mean(APs)
+        return m_ap
 
     def evolution(self, model, config, train, val):
         dir_name = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
