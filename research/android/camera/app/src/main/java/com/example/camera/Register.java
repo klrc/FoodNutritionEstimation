@@ -2,8 +2,12 @@ package com.example.camera;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -74,8 +78,6 @@ public class Register extends AppCompatActivity {
     class SpinnerSexSelectedListener implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?>arg0,View arg1,int arg2,long arg3){
             choosed_sex = sex_list[arg2];
-
-
         }
 
         @Override
@@ -89,18 +91,39 @@ public class Register extends AppCompatActivity {
             switch (v.getId()) {
                 case R.id.register_btn_sure:
                     if(register_check()){
-
-                    Log.i(TAG,"check finish1");
                     double userWeight = Double.parseDouble(mWeight.getText().toString().trim());
-                    Log.i(TAG,"check finish2");
-                    double userHeight = Double.parseDouble(mHeight.getText().toString().trim());
+                    Log.i(TAG,"check finish");
+                    double userHeight = Double.parseDouble(mHeight.getText().toString().trim())/100;
+
 //                    String useryear =mUseryear.getText().toString().trim();
 //                    String usermonth =mUsermonth.getText().toString().trim();
 //                    String userday =mUserday.getText().toString().trim();
-                    String sex =mSex.getText().toString().trim();
+
+                    String sex =choosed_sex;//mSex.getText().toString().trim();
                     double BMI = userWeight/userHeight/userHeight;
+                    String useryear =mUseryear.getText().toString().trim();
+                    String usermonth =mUsermonth.getText().toString().trim();
+                    String userday =mUserday.getText().toString().trim();
+                    String userheight = mHeight.getText().toString().trim();
+                    String birthday = useryear+"-"+usermonth+"-"+userday;
+                    String agestr = getAge(birthday);
+                    String[] strage = agestr.split("-");
+                    int age = Integer.parseInt(strage[0]);
+                    int days = Integer.parseInt(strage[1]);
+                    float height = Float.parseFloat(userheight);
+                    //float age = days/365;
+                    Log.i(TAG,"性别"+sex);
+                    Log.i(TAG,"age"+String.valueOf(age));
+                    Log.i(TAG,"days"+String.valueOf(days));
+                    Log.i(TAG,"STRTT"+agestr);
+                    //int user_status = check_health(sex,userHeight,age,days,BMI);
+                    //Log.i(TAG,"STATUS"+String.valueOf(user_status));
+                    int status = mUserDataManager.BMIInfo(sex,age,days,BMI);
+                    float ibw = mUserDataManager.IBWInfo(sex,age,days,height);
+                    Log.i(TAG,"状态"+status);
 
-
+                    if (status==1) overthin(BMI);
+                    if (status==3) overfat(BMI);
                     //float w = Float.parseFloat(userWeight);
                     //float h = Float.parseFloat(userHeight);
 //                    double BMI = userWeight/userHeight/userHeight*10000;
@@ -110,19 +133,19 @@ public class Register extends AppCompatActivity {
 //                    double fats = calfats(age,kcal);
 //                    double CHO = calCHO(age,kcal);
 //                    double protein = calprotein(age,kcal);
-                    if(BMI>=40){
-                        Log.i(TAG,"overfat");
-                        overfat(BMI);
-                        break;
-                    }
-                    else if(BMI<=10) {
-                        Log.i(TAG,"overthin");
-                        overthin(BMI);
-                        break;
-                    }
-                    else{
-                        Log.i(TAG,"normal");
-                    }
+//                    if(BMI>=40){
+//                        Log.i(TAG,"overfat");
+//                        overfat(BMI);
+//                        break;
+//                    }
+//                    else if(BMI<=10) {
+//                        Log.i(TAG,"overthin");
+//                        overthin(BMI);
+//                        break;
+//                    }
+//                    else{
+//                        Log.i(TAG,"normal");
+//                    }
                     Intent intent_Reg_to_Login = new Intent(Register.this, Login.class);
                     startActivity(intent_Reg_to_Login);
                     finish();
@@ -231,11 +254,11 @@ public class Register extends AppCompatActivity {
                     age = 0;
                 } else if (dayMinus >= 0) {
                     age = 1;
-                    days = dayMinus;
+                    //days = dayMinus;
                 }
             } else if (monthMinus > 0) {
                 age = 1;
-                days = monthMinus*30+dayMinus;
+                //days = monthMinus*30+dayMinus;
             }
         } else if (yearMinus > 0) {
             if (monthMinus < 0) {// 当前月>生日月
@@ -243,14 +266,13 @@ public class Register extends AppCompatActivity {
                 if (dayMinus < 0) {
                 } else if (dayMinus >= 0) {
                     age = age + 1;
-                    days = yearMinus*365+monthMinus*30+dayMinus;
+                    //days = yearMinus*365+monthMinus*30+dayMinus;
                 }
             } else if (monthMinus > 0) {
                 age = age + 1;
             }
         }
-        Log.i(TAG,"最终"+age);
-        Log.i(TAG,"DAYS"+days);
+        days = yearMinus*365+monthMinus*30+dayMinus;
         String str = Integer.toString(age)+"-"+Integer.toString(days);
         return str;
     }
@@ -320,13 +342,7 @@ public class Register extends AppCompatActivity {
                 Toast.makeText(this, "用户名已存在，请重新输入", Toast.LENGTH_SHORT).show();
                 return false;
             }
-//            if (userPwd.equals(userPwdCheck) == false) {
-//                Toast.makeText(this, "两次输入密码不同，请重新输入", Toast.LENGTH_SHORT).show();
-//                return;
-//            } else {
-                UserData mUser = new UserData(userName,days,Integer.toString(age
-
-                ),userSex,userWeight,
+                UserData mUser = new UserData(userName,days,Integer.toString(age),userSex,userWeight,
                         userHeight,BMI,kcal,protein,fats,CHO);
 //                        d1kcal,d1CHO,d1protein,d1fats,
 //                        d2kcal,d2CHO,d2protein,d2fats,
@@ -403,32 +419,185 @@ public class Register extends AppCompatActivity {
                     });
             dialog.show();
         }
-    public boolean check_height(double height,String sex,float age,float days){
-        return true;
+//    public boolean check_health(String sex,float age,double BMI){
+//            if(age>=2&&age<=5){
+//                if(sex=="男"){
+//                    //查表，看BMI属于哪个层次。判断超胖或者消瘦
+//                }
+//                else if(sex=="女"){
+//                    //同上
+//                }
+//            }
+//            else if(age>5&&age<=18){
+//                if(sex=="男"){
+//                    //
+//                }
+//                else if(sex=="女"){
+//                    //
+//                }
+//            }
+//        else {//就医
+//            return false;
+//              }
+//        return true;
+//        }
 
-    }
-    public boolean check_health(String sex,float age,double BMI){
-            if(age>=2&&age<=5){
-                if(sex=="男"){
-                    //查表，看BMI属于哪个层次。判断超胖或者消瘦
+/*
+ * "1": 小于两岁，不显示营养推荐
+ * "2": 身高小于10%，建议就医
+ * "3": 超胖
+ * "4": 消瘦
+ * "5": 正常
+ */
+private SQLiteDatabase mSQLiteDatabase = null;
+    public int check_health(String sex,double height,float age,float days,double BMI){
+        String string_age = String.valueOf(age);
+        String string_days = String.valueOf(days);
+        //小于两岁，不显示营养推荐
+        if(days < 731)
+            return 1;
+            //查BMI表
+        else {
+            //男孩
+            if (sex == "男") {
+                //身高小于10%
+                //Cursor height_boy = mSQLiteDatabase.query("boy_height",)
+                Cursor height_boy = mSQLiteDatabase.rawQuery("SELECT * FROM boy_height WHERE Age < ? ORDER BY Age DESC LIMIT 1", new String[]{string_age});
+                String boy_h = "";
+                if (height_boy.moveToFirst()) {
+                    do {
+                        if (height_boy.getCount() == 0) {
+                            Log.i(TAG, "NULL");
+                        }
+                        boy_h = height_boy.getString(height_boy.getColumnIndex("P10"));
+                    } while (height_boy.moveToNext());
                 }
-                else if(sex=="女"){
-                    //同上
+                float boyHeight = Float.parseFloat(boy_h);
+                if (height < boyHeight) {
+                    return 2;
+                } else {
+                    //2-5岁的孩子
+                    if (age >= 2 && age <= 5) {
+                        Cursor boy_2_5 = mSQLiteDatabase.query("boy_2_5", null, "Age=?", new String[]{string_days}, null, null, null, null);
+                        String boy_2_5_15 = "";
+                        String boy_2_5_85 = "";
+                        if (boy_2_5.moveToFirst()) {
+                            do {
+                                if (boy_2_5.getCount() == 0) {
+                                    Log.i(TAG, "NULL");
+                                }
+                                boy_2_5_15 = boy_2_5.getString(boy_2_5.getColumnIndex("P15"));
+                                boy_2_5_85 = boy_2_5.getString(boy_2_5.getColumnIndex("p85"));
+                            } while (boy_2_5.moveToNext());
+                        }
+                        float boy_15 = Float.parseFloat(boy_2_5_15);
+                        float boy_85 = Float.parseFloat(boy_2_5_85);
+                        //到表boy_2_5查询结果
+                        if (BMI >= boy_15 && BMI <= boy_85) {
+                            return 3;
+                        } else if (BMI < boy_15) {
+                            return 4;
+                        } else {
+                            return 5;
+                        }
+                    } else if (age >= 6 && age <= 18) {
+                        String month = String.valueOf(days / 30);
+                        //到表boy_5_19查询结果
+                        Cursor boy_6_18 = mSQLiteDatabase.query("boy_5_19", null, "Month=?", new String[]{month}, null, null, null);
+                        String boy_6_18_15 = "";
+                        String boy_6_18_85 = "";
+                        if (boy_6_18.moveToFirst()) {
+                            do {
+                                if (boy_6_18.getCount() == 0) {
+                                    Log.i(TAG, "NULL");
+                                }
+                                boy_6_18_15 = boy_6_18.getString(boy_6_18.getColumnIndex("P15"));
+                                boy_6_18_85 = boy_6_18.getString(boy_6_18.getColumnIndex("p85"));
+                            } while (boy_6_18.moveToNext());
+                        }
+                        float boy_15 = Float.parseFloat(boy_6_18_15);
+                        float boy_85 = Float.parseFloat(boy_6_18_85);
+                        if (BMI >= boy_15 && BMI <= boy_85) {
+                            return 3;
+                        } else if (BMI < boy_15) {
+                            return 4;
+                        } else {
+                            return 5;
+                        }
+                    }
                 }
             }
-            else if(age>5&&age<=18){
-                if(sex=="男"){
-                    //
+            //女孩
+            else {
+                //身高小于10%
+                Cursor height_girl = mSQLiteDatabase.rawQuery("SELECT * FROM girl_height WHERE Age < ? ORDER BY Age DESC LIMIT 1", new String[]{string_age});
+                String girl_h = "";
+                if (height_girl.moveToFirst()) {
+                    do {
+                        if (height_girl.getCount() == 0) {
+                            Log.i(TAG, "NULL");
+                        }
+                        girl_h = height_girl.getString(height_girl.getColumnIndex("P10"));
+                    } while (height_girl.moveToNext());
                 }
-                else if(sex=="女"){
-                    //
+                float girlHeight_10 = Float.parseFloat(girl_h);
+                if (height < girlHeight_10) {
+                    return 2;
+                } else {
+                    if (age >= 2 && age <= 5) {
+                        //到表girl_2_5查询结果
+                        Cursor girl_2_5 = mSQLiteDatabase.query("girl_2_5", null, "Age=?", new String[]{string_days}, null, null, null);
+                        String girl_2_5_15 = "";
+                        String girl_2_5_85 = "";
+                        if (girl_2_5.moveToFirst()) {
+                            do {
+                                if (girl_2_5.getCount() == 0) {
+                                    Log.i(TAG, "NULL");
+                                }
+                                girl_2_5_15 = girl_2_5.getString(girl_2_5.getColumnIndex("P15"));
+                                girl_2_5_85 = girl_2_5.getString(girl_2_5.getColumnIndex("p85"));
+                            } while (girl_2_5.moveToNext());
+                        }
+                        float girl_15 = Float.parseFloat(girl_2_5_15);
+                        float girl_85 = Float.parseFloat(girl_2_5_85);
+                        if (BMI >= girl_15 && BMI <= girl_85) {
+                            return 3;
+                        } else if (BMI < girl_15) {
+                            return 4;
+                        } else {
+                            return 5;
+                        }
+                    } else if (age >= 6 && age <= 18) {
+                        //到表girl_5_19查询结果
+                        String month = String.valueOf(days / 30);
+                        Cursor girl_6_18 = mSQLiteDatabase.query("girl_5_19", null, "Month=?", new String[]{month}, null, null, null);
+                        String girl_6_18_15 = "";
+                        String girl_6_18_85 = "";
+                        if (girl_6_18.moveToFirst()) {
+                            do {
+                                if (girl_6_18.getCount() == 0) {
+                                    Log.i(TAG, "NULL");
+                                }
+                                girl_6_18_15 = girl_6_18.getString(girl_6_18.getColumnIndex("P15"));
+                                girl_6_18_85 = girl_6_18.getString(girl_6_18.getColumnIndex("p85"));
+                            } while (girl_6_18.moveToNext());
+                        }
+                        float girl_15 = Float.parseFloat(girl_6_18_15);
+                        float girl_85 = Float.parseFloat(girl_6_18_85);
+                        if (BMI <= girl_85 && BMI >= girl_15) {
+                            return 3;
+                        } else if (BMI < girl_15) {
+                            return 4;
+                        } else {
+                            return 5;
+                        }
+                    }
                 }
             }
-        else {//就医
-            return false;
-              }
-        return true;
         }
+        return 0;
+    }
+
 
 //    public boolean register_check2() {
 //        Log.i(TAG, "check_start");

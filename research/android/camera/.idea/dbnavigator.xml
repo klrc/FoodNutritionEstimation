@@ -24,27 +24,42 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="817686c8-e189-412a-866d-7013b0108477">
-        <schema name="main" object-types="dataset trigger, table, view, column, index, constraint" />
+      <connection connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f">
+        <schema name="main" object-types="index, table, view, dataset trigger, constraint, column" />
+      </connection>
+      <connection connection-id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268">
+        <schema name="main" object-types="index, table, view, dataset trigger, constraint, column" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="817686c8-e189-412a-866d-7013b0108477">
+    <connection id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
+    </connection>
+    <connection id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268">
+      <console name="Connection 1" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files>
-      <object connection-id="817686c8-e189-412a-866d-7013b0108477" object-ref="schemas/main/tables/users_info" />
+      <object connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" object-ref="schemas/main/tables/boy_ibw" />
+      <object connection-id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" object-ref="schemas/main/tables/users_info" />
+      <object connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" object-ref="schemas/main/tables/girl_ibw" />
     </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="817686c8-e189-412a-866d-7013b0108477" />
+    <connection id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" />
+    <connection id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="817686c8-e189-412a-866d-7013b0108477" dataset="main.users_info" active-filter-id="e3bcbf5a-323c-4f38-9bcc-dc9abf0eb86f">
-      <filter id="e3bcbf5a-323c-4f38-9bcc-dc9abf0eb86f" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    <filter-actions connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" dataset="main.boy_ibw" active-filter-id="3867e8ba-e63b-4c87-bacf-fcb7469ab7a6">
+      <filter id="3867e8ba-e63b-4c87-bacf-fcb7469ab7a6" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
+    <filter-actions connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" dataset="main.girl_ibw" active-filter-id="ba35fcd5-5f6b-4e53-925a-25e88d662e85">
+      <filter id="ba35fcd5-5f6b-4e53-925a-25e88d662e85" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
+    <filter-actions connection-id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" dataset="main.users_info" active-filter-id="2be0ad66-92e7-40d7-9822-ac5e89dd230b">
+      <filter id="2be0ad66-92e7-40d7-9822-ac5e89dd230b" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
@@ -72,7 +87,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="817686c8-e189-412a-866d-7013b0108477" active="true">
+      <connection id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" active="true">
         <database>
           <name value="Connection" />
           <description value="" />
@@ -88,6 +103,92 @@
           <database value="database" />
           <files>
             <file path="D:\user_data" schema="main" />
+          </files>
+          <type value="NONE" />
+          <user value="" />
+          <deprecated-pwd value="" />
+        </database>
+        <properties>
+          <auto-commit value="false" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="false" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="true" />
+          <environment-type value="default" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false">
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+          <object-name-filters />
+        </object-filters>
+      </connection>
+      <connection id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" active="true">
+        <database>
+          <name value="Connection 1" />
+          <description value="" />
+          <database-type value="SQLITE" />
+          <config-type value="BASIC" />
+          <database-version value="3.21" />
+          <driver-source value="BUILTIN" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="FILE" />
+          <host value="localhost" />
+          <port value="1234" />
+          <database value="database" />
+          <files>
+            <file path="E:\user_data" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -268,7 +369,7 @@
         <data-length-threshold value="250" />
       </values-actions-popup>
       <general>
-        <fetch-block-size value="100" />
+        <fetch-block-size value="1000" />
         <fetch-timeout value="30" />
         <trim-whitespaces value="true" />
         <convert-empty-strings-to-null value="true" />
