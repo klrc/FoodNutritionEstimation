@@ -84,8 +84,8 @@ class SEModule(nn.Module):
 
     def __init__(self, channels, reduction):
         super(SEModule, self).__init__()
-        # self.avg_pool = nn.AdaptiveAvgPool2d(1)
-        self.avg_pool = nn.AvgPool2d(31)
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+        # self.avg_pool = nn.AvgPool2d(31)
         self.fc1 = nn.Conv2d(channels, channels // reduction, kernel_size=1,
                              padding=0)
         self.relu = nn.ReLU(inplace=True)

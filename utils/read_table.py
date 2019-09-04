@@ -1,5 +1,6 @@
 
 # %%
+import xlwt
 import xlrd
 import sys
 sys.path.append('.')
@@ -40,7 +41,7 @@ def read_foods(table, start_from=1, fmt=1):
             _food, _id, _w, _volume = table.row_values(line)
         if _food != '':
             if current_food is not None:
-                ret[_food] = {
+                ret[current_food] = {
                     'ids': current_ids.copy(),
                     'volume': current_volume,
                 }
@@ -51,7 +52,8 @@ def read_foods(table, start_from=1, fmt=1):
             current_volume += _volume
         if _w != '':
             if _id == '':
-                current_ids[_food] = _w
+                if current_food != '小米粥':
+                    current_ids[_food] = _w
             else:
                 current_ids[_id] = _w
     return ret
@@ -71,11 +73,13 @@ dic_1.update(dic_2)
 replace_dir = {
     '牛肉块': '牛肉（肥瘦）',
     '牛肉片': '牛肉（瘦）',
-    '豌豆（带夹）': '牛油',
-    '荠菜': '',
-    '粉丝（干）':,
-    '内酯豆腐':,
+    '豌豆（带夹）': '豌豆（鲜）',
+    '荠菜': '荠菜（蓟菜）',
+    '粉丝（干）': '粉丝',
+    '内酯豆腐': '豆腐（内酯豆腐）',
 }
+
+final_ret = []
 
 for food in dic_1.keys():
     volume = dic_1[food]['volume']
@@ -83,15 +87,31 @@ for food in dic_1.keys():
     try:
         nutri = [0, 0, 0, 0]
         for _id in dic_1[food]['ids'].keys():
+            print(f'food <{food}> id <{_id}>')
             _w = dic_1[food]['ids'][_id]
-            # if _id in replace_dir.keys():
-            #     _id = replace_dir[_id]
+            if _id in replace_dir.keys():
+                _id = replace_dir[_id]
             _nutri = [_w*x for x in stats[_id]]
             # print(_id, _nutri)
             nutri = [a+b for a, b in zip(nutri, _nutri)]
 
-        # print("×", food, nutri, volume)
+        if volume > 0:
+            _record = [food, volume]
+            _record.extend(nutri)
+            final_ret.append(_record)
     except KeyError as e:
         print(e)
 
+for x in final_ret:
+    print(x)
+
 # %%
+f = xlwt.Workbook()
+sheet1 = f.add_sheet('sheet1', cell_overwrite_ok=True)
+for r, data in enumerate(final_ret):
+    for c, x in enumerate(data):
+        sheet1.write(r, c, x)
+f.save('test.xls')
+
+
+#%%

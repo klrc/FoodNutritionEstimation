@@ -14,7 +14,7 @@ import numpy as np
 sys.path.append('.')
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True  # 不全部占满显存, 按需分配
 session = tf.Session(config=config)
@@ -67,7 +67,7 @@ check_keras = False
 from research.map_detection.cells.network import MaskRCNN  # noqa: E402
 network = MaskRCNN.compile('inference')
 network.model.load_weights(f'{checkpoint_dir}/{model_id}.h5', by_name=True)
-network.model.keras_model.summary()
+# network.model.keras_model.summary()
 if check_keras:
     pred = network.model.detect([test_images[0]])
     if pred:

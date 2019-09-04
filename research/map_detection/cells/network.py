@@ -80,22 +80,30 @@ class Network():
         # image_ids = np.random.choice(self.dataset_val.image_ids, 10)
         image_ids = val.image_ids
         APs = []
-        for image_id in image_ids:
+        import random
+        random.shuffle(image_ids)
+        for index, image_id in enumerate(image_ids):
             # Load image and ground truth data
             image, image_meta, gt_class_id, gt_bbox, gt_mask = \
                 modellib.load_image_gt(val, self.compile_config,
                                        image_id, use_mini_mask=False)
+            # print(image_id, gt_class_id)
+            # continue
             # molded_images = np.expand_dims(
             #     modellib.mold_image(image, self.inference_config), 0)
             # Run object detection
             results = self.model.detect([image], verbose=0)
             r = results[0]
             # Compute AP
+
+            print(r["class_ids"], gt_class_id)
             AP, precisions, recalls, overlaps = \
                 utils.compute_ap(gt_bbox, gt_class_id, gt_mask,
                                  r["rois"], r["class_ids"], r["scores"], r['masks'])
             APs.append(AP)
-        m_ap = np.mean(APs)
+            print(AP, precisions, recalls, overlaps)
+            m_ap = np.mean(APs)
+            print(f'eval image [{index} /{len(image_ids)}] current mAP:{m_ap}')
         return m_ap
 
     def evolution(self, model, config, train, val):
