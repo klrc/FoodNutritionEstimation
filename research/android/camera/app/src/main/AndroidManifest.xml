@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".AdultAttri"></activity>
         <activity android:name=".ChangInfo" />
         <activity android:name=".SubmitAdv" />
         <activity android:name=".Setting" />
@@ -36,9 +37,9 @@
         </activity>
         <activity android:name=".NutritionIntake">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
         <activity android:name=".Login" />

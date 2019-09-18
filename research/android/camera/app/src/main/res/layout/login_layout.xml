@@ -113,21 +113,20 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_marginLeft="15.0px"
-        android:layout_marginRight="15.0px"
         android:layout_marginTop="62.0px"
+        android:layout_marginRight="15.0px"
         android:background="#ff3f3f3f"
-        android:paddingBottom="10.0px"
         android:paddingTop="21.0px"
-        android:visibility="gone"
-        >
+        android:paddingBottom="10.0px"
+        android:visibility="gone">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/login_success_show"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="#ff3f3f3f"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
     </RelativeLayout>
 
 

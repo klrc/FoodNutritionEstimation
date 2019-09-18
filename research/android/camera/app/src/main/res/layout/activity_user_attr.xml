@@ -51,24 +51,33 @@
         android:hint="请输入你的出生/年龄"
         tools:layout_editor_absoluteX="35dp"
         tools:layout_editor_absoluteY="277dp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_attr">
+        <Button
+            android:id="@+id/user_attribute_sure"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="确认"
+            android:textSize="20dp"
+            tools:layout_editor_absoluteX="35dp"
+            tools:layout_editor_absoluteY="380dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
-    <Button
-        android:id="@+id/user_attribute_sure"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="确认"
-        android:textSize="20dp"
-        tools:layout_editor_absoluteX="35dp"
-        tools:layout_editor_absoluteY="380dp"
-        android:layout_gravity="center"/>
-
-    <Button
-        android:id="@+id/user_attribute_cancel"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:text="取消"
-        android:textSize="20dp"
-        android:layout_gravity="center"
-        />
+        <Button
+            android:id="@+id/user_attribute_cancel"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:text="取消"
+            android:textSize="20dp"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
 
 </android.support.v7.widget.LinearLayoutCompat>

@@ -134,12 +134,13 @@ public class Login extends AppCompatActivity {
                 case R.id.login_btn_register:
                     Intent intent_Login_to_Register = new Intent(Login.this, Register.class);
                     startActivity(intent_Login_to_Register);
-                    finish();
+                    //finish();
                     break;
                 case R.id.login_btn_login:
                     String loginuser = login();
                     Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
                     intent_Login_to_MainInterface.putExtra("user",loginuser);
+                    intent_Login_to_MainInterface.putExtra("roll",100);
                     //Log.i(TAG,"asdas"+loginuser);
                     startActivity(intent_Login_to_MainInterface);
                     break;

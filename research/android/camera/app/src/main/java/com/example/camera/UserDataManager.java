@@ -74,7 +74,7 @@ public class UserDataManager {             //用户数据管理类
             + "Birth varchar(20),"
             + "Weight varchar(20),"
             + "Height varchar(20),"
-            + "BMI varchar(20),"
+            + "BMI double(20,3),"
             + "Kcal varchar(20),"
             + "Protein varchar(20),"
             + "Fats varchar(20),"
@@ -164,6 +164,34 @@ public class UserDataManager {             //用户数据管理类
         double Protein = userData.getProtein();
         double Fats = userData.getFats();
         double CHO = userData.getCHO();
+        double D1Kcal=userData.getD1Kcal();
+        double D1CHO = userData.getD1CHO();
+        double D1Protein = userData.getD1Protein();
+        double D1Fats = userData.getD1Fats();
+        double D2Kcal=userData.getD2Kcal();
+        double D2CHO = userData.getD2CHO();
+        double D2Protein = userData.getD2Protein();
+        double D2Fats = userData.getD2Fats();
+        double D3Kcal=userData.getD3Kcal();
+        double D3CHO = userData.getD3CHO();
+        double D3Protein = userData.getD3Protein();
+        double D3Fats = userData.getD3Fats();
+        double D4Kcal=userData.getD4Kcal();
+        double D4CHO = userData.getD4CHO();
+        double D4Protein = userData.getD4Protein();
+        double D4Fats = userData.getD4Fats();
+        double D5Kcal=userData.getD5Kcal();
+        double D5CHO = userData.getD5CHO();
+        double D5Protein = userData.getD5Protein();
+        double D5Fats = userData.getD5Fats();
+        double D6Kcal=userData.getD6Kcal();
+        double D6CHO = userData.getD6CHO();
+        double D6Protein = userData.getD6Protein();
+        double D6Fats = userData.getD6Fats();
+        double D7Kcal=userData.getD7Kcal();
+        double D7CHO = userData.getD7CHO();
+        double D7Protein = userData.getD7Protein();
+        double D7Fats = userData.getD7Fats();
 
 
 
@@ -182,6 +210,35 @@ public class UserDataManager {             //用户数据管理类
         values.put(USER_PROTEIN,Protein);
         values.put(USER_FATS,Fats);
         values.put(USER_CHO,CHO);
+        values.put(D1KCAL,D1Kcal);
+        values.put(UD1CHO,D1CHO);
+        values.put(D1PROTEIN,D1Protein);
+        values.put(D1FATS,D1Fats);
+        values.put(D2KCAL,D2Kcal);
+        values.put(UD2CHO,D2CHO);
+        values.put(D2PROTEIN,D2Protein);
+        values.put(D2FATS,D2Fats);
+        values.put(D3KCAL,D3Kcal);
+        values.put(UD3CHO,D3CHO);
+        values.put(D3PROTEIN,D3Protein);
+        values.put(D3FATS,D3Fats);
+        values.put(D4KCAL,D4Kcal);
+        values.put(UD4CHO,D4CHO);
+        values.put(D4PROTEIN,D4Protein);
+        values.put(D4FATS,D4Fats);
+        values.put(D5KCAL,D5Kcal);
+        values.put(UD5CHO,D5CHO);
+        values.put(D5PROTEIN,D5Protein);
+        values.put(D5FATS,D5Fats);
+        values.put(D6KCAL,D6Kcal);
+        values.put(UD6CHO,D6CHO);
+        values.put(D6PROTEIN,D6Protein);
+        values.put(D6FATS,D6Fats);
+        values.put(D7KCAL,D7Kcal);
+        values.put(UD7CHO,D7CHO);
+        values.put(D7PROTEIN,D7Protein);
+        values.put(D7FATS,D7Fats);
+
         //values.put(USER_NA,Na);
         //values.put(USER_PWD, userPwd);
         return mSQLiteDatabase.insert(TABLE_NAME, ID, values);
@@ -609,15 +666,37 @@ public class UserDataManager {             //用户数据管理类
 
         cursor.close();
         return weekfatsinfo;
+    }public List<String> DayNutriInfo(String userName,int week){
+        Log.i(TAG,"findWeekfatsInfo");
+        Cursor cursor = mSQLiteDatabase.query("users_info",null,"USER_NAME=?", new String[]{userName},null,null,null,null);
+        List<String> daynutriinfo = new ArrayList<String>();
+        if(cursor.moveToFirst()) {
+            do {
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                String weekKcal = cursor.getString(cursor.getColumnIndex("D"+Integer.toString(week)+"Kcal"));
+                String weekCHO = cursor.getString(cursor.getColumnIndex("D"+Integer.toString(week)+"CHO"));
+                String weekProtein = cursor.getString(cursor.getColumnIndex("D"+Integer.toString(week)+"Protein"));
+                String weekFats = cursor.getString(cursor.getColumnIndex("D"+Integer.toString(week)+"Fats"));
+                daynutriinfo.add(weekKcal);
+                daynutriinfo.add(weekCHO);
+                daynutriinfo.add(weekProtein);
+                daynutriinfo.add(weekFats);
+                daynutriinfo.add("1000");
+            } while (cursor.moveToNext());}
+
+        cursor.close();
+        return daynutriinfo;
     }
     public int BMIInfo(String usersex,int age,int days,double BMI){
-        Log.i(TAG,"IBWInfo");
+        Log.i(TAG,"BMIInfo");
         Cursor cursor;
         int a= 0;
         String p15="";
         String p85="";
         String bmiinfo="";
         int status = 0;
+        if(days<730){status=-1;}
+        else if(days>=730){
         if (usersex=="男"){
             Log.i(TAG,"男");
             if(age>=2&&age<=5){
@@ -711,20 +790,34 @@ public class UserDataManager {             //用户数据管理类
                 }
                 cursor.close();
             }
-        }
+        }}
+        Log.i(TAG,Integer.toString(status));
         return status;
     }
+    //查ibw表，如果身高高于表内最高值，按成人算ibw。
     public float IBWInfo(String sex,int userage,int days,float height){
         Cursor cursor=mSQLiteDatabase.query("boy_ibw", null, "Age=?", new String[]{"0"}, null, null, null, null);
         int month = days/30;
         float ibw = 0;
         float agecol=0;
+        float overtall=0;
+        float adultweight = 0;
         String weight="";
         String strsex="";
-        if(sex=="男")
+        if(sex=="男"){
             strsex="boy";
-        if(sex=="女")
+            if(height>183.9){
+                overtall = (height-100)*0.9f;
+            }
+        }
+
+        if(sex=="女"){
             strsex="girl";
+            if(height>170.7){
+                overtall= (height-100)*0.9f-2.5f;
+            }
+        }
+
             if(month<24) {
                 agecol = month/12f;
             Log.i(TAG, "agecol" + String.valueOf(agecol));
@@ -745,7 +838,101 @@ public class UserDataManager {             //用户数据管理类
             if (agecol >= 1.5 && agecol < 1.75)
                 cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.5",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 1.75 && agecol < 2)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age=?", new String[]{"1.75",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.75",Float.toString(height)}, null, null, null, "1");
+        }
+        if(month>=24&&month<=216){
+            int age_low = month/12;
+            float age_mid = age_low+1f/2f;
+            int age_high = age_low+1;
+            agecol = month/12f;
+
+            Log.i(TAG,"agelow"+String.valueOf(age_low));
+            Log.i(TAG,"agemid"+String.valueOf(age_mid));
+            Log.i(TAG,"agehigh"+String.valueOf(age_high));
+            if(agecol>=age_low&&agecol<age_mid){
+                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_low),Float.toString(height)},null,null,null,"1");
+                Log.i(TAG,"chossedcursor low"); }
+            if(agecol>=age_mid&&agecol<age_high){
+                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_mid),Float.toString(height)},null,null,null,"1");
+                Log.i(TAG,"chossedcursor mid");}
+            if(agecol==age_high){
+                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_high),Float.toString(height)},null,null,null,"1");
+                Log.i(TAG,"chossedcursor high");}
+
+            Log.i(TAG,"agecol"+agecol);
+
+        }
+        if(month>216){
+            if(sex=="男")
+                adultweight = (height-100)*0.9f;
+            if(sex=="女")
+                adultweight = (height-100)*0.9f-2.5f;
+        }
+        if(cursor.moveToFirst()) {
+            do {
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                        weight = cursor.getString(cursor.getColumnIndex("P_weight"));
+                } while (cursor.moveToNext());}
+            cursor.close();
+//        Log.i(TAG,"USER_HEIGHT"+height);
+        Log.i(TAG,"USER_IBW"+weight);
+        if(sex=="男"){
+            if(month>216)
+                ibw = adultweight;
+            if(month<=216){
+                if(height>183.9)
+                    ibw = overtall;
+                else
+                    ibw = Float.parseFloat(weight);
+            }
+        }
+
+        if(sex=="女"){
+            if(month>216)
+                ibw = adultweight;
+            if(month<=216){
+                if(height>170.7)
+                    ibw = overtall;
+                else
+                    ibw = Float.parseFloat(weight);
+            }
+        }
+        Log.i(TAG,"USER_IBW IS "+ String.valueOf(ibw));
+        return ibw;
+    }
+    public int check_height(String sex,int days,float height){
+        Cursor cursor=mSQLiteDatabase.query("boy_ibw", null, "Age=?", new String[]{"0"}, null, null, null, null);
+        int month = days/30;
+        float ibw = 0;
+        float agecol=0;
+        int status = 0;
+        String weight="";
+        String strsex="";
+        if(sex=="男")
+            strsex="boy";
+        if(sex=="女")
+            strsex="girl";
+        if(month<24) {
+            agecol = month/12f;
+            Log.i(TAG, "agecol" + String.valueOf(agecol));
+            if (agecol < 0.166)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0"}, null, null, null, "2");
+            if (agecol >= 0.166 && agecol < 0.333)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.166"}, null, null, null, "2");
+            if (agecol >= 0.333 && agecol < 0.5)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.333"}, null, null, null, "2");
+            if (agecol >= 0.5 && agecol < 0.75)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.5"}, null, null, null, "2");
+            if (agecol >= 0.75 && agecol < 1)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.75"}, null, null, null, "2");
+            if (agecol >= 1 && agecol < 1.25)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1"}, null, null, null, "2");
+            if (agecol >= 1.25 && agecol < 1.5)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1.25"}, null, null, null, "2");
+            if (agecol >= 1.5 && agecol < 1.75)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1.5"}, null, null, null, "2");
+            if (agecol >= 1.75 && agecol < 2)
+                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1.75"}, null, null, null, "2");
         }
         if(month>=24){
             int age_low = month/12;
@@ -757,29 +944,31 @@ public class UserDataManager {             //用户数据管理类
             Log.i(TAG,"agemid"+String.valueOf(age_mid));
             Log.i(TAG,"agehigh"+String.valueOf(age_high));
             if(agecol>=age_low&&agecol<age_mid){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age=? AND P_height>=?", new String[]{Float.toString(age_low),Float.toString(height)},null,null,null,"1");
+                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age=?", new String[]{Float.toString(age_low)},null,null,null,"2");
                 Log.i(TAG,"chossedcursor low"); }
             if(agecol>=age_mid&&agecol<age_high){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age=? AND P_height>=?", new String[]{Float.toString(age_mid),Float.toString(height)},null,null,null,"1");
+                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=?", new String[]{Float.toString(age_mid)},null,null,null,"2");
                 Log.i(TAG,"chossedcursor mid");}
             if(agecol==age_high){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age=? AND P_height>=?", new String[]{Float.toString(age_high),Float.toString(height)},null,null,null,"1");
+                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=?", new String[]{Float.toString(age_high)},null,null,null,"2");
                 Log.i(TAG,"chossedcursor high");}
-            Log.i(TAG,"agecol"+agecol);
+                Log.i(TAG,"agecol"+agecol);
 
         }
+        String p10_height="";
         if(cursor.moveToFirst()) {
             do {
                 if (cursor.getCount()==0){Log.i(TAG,"NULL");}
-                        weight = cursor.getString(cursor.getColumnIndex("P_weight"));
-                } while (cursor.moveToNext());}
-            cursor.close();
-//        Log.i(TAG,"USER_HEIGHT"+height);
-        Log.i(TAG,"USER_WEIGHT"+weight);
-
-
-
-        return ibw;
+                p10_height = cursor.getString(cursor.getColumnIndex("P_height"));
+            } while (cursor.moveToNext());}
+        cursor.close();
+        //p10_height = cursor.getColumnIndex("P_height");
+        Log.i(TAG,"最低身高"+p10_height);
+        if(height<=Float.parseFloat(p10_height)){
+            status=1;
+        }
+        Log.i(TAG,"身高状态"+status);
+        return status;
     }
     public void changinfo(String userName,String columnName,String changed_value) {
         int result = 0;
@@ -790,152 +979,4 @@ public class UserDataManager {             //用户数据管理类
         mSQLiteDatabase.update(TABLE_NAME, values, "USER_NAME=?", new String[]{userName});
     }
 }
-
-//    public double check_kcal (String sex,double height,double weight,float age,float days,double BMI) {
-//        //分为男生女生讨论，分别检索
-//        String string_age = String.valueOf(age);
-//        String string_days = String.valueOf(days);
-//        if(sex == "男"){
-//            //获取对应年纪下体重
-//            //Cursor weight_boy = mSQLiteDatabase.rawQuery("SELECT * FROM boy_weight WHERE Age < ? ORDER BY Age DESC LIMIT 1", new String[]{string_age});
-//            Cursor weight_boy = mSQLiteDatabase.query("boy_weight",null,"Age > ?",new String[]{string_age},null,null,"Age","1");
-//            String weight_boy_3 = "";
-//            String weight_boy_10 = "";
-//            String weight_boy_25 = "";
-//            String weight_boy_50 = "";
-//            String weight_boy_75 = "";
-//            String weight_boy_90 = "";
-//            String weight_boy_97 = "";
-//            if (weight_boy.moveToFirst()) {
-//                do {
-//                    if (weight_boy.getCount() == 0) {
-//                        Log.i(TAG, "NULL");
-//                    }
-//                    //获取每一列的值
-//                    weight_boy_3 = weight_boy.getString(weight_boy.getColumnIndex("P3"));
-//                    weight_boy_10 = weight_boy.getString(weight_boy.getColumnIndex("P10"));
-//                    weight_boy_25 = weight_boy.getString(weight_boy.getColumnIndex("P25"));
-//                    weight_boy_50 = weight_boy.getString(weight_boy.getColumnIndex("P50"));
-//                    weight_boy_75 = weight_boy.getString(weight_boy.getColumnIndex("P75"));
-//                    weight_boy_90 = weight_boy.getString(weight_boy.getColumnIndex("P90"));
-//                    weight_boy_97 = weight_boy.getString(weight_boy.getColumnIndex("P97"));
-//                } while (weight_boy.moveToNext());
-//            }
-//            float wboy3 = Float.parseFloat(weight_boy_3);
-//            float wboy10 = Float.parseFloat(weight_boy_10);
-//            float wboy25 = Float.parseFloat(weight_boy_25);
-//            float wboy50 = Float.parseFloat(weight_boy_50);
-//            float wboy75 = Float.parseFloat(weight_boy_75);
-//            float wboy90 = Float.parseFloat(weight_boy_90);
-//            float wboy97 = Float.parseFloat(weight_boy_97);
-//            double IBW = 0;
-//            double Kcal = 0;
-//            if (weight <= wboy3){
-//                IBW = wboy3;
-//            }else if (weight > wboy3 && weight <= wboy10){
-//                IBW = wboy10;
-//            }else if (weight > wboy10 && weight <= wboy25){
-//                IBW = wboy25;
-//            }else if (weight > wboy25 && weight <= wboy50){
-//                IBW = wboy50;
-//            }else if (weight > wboy50 && weight <= wboy75){
-//                IBW = wboy75;
-//            }else if (weight > wboy75 && weight <= wboy90){
-//                IBW = wboy90;
-//            }else if (weight >wboy90 && weight <= wboy97){
-//                IBW = wboy97;
-//            }else if (weight >wboy97){
-//                IBW = -1;
-//            }
-//            //判断IBW（体重）≤10kg 热卡（kcal）=90*IBW
-//            //10＜IBW≤20kg，热卡（kcal）=900+50*（IBW-10kg）
-//            //IBW＞20kg，热卡（kcal）=1000+50*（20-10）+20*（IBW-20）
-//            if (IBW <= 10){
-//                Kcal = 90 * IBW;
-//            }else if (IBW > 10 && IBW <= 20){
-//                Kcal = 900 + 50 * (IBW - 10);
-//            }else if (IBW > 20 ){
-//                Kcal = 1000 + 50 * (20 - 10 ) + 20 * (IBW - 20);
-//            }
-//            //1~4岁，碳水化合物50%，脂肪35%，蛋白质15%
-//            if (age >= 1 && age <= 4){
-//                return Kcal * 0.5;
-//            }
-//            //4~18岁，碳水化合物55%，脂肪30%，蛋白质15%
-//            else if(age <= 18 && age >4){
-//                return Kcal * 0.55;
-//            }
-//        }
-//        else if (sex == "女"){
-//            //获取对应年纪下体重
-//            Cursor weight_girl = mSQLiteDatabase.query("girl_weight",null,"Age < ?",new String[]{string_age},null,null,"Age","1");
-//            String weight_girl_3 = "";
-//            String weight_girl_10 = "";
-//            String weight_girl_25 = "";
-//            String weight_girl_50 = "";
-//            String weight_girl_75 = "";
-//            String weight_girl_90 = "";
-//            String weight_girl_97 = "";
-//            if (weight_girl.moveToFirst()) {
-//                do {
-//                    if (weight_girl.getCount() == 0) {
-//                        Log.i(TAG, "NULL");
-//                    }
-//                    //获取每一列的值
-//                    weight_girl_3 = weight_girl.getString(weight_girl.getColumnIndex("P3"));
-//                    weight_girl_10 = weight_girl.getString(weight_girl.getColumnIndex("P10"));
-//                    weight_girl_25 = weight_girl.getString(weight_girl.getColumnIndex("P25"));
-//                    weight_girl_50 = weight_girl.getString(weight_girl.getColumnIndex("P50"));
-//                    weight_girl_75 = weight_girl.getString(weight_girl.getColumnIndex("P75"));
-//                    weight_girl_90 = weight_girl.getString(weight_girl.getColumnIndex("P90"));
-//                    weight_girl_97 = weight_girl.getString(weight_girl.getColumnIndex("P97"));
-//                } while (weight_girl.moveToNext());
-//            }
-//            float wgirl3 = Float.parseFloat(weight_girl_3);
-//            float wgirl10 = Float.parseFloat(weight_girl_10);
-//            float wgirl25 = Float.parseFloat(weight_girl_25);
-//            float wgirl50 = Float.parseFloat(weight_girl_50);
-//            float wgirl75 = Float.parseFloat(weight_girl_75);
-//            float wgirl90 = Float.parseFloat(weight_girl_90);
-//            float wgirl97 = Float.parseFloat(weight_girl_97);
-//            double IBW = 0;
-//            double Kcal = 0;
-//            if (weight <= wgirl3){
-//                IBW = wgirl3;
-//            }else if (weight > wgirl3 && weight <= wgirl10){
-//                IBW = wgirl10;
-//            }else if (weight > wgirl10 && weight <= wgirl25){
-//                IBW = wgirl25;
-//            }else if (weight > wgirl25 && weight <= wgirl50){
-//                IBW = wgirl50;
-//            }else if (weight > wgirl50 && weight <= wgirl75){
-//                IBW = wgirl75;
-//            }else if (weight > wgirl75 && weight <= wgirl90){
-//                IBW = wgirl90;
-//            }else if (weight >wgirl90 && weight <= wgirl97){
-//                IBW = wgirl97;
-//            }else if (weight >wgirl97){
-//                IBW = -1;
-//            }
-//            //判断IBW（体重）≤10kg 热卡（kcal）=90*IBW
-//            //10＜IBW≤20kg，热卡（kcal）=900+50*（IBW-10kg）
-//            //IBW＞20kg，热卡（kcal）=1000+50*（20-10）+20*（IBW-20）
-//            if (IBW <= 10){
-//                Kcal = 90 * IBW;
-//            }else if (IBW > 10 && IBW <= 20){
-//                Kcal = 900 + 50 * (IBW - 10);
-//            }else if (IBW > 20 ){
-//                Kcal = 1000 + 50 * (20 - 10 ) + 20 * (IBW - 20);
-//            }
-//            //1~4岁，碳水化合物50%，脂肪35%，蛋白质15%
-//            if (age >= 1 && age <= 4){
-//                return Kcal * 0.5;
-//            }
-//            //4~18岁，碳水化合物55%，脂肪30%，蛋白质15%
-//            else if(age <= 18 && age >4){
-//                return Kcal * 0.55;
-//            }
-//        }
-//        return 0;
-//    }
 

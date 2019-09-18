@@ -24,42 +24,35 @@
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
     <loaded-nodes>
-      <connection connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f">
-        <schema name="main" object-types="index, table, view, dataset trigger, constraint, column" />
+      <connection connection-id="d119691a-9ee7-4582-9ac9-d203811de5e8">
+        <schema name="main" object-types="view, table" />
       </connection>
-      <connection connection-id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268">
-        <schema name="main" object-types="index, table, view, dataset trigger, constraint, column" />
+      <connection connection-id="56f3d8ee-6ba1-4ef6-98b6-140c275952e9">
+        <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f">
-      <console name="Connection" type="STANDARD" schema="main" session="Main" />
+    <connection id="d119691a-9ee7-4582-9ac9-d203811de5e8">
+      <console name="f" type="STANDARD" schema="main" session="Main" />
     </connection>
-    <connection id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268">
-      <console name="Connection 1" type="STANDARD" schema="main" session="Main" />
+    <connection id="56f3d8ee-6ba1-4ef6-98b6-140c275952e9">
+      <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" object-ref="schemas/main/tables/boy_ibw" />
-      <object connection-id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" object-ref="schemas/main/tables/users_info" />
-      <object connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" object-ref="schemas/main/tables/girl_ibw" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-    <connection id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" />
-    <connection id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" />
+    <connection id="d119691a-9ee7-4582-9ac9-d203811de5e8" />
+    <connection id="56f3d8ee-6ba1-4ef6-98b6-140c275952e9" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" dataset="main.boy_ibw" active-filter-id="3867e8ba-e63b-4c87-bacf-fcb7469ab7a6">
-      <filter id="3867e8ba-e63b-4c87-bacf-fcb7469ab7a6" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    <filter-actions connection-id="56f3d8ee-6ba1-4ef6-98b6-140c275952e9" dataset="main.users_info" active-filter-id="2c4f2634-c188-4b41-9b91-3fc42b49e651">
+      <filter id="2c4f2634-c188-4b41-9b91-3fc42b49e651" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
-    <filter-actions connection-id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" dataset="main.girl_ibw" active-filter-id="ba35fcd5-5f6b-4e53-925a-25e88d662e85">
-      <filter id="ba35fcd5-5f6b-4e53-925a-25e88d662e85" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
-    </filter-actions>
-    <filter-actions connection-id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" dataset="main.users_info" active-filter-id="2be0ad66-92e7-40d7-9822-ac5e89dd230b">
-      <filter id="2be0ad66-92e7-40d7-9822-ac5e89dd230b" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    <filter-actions connection-id="d119691a-9ee7-4582-9ac9-d203811de5e8" dataset="main.users_info" active-filter-id="f3e9a9bf-6c23-423f-89e7-f203b70b2962">
+      <filter id="f3e9a9bf-6c23-423f-89e7-f203b70b2962" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
@@ -87,9 +80,9 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="cd6ae783-bcb4-4bd1-ab5a-1388f4b07f2f" active="true">
+      <connection id="d119691a-9ee7-4582-9ac9-d203811de5e8" active="true">
         <database>
-          <name value="Connection" />
+          <name value="f" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
@@ -102,7 +95,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="D:\user_data" schema="main" />
+            <file path="F:\user_data" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
@@ -173,9 +166,9 @@
           <object-name-filters />
         </object-filters>
       </connection>
-      <connection id="07640f9c-ef6e-4ec8-92fe-ef9f6c854268" active="true">
+      <connection id="56f3d8ee-6ba1-4ef6-98b6-140c275952e9" active="true">
         <database>
-          <name value="Connection 1" />
+          <name value="Connection" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
@@ -188,7 +181,7 @@
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="E:\user_data" schema="main" />
+            <file path="D:\user_data" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />
