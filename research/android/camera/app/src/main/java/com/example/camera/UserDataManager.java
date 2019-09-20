@@ -118,7 +118,7 @@ public class UserDataManager {             //用户数据管理类
         DataBaseManagementHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
         }
-
+//创建数据库
         @Override
         public void onCreate(SQLiteDatabase db) {
             Log.i(TAG,"db.getVersion()="+db.getVersion());
@@ -524,6 +524,29 @@ public class UserDataManager {             //用户数据管理类
         return userlist;
     }
     //问题记录 现在是用户名是数字的可以找到 ， AA这个字符类型的找不到。
+    public List<Float> findFoodInfo(String foodName){
+        Cursor cursor = mSQLiteDatabase.query("foods_info",null,"Food_Name=?",new String[]{foodName},null,null,null,null);
+        List<Float> foodinfo = new ArrayList<Float>();
+        Log.i(TAG,"foodinfostart");
+        if(cursor.moveToFirst()){
+            do{
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+            Float vol = cursor.getFloat(cursor.getColumnIndex("Vol"));
+            Float Energy = cursor.getFloat(cursor.getColumnIndex("Energy"))/vol;
+            Float CHO = cursor.getFloat(cursor.getColumnIndex("CHO"))/vol;
+            Float Protein = cursor.getFloat(cursor.getColumnIndex("Protein"))/vol;
+            Float Fats = cursor.getFloat(cursor.getColumnIndex("Fats"))/vol;
+            foodinfo.add(Energy);
+            foodinfo.add(CHO);
+            foodinfo.add(Protein);
+            foodinfo.add(Fats);
+                Log.i(TAG,"FOODNUTRI"+Energy+"+"+CHO+"+"+Protein+"+"+Fats);
+        }while (cursor.moveToNext());}
+        cursor.close();
+
+        return foodinfo;
+
+    }
     public List<String> findUserInfo(String userName){
         int result=0;
         Log.i(TAG,"findUserInfo");
