@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -35,7 +36,11 @@ public class Register extends AppCompatActivity {
     private EditText mSex;
     private Button mSureButton;
     private Button mCancelButton;
+    private RadioButton mChild;
+    private RadioButton mAdult;
+    private RadioButton mElder;
     private UserDataManager mUserDataManager;
+    private int identity=0;
     //下拉框
     private Spinner sex_spinner;
     public String choosed_sex;
@@ -53,6 +58,13 @@ public class Register extends AppCompatActivity {
         mUseryear = (EditText)findViewById(R.id.user_year);
         mUsermonth = (EditText)findViewById(R.id.user_month);
         mUserday = (EditText)findViewById(R.id.user_day);
+        mChild = (RadioButton) findViewById(R.id.child);
+        mAdult = (RadioButton) findViewById(R.id.adult);
+        mElder = (RadioButton) findViewById(R.id.elder);
+        mChild.setOnClickListener(mListener);
+        mAdult.setOnClickListener(mListener);
+        mElder.setOnClickListener(mListener);
+
         //mSex = (EditText)findViewById(R.id.user_sex);
 
         mSureButton = (Button) findViewById(R.id.register_btn_sure);
@@ -64,6 +76,7 @@ public class Register extends AppCompatActivity {
         if (mUserDataManager == null) {
             mUserDataManager = new UserDataManager(this);
             mUserDataManager.openDataBase();
+
         }
         //下拉框
         sex_spinner = (Spinner)findViewById(R.id.sex_choose);
@@ -76,6 +89,26 @@ public class Register extends AppCompatActivity {
         sex_spinner.setVisibility(View.VISIBLE);
         Log.i(TAG,"Register_onCreate()");
     }
+
+    View.OnClickListener mListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.child:
+                    identity=1;
+                    Log.i(TAG,"身份："+identity);
+                    break;
+                case R.id.adult:
+                    identity=2;
+                    Log.i(TAG,"身份："+identity);
+                    break;
+                case R.id.elder:
+                    identity=3;
+                    Log.i(TAG,"身份："+identity);
+                    break;
+            }
+        }
+    };
     class SpinnerSexSelectedListener implements AdapterView.OnItemSelectedListener {
         public void onItemSelected(AdapterView<?>arg0,View arg1,int arg2,long arg3){
             choosed_sex = sex_list[arg2];
@@ -91,109 +124,167 @@ public class Register extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.register_btn_sure:
+
                     if(register_check()) {
+                        if(identity==0){
+                            Toast.makeText(Register.this,"请选择用户身份",Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        Log.i(TAG,"用户身份："+identity);
+//                    if(mUserDataManager.is_num_enough(String.valueOf(identity))==false)
+//                    {
+//                        Toast.makeText(Register.this,"该身份用户数量已达上限，无法注册！",Toast.LENGTH_SHORT).show();
+//                        break;
+//                    }
                         final double userWeight = Double.parseDouble(mWeight.getText().toString().trim());
                         Log.i(TAG, "check finish");
                         final double userHeight = Double.parseDouble(mHeight.getText().toString().trim()) / 100f;
                         Log.i(TAG,"小数身高"+userHeight);
-                        final String sex = choosed_sex;//mSex.getText().toString().trim();
+                        String sex = "";//mSex.getText().toString().trim();
                         final double BMI = userWeight / userHeight / userHeight;
                         Log.i(TAG,"BMI呀"+BMI);
                         final String userName = mUsername.getText().toString().trim();
                         String useryear = mUseryear.getText().toString().trim();
                         String usermonth = mUsermonth.getText().toString().trim();
                         String userday = mUserday.getText().toString().trim();
-                        String userheight = mHeight.getText().toString().trim();
+                        final String userheight = mHeight.getText().toString().trim();
                         String birthday = useryear + "-" + usermonth + "-" + userday;
                         String agestr = getAge(birthday);
                         String[] strage = agestr.split("-");
                         final int age = Integer.parseInt(strage[0]);
                         final int days = Integer.parseInt(strage[1]);
                         final float height = Float.parseFloat(userheight);
+                        Calendar cal = Calendar.getInstance();
+                        int yearNow = cal.get(Calendar.YEAR);
+                        int monthNow = cal.get(Calendar.MONTH)+1;
+                        int dayNow = cal.get(Calendar.DAY_OF_MONTH);
+                        String comp_monthNow =String.valueOf(monthNow);
+                        String comp_dayNow=String.valueOf(dayNow);
+                        if(String.valueOf(monthNow).length()==1){
+                            comp_monthNow = "0"+monthNow;
+                        }
+                        if(String.valueOf(dayNow).length()==1){
+                            comp_dayNow="0"+dayNow;
+                        }
+                        final String Reg_time = yearNow+"-"+comp_monthNow+"-"+comp_dayNow;
+                        int userage=days/365;
+                        float calmonth =(days-userage*365)/30;
+                        float real_age=0;
+                        if(calmonth>=0&&calmonth<=4) real_age=userage;
+                        if(calmonth>4&&calmonth<=8) real_age=userage+0.5f;
+                        if(calmonth>8&&calmonth<=12) real_age=userage+1;
+
+                        if(choosed_sex=="男"){
+                            sex = "boy";
+                        }
+                        if(choosed_sex=="女"){
+                            sex = "girl";
+                        }
+
 
                         //float age = days/365;
                         Log.i(TAG, "性别" + sex);
-                        Log.i(TAG, "age" + String.valueOf(age));
-                        Log.i(TAG, "days" + String.valueOf(days));
+                        Log.i(TAG, "age" + age);
+                        Log.i(TAG, "days" + days);
                         Log.i(TAG, "STRTT" + agestr);
-                        if (age <= 18) {
-                            Log.i("bmi丫丫","?"+BMI);
-                            int status = mUserDataManager.BMIInfo(sex, age, days, BMI);
-                            float ibw = 0;//mUserDataManager.IBWInfo(sex,age,days,height);
-                            double kcal = 0;
-                            double fats = 0;
-                            double CHO = 0;
-                            double protein = 0;
-                            final int[] askdr = {0};
-                            Log.i(TAG, "状态" + status);
-                            //小于2岁 不给推荐
-                            if (status == -1) {
-                                AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
-                                dialog.setTitle("该用户年纪过小");
-                                dialog.setMessage("本APP将不提供建议营养成分摄入量");
-                                dialog.setCancelable(false);
-                                dialog.setNegativeButton("确认",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
-                                                        height,BMI, 0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0);
-                                                mUserDataManager.openDataBase();
-                                                long flag = mUserDataManager.insertUserData(mUser);
-                                                if (flag == -1) {
-                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                       if(real_age<=2){
+                           AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+                           dialog.setTitle("该用户年纪过小");
+                           dialog.setMessage("本APP将不提供建议营养成分摄入量");
+                           dialog.setCancelable(false);
+                           dialog.setNegativeButton("确认",
+                                   new DialogInterface.OnClickListener() {
+                                       @Override
+                                       public void onClick(DialogInterface dialog, int which) {
+                                           Log.i(TAG,"小年纪："+identity);
+                                           UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+                                                   height,BMI, String.valueOf(identity),String.valueOf(-1),0, 0, 0, 0,
+                                                   0, 0, 0, 0,
+                                                   0, 0, 0, 0,
+                                                   0, 0, 0, 0,
+                                                   0, 0, 0, 0,
+                                                   0, 0, 0, 0,
+                                                   0, 0, 0, 0,
+                                                   0, 0, 0, 0);
+                                           mUserDataManager.openDataBase();
+                                           long flag = mUserDataManager.insertUserData(mUser);
+                                           if (flag == -1) {
+                                               Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+                                           } else {
+
+                                               long flag2 =  mUserDataManager.insert_userhw(userName,(float)userWeight,height,Reg_time);
+                                               if (flag2==-1){
+                                                   Log.i(TAG,"失败了~~~");
+                                               }
+                                               else
+                                               {Log.i(TAG,"成功了~~~");}
+                                               Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                           }
+                                           Intent intent = new Intent(Register.this, Login.class);
+                                           intent.putExtra("user_status",-1);
+                                           intent.putExtra("user_sex",choosed_sex);
+                                           intent.putExtra("user_days",days);
+                                           startActivity(intent);
+                                           finish();
+                                       }
+                                   });
+                           dialog.show();
+                       }
+
+                        //new_status=0消瘦 1正常 2超胖 3肥胖
+                        if(real_age>=2&&real_age<=18) {
+                            final int new_status = mUserDataManager.new_BMIInfo(sex, days, BMI);
+                            Log.i(TAG, "新的status" + new_status);
+                            float ibw = mUserDataManager.IBWInfo(sex, age, days, height);
+                            final double kcal =calkcal(ibw);
+                            final double fats = calfats(age, kcal);
+                            final double CHO = calCHO(age, kcal);
+                            final double protein = calprotein(age, kcal);
+
+
+                            if (new_status != -1) {
+
+
+                                Log.i(TAG, "用户名："+userName +"用户日子："+ days +","+kcal+","+CHO+","+kcal+","+fats);
+                                if (mUserDataManager.check_height(sex, days, height) == 1) {
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+                                    dialog.setTitle("该用户身高低于该年龄段10%");
+                                    dialog.setMessage("本APP将不提供建议营养成分摄入量，建议就医");
+                                    dialog.setCancelable(false);
+                                    dialog.setNegativeButton("确认",
+                                            new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+                                                            height, BMI,String.valueOf(identity),String.valueOf(new_status),0, 0, 0, 0,
+                                                            0, 0, 0, 0,
+                                                            0, 0, 0, 0,
+                                                            0, 0, 0, 0,
+                                                            0, 0, 0, 0,
+                                                            0, 0, 0, 0,
+                                                            0, 0, 0, 0,
+                                                            0, 0, 0, 0);
+                                                    mUserDataManager.openDataBase();
+                                                    long flag = mUserDataManager.insertUserData(mUser);
+                                                    if (flag == -1) {
+                                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        long flag2 = mUserDataManager.insert_userhw(userName, (float) userWeight, height, Reg_time);
+                                                        if (flag2 == -1) {
+                                                            Log.i(TAG, "失败了~~~");
+                                                        } else {
+                                                            Log.i(TAG, "成功了~~~");
+                                                        }
+                                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    Intent intent = new Intent(Register.this, Login.class);
+                                                    intent.putExtra("user_status",-2);
+                                                    intent.putExtra("user_sex",choosed_sex);
+                                                    intent.putExtra("user_days",days);
+                                                    startActivity(intent);
+                                                    finish();
                                                 }
-                                                Intent intent = new Intent(Register.this, Login.class);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        });
-                                dialog.show();
-                                // break;
-                            }
-                            //status=1 个子小于年龄段p10不给推荐
-                            //不小于p10
-                            Log.i(TAG, "身高状况" + mUserDataManager.check_height(sex, days, height));
-                            if(status!=-1){
-                            if (mUserDataManager.check_height(sex, days, height) == 1) {
-                                AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
-                                dialog.setTitle("该用户身高低于该年龄段10%，");
-                                dialog.setMessage("本APP将不提供建议营养成分摄入量");
-                                dialog.setCancelable(false);
-                                dialog.setNegativeButton("确认",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
-                                                        height, BMI, 0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0,
-                                                        0, 0, 0, 0);
-                                                mUserDataManager.openDataBase();
-                                                long flag = mUserDataManager.insertUserData(mUser);
-                                                if (flag == -1) {
-                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
-                                                } else {
-                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
-                                                }
-                                                Intent intent = new Intent(Register.this, Login.class);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        });
+                                            });
 //                            dialog.setPositiveButton("已咨询医生，自定义营养成分摄入值",
 //                                    new DialogInterface.OnClickListener() {
 //                                        @Override
@@ -222,42 +313,51 @@ public class Register extends AppCompatActivity {
 //                                            finish();
 //                                        }
 //                                    });
-                                dialog.show();
-                                //break;
-                            }
-                            if (mUserDataManager.check_height(sex, days, height) != 1) {
-                                //太瘦 不设置阈值
-                                if (status == 1) {
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
-                                    dialog.setTitle("亲，您有点太瘦了呢");
+                                    dialog.show();
+                                    //break;
+                                }
+                                if (mUserDataManager.check_height(sex, days, height) != 1) {
+                                    //太瘦 不设置阈值
+                                    if (new_status == 0) {
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+                                        dialog.setTitle("亲，您有点太瘦了呢");
 //                                dialog.setMessage("是否已经咨询医生并自定义营养成分摄入量？否则我们将为您设定摄入量");
-                                    dialog.setMessage("本APP将不提供建议营养成分摄入量");
-                                    dialog.setCancelable(false);
-                                    dialog.setNegativeButton("确认",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
-                                                            height, BMI, 0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0);
-                                                    mUserDataManager.openDataBase();
-                                                    long flag = mUserDataManager.insertUserData(mUser);
-                                                    if (flag == -1) {
-                                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                        dialog.setMessage("本APP只为您提供正常人的建议营养成分摄入量，并建议您就医");
+                                        dialog.setCancelable(false);
+                                        dialog.setNegativeButton("确认",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+                                                                Double.parseDouble(userheight), BMI, String.valueOf(identity),String.valueOf(new_status),kcal, protein, fats, CHO,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0);
+                                                        mUserDataManager.openDataBase();
+                                                        long flag = mUserDataManager.insertUserData(mUser);
+                                                        if (flag == -1) {
+                                                            Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            long flag2 = mUserDataManager.insert_userhw(userName, (float) userWeight, height, Reg_time);
+                                                            if (flag2 == -1) {
+                                                                Log.i(TAG, "失败了~~~");
+                                                            } else {
+                                                                Log.i(TAG, "成功了~~~");
+                                                            }
+                                                            Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        Intent intent = new Intent(Register.this, Login.class);
+                                                        intent.putExtra("user_status",new_status);
+                                                        intent.putExtra("user_sex",choosed_sex);
+                                                        intent.putExtra("user_days",days);
+                                                        startActivity(intent);
+                                                        finish();
                                                     }
-                                                    Intent intent = new Intent(Register.this, Login.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            });
+                                                });
 //                                dialog.setPositiveButton("是的，我要自定义",
 //                                        new DialogInterface.OnClickListener() {
 //                                            @Override
@@ -287,40 +387,49 @@ public class Register extends AppCompatActivity {
 //                                                finish();
 //                                            }
 //                                        });
-                                    dialog.show();
-                                    //break;
-                                }
-                                //太胖 不设置阈值
-                                if (status == 3) {
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
-                                    dialog.setTitle("亲，您有点超重了呢");
-                                    dialog.setMessage("本APP将不提供建议营养成分摄入量");
-                                    dialog.setCancelable(false);
-                                    dialog.setNegativeButton("确认",
-                                            new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
-                                                            height, BMI, 0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0,
-                                                            0, 0, 0, 0);
-                                                    mUserDataManager.openDataBase();
-                                                    long flag = mUserDataManager.insertUserData(mUser);
-                                                    if (flag == -1) {
-                                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                        dialog.show();
+                                        //break;
+                                    }
+                                    //太胖 不设置阈值
+                                    if (new_status == 2) {
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+                                        dialog.setTitle("亲，您有点超重了呢");
+                                        dialog.setMessage("本APP只为您提供正常人的建议营养成分摄入量，并建议您就医");
+                                        dialog.setCancelable(false);
+                                        dialog.setNegativeButton("确认",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+                                                                Double.parseDouble(userheight), BMI, String.valueOf(identity),String.valueOf(new_status),kcal, protein, fats, CHO,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0);
+                                                        mUserDataManager.openDataBase();
+                                                        long flag = mUserDataManager.insertUserData(mUser);
+                                                        if (flag == -1) {
+                                                            Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            long flag2 = mUserDataManager.insert_userhw(userName, (float) userWeight, height, Reg_time);
+                                                            if (flag2 == -1) {
+                                                                Log.i(TAG, "失败了~~~");
+                                                            } else {
+                                                                Log.i(TAG, "成功了~~~");
+                                                            }
+                                                            Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        Intent intent = new Intent(Register.this, Login.class);
+                                                        intent.putExtra("user_status",new_status);
+                                                        intent.putExtra("user_sex",choosed_sex);
+                                                        intent.putExtra("user_days",days);
+                                                        startActivity(intent);
+                                                        finish();
                                                     }
-                                                    Intent intent = new Intent(Register.this, Login.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            });
+                                                });
 //                                dialog.setMessage("是否已经咨询医生并自定义营养成分摄入量？");
 //                                dialog.setCancelable(false);
 //                                dialog.setPositiveButton("是的，我要自定义",
@@ -350,43 +459,441 @@ public class Register extends AppCompatActivity {
 //                                                return;//finish();
 //                                            }
 //                                        });
-                                    dialog.show();
-                                    //break;
-                                }
-                                //如果正常bmi计算ibw 和营养成分
-                                //正常体重 用ibw计算各种营养成分值
-                                else if (status == 2) {
-                                    ibw = mUserDataManager.IBWInfo(sex, age, days, height);
-                                    kcal = calkcal(ibw);
-                                    fats = calfats(age, kcal);
-                                    CHO = calCHO(age, kcal);
-                                    protein = calprotein(age, kcal);
-                                    Log.i(TAG, "身高高" + userHeight + "+" + userheight);
-                                    UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
-                                            Double.parseDouble(userheight), BMI, kcal,protein, fats, CHO,
-                                            0, 0, 0, 0,
-                                            0, 0, 0, 0,
-                                            0, 0, 0, 0,
-                                            0, 0, 0, 0,
-                                            0, 0, 0, 0,
-                                            0, 0, 0, 0,
-                                            0, 0, 0, 0);
-                                    mUserDataManager.openDataBase();
-                                    long flag = mUserDataManager.insertUserData(mUser);
-                                    if (flag == -1) {
-                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                        dialog.show();
+                                        //break;
                                     }
-                                    Intent intent_Reg_to_Login = new Intent(Register.this, Login.class);
-                                    startActivity(intent_Reg_to_Login);
-                                    finish();
-                                    break;
-                                }
+                                    if (new_status == 3) {
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+                                        dialog.setTitle("亲，您的身体状态为肥胖");
+                                        dialog.setMessage("本APP只为您提供正常人的建议营养成分摄入量，并建议您就医");
+                                        dialog.setCancelable(false);
+                                        dialog.setNegativeButton("确认",
+                                                new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+//                                                                height, BMI, 0, 0, 0, 0,
+//                                                                0, 0, 0, 0,
+//                                                                0, 0, 0, 0,
+//                                                                0, 0, 0, 0,
+//                                                                0, 0, 0, 0,
+//                                                                0, 0, 0, 0,
+//                                                                0, 0, 0, 0,
+//                                                                0, 0, 0, 0);
+                                                        UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+                                                                Double.parseDouble(userheight), BMI, String.valueOf(identity),String.valueOf(new_status),kcal, protein, fats, CHO,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0,
+                                                                0, 0, 0, 0);
+                                                        mUserDataManager.openDataBase();
+                                                        long flag = mUserDataManager.insertUserData(mUser);
+                                                        if (flag == -1) {
+                                                            Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            long flag2 = mUserDataManager.insert_userhw(userName, (float) userWeight, height, Reg_time);
+                                                            if (flag2 == -1) {
+                                                                Log.i(TAG, "失败了~~~");
+                                                            } else {
+                                                                Log.i(TAG, "成功了~~~");
+                                                            }
+                                                            Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        Intent intent = new Intent(Register.this, Login.class);
+                                                        intent.putExtra("user_status",new_status);
+                                                        intent.putExtra("user_sex",choosed_sex);
+                                                        intent.putExtra("user_days",days);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                });
+//                                dialog.setMessage("是否已经咨询医生并自定义营养成分摄入量？");
+//                                dialog.setCancelable(false);
+//                                dialog.setPositiveButton("是的，我要自定义",
+//                                        new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                Intent intent = new Intent(Register.this, SetNutrition.class);
+//                                                startActivity(intent);
+//                                                finish();
+//                                            }
+//                                        });
+//                                dialog.setNegativeButton("没有，不再设置营养成分阈值",
+//                                        new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+//                                                        userHeight, BMI, 0, 0, 0, 0);
+//                                                mUserDataManager.openDataBase();
+//                                                long flag = mUserDataManager.insertUserData(mUser);
+//                                                if (flag == -1) {
+//                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+//                                                } else {
+//                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                                Intent intent = new Intent(Register.this, Login.class);
+//                                                startActivity(intent);
+//                                                return;//finish();
+//                                            }
+//                                        });
+                                        dialog.show();
+                                        //break;
+                                    }
+                                    //如果正常bmi计算ibw 和营养成分
+                                    //正常体重 用ibw计算各种营养成分值
+                                    else if (new_status == 1) {
+//                                        float ibw = 0;//mUserDataManager.IBWInfo(sex,age,days,height);
+//                                        double kcal = 0;
+//                                        double fats = 0;
+//                                        double CHO = 0;
+//                                        double protein = 0;
+////                                        ibw = mUserDataManager.IBWInfo(sex, age, days, height);
+////                                        kcal = calkcal(ibw);
+////                                        fats = calfats(age, kcal);
+////                                        CHO = calCHO(age, kcal);
+////                                        protein = calprotein(age, kcal);
+//                                        Log.i(TAG, "ibw" + ibw+","+kcal+","+CHO+","+kcal+","+fats);
+                                        UserData mUser = new UserData(userName, days, Integer.toString(age), choosed_sex, userWeight,
+                                                Double.parseDouble(userheight), BMI, String.valueOf(identity),String.valueOf(new_status),kcal, protein, fats, CHO,
+                                                0, 0, 0, 0,
+                                                0, 0, 0, 0,
+                                                0, 0, 0, 0,
+                                                0, 0, 0, 0,
+                                                0, 0, 0, 0,
+                                                0, 0, 0, 0,
+                                                0, 0, 0, 0);
+                                        mUserDataManager.openDataBase();
+                                        long flag = mUserDataManager.insertUserData(mUser);
+                                        if (flag == -1) {
+                                            Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            long flag2 = mUserDataManager.insert_userhw(userName, (float) userWeight, height, Reg_time);
+                                            if (flag2 == -1) {
+                                                Log.i(TAG, "失败了~~~");
+                                            } else {
+                                                Log.i(TAG, "成功了~~~");
+                                            }
+                                            Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                        }
+                                        Intent intent_Reg_to_Login = new Intent(Register.this, Login.class);
+                                        intent_Reg_to_Login.putExtra("user_status",new_status);
+                                        intent_Reg_to_Login.putExtra("user_sex",choosed_sex);
+                                        intent_Reg_to_Login.putExtra("user_days",days);
+                                        startActivity(intent_Reg_to_Login);
+                                        finish();
+                                        break;
+                                    }
 
+                                }
                             }
-                            }
-                        } else if (age > 18) {
+                        }
+//////////////////////////////////////////////////////////
+//                        if (age <= 18) {
+//                            Log.i("bmi丫丫","?"+BMI);
+//                            int status = mUserDataManager.BMIInfo(sex, age, days, BMI);
+//                            float ibw = 0;//mUserDataManager.IBWInfo(sex,age,days,height);
+//                            double kcal = 0;
+//                            double fats = 0;
+//                            double CHO = 0;
+//                            double protein = 0;
+//                            final int[] askdr = {0};
+//                            Log.i(TAG, "状态" + status);
+//                            //小于2岁 不给推荐
+//                            if (status == -1) {
+//                                AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+//                                dialog.setTitle("该用户年纪过小");
+//                                dialog.setMessage("本APP将不提供建议营养成分摄入量");
+//                                dialog.setCancelable(false);
+//                                dialog.setNegativeButton("确认",
+//                                        new DialogInterface.OnClickListener() {
+//                                            @Override
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+//                                                        height,BMI, 0, 0, 0, 0,
+//                                                        0, 0, 0, 0,
+//                                                        0, 0, 0, 0,
+//                                                        0, 0, 0, 0,
+//                                                        0, 0, 0, 0,
+//                                                        0, 0, 0, 0,
+//                                                        0, 0, 0, 0,
+//                                                        0, 0, 0, 0);
+//                                                mUserDataManager.openDataBase();
+//                                                long flag = mUserDataManager.insertUserData(mUser);
+//                                                if (flag == -1) {
+//                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+//                                                } else {
+//
+//                                                    long flag2 =  mUserDataManager.insert_userhw(userName,(float)userWeight,height,Reg_time);
+//                                                    if (flag2==-1){
+//                                                    Log.i(TAG,"失败了~~~");
+//                                                    }
+//                                                    else
+//                                                    {Log.i(TAG,"成功了~~~");}
+//                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                                Intent intent = new Intent(Register.this, Login.class);
+//                                                startActivity(intent);
+//                                                finish();
+//                                            }
+//                                        });
+//                                dialog.show();
+//                                // break;
+//                            }
+//                            //status=1 个子小于年龄段p10不给推荐
+//                            //不小于p10
+//                            Log.i(TAG, "身高状况" + mUserDataManager.check_height(sex, days, height));
+//                            if(status!=-1){
+////                            if (mUserDataManager.check_height(sex, days, height) == 1) {
+////                                AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+////                                dialog.setTitle("该用户身高低于该年龄段10%，");
+////                                dialog.setMessage("本APP将不提供建议营养成分摄入量");
+////                                dialog.setCancelable(false);
+////                                dialog.setNegativeButton("确认",
+////                                        new DialogInterface.OnClickListener() {
+////                                            @Override
+////                                            public void onClick(DialogInterface dialog, int which) {
+////                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+////                                                        height, BMI, 0, 0, 0, 0,
+////                                                        0, 0, 0, 0,
+////                                                        0, 0, 0, 0,
+////                                                        0, 0, 0, 0,
+////                                                        0, 0, 0, 0,
+////                                                        0, 0, 0, 0,
+////                                                        0, 0, 0, 0,
+////                                                        0, 0, 0, 0);
+////                                                mUserDataManager.openDataBase();
+////                                                long flag = mUserDataManager.insertUserData(mUser);
+////                                                if (flag == -1) {
+////                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+////                                                } else {
+////                                                    long flag2 =  mUserDataManager.insert_userhw(userName,(float)userWeight,height,Reg_time);
+////                                                    if (flag2==-1){
+////                                                        Log.i(TAG,"失败了~~~");
+////                                                    }
+////                                                    else
+////                                                    {Log.i(TAG,"成功了~~~");}
+////                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+////                                                }
+////                                                Intent intent = new Intent(Register.this, Login.class);
+////                                                startActivity(intent);
+////                                                finish();
+////                                            }
+////                                        });
+//////                            dialog.setPositiveButton("已咨询医生，自定义营养成分摄入值",
+//////                                    new DialogInterface.OnClickListener() {
+//////                                        @Override
+//////                                        public void onClick(DialogInterface dialog, int which) {
+//////                                            askdr[0]=2;
+//////                                            Intent intent = new Intent(Register.this,SetNutrition.class);
+//////                                            startActivity(intent);
+//////                                            finish();
+//////                                        }
+//////                                    });
+//////                            dialog.setNegativeButton("不，不再设置营养成分阈值",
+//////                                    new DialogInterface.OnClickListener() {
+//////                                        @Override
+//////                                        public void onClick(DialogInterface dialog, int which) {
+//////                                            UserData mUser = new UserData(userName,days,Integer.toString(age),sex,userWeight,
+//////                                                    userHeight,BMI,0,0,0,0);
+//////                                            mUserDataManager.openDataBase();
+//////                                            long flag = mUserDataManager.insertUserData(mUser);
+//////                                            if (flag == -1) {
+//////                                                Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+//////                                            } else {
+//////                                                Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+//////                                            }
+//////                                            Intent intent = new Intent(Register.this,Login.class);
+//////                                            startActivity(intent);
+//////                                            finish();
+//////                                        }
+//////                                    });
+////                                dialog.show();
+////                                //break;
+////                            }
+////                            if (mUserDataManager.check_height(sex, days, height) != 1) {
+////                                //太瘦 不设置阈值
+////                                if (status == 1) {
+////                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+////                                    dialog.setTitle("亲，您有点太瘦了呢");
+//////                                dialog.setMessage("是否已经咨询医生并自定义营养成分摄入量？否则我们将为您设定摄入量");
+////                                    dialog.setMessage("本APP将不提供建议营养成分摄入量");
+////                                    dialog.setCancelable(false);
+////                                    dialog.setNegativeButton("确认",
+////                                            new DialogInterface.OnClickListener() {
+////                                                @Override
+////                                                public void onClick(DialogInterface dialog, int which) {
+////                                                    UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+////                                                            height, BMI, 0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0);
+////                                                    mUserDataManager.openDataBase();
+////                                                    long flag = mUserDataManager.insertUserData(mUser);
+////                                                    if (flag == -1) {
+////                                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+////                                                    } else {
+////                                                        long flag2 =  mUserDataManager.insert_userhw(userName,(float)userWeight,height,Reg_time);
+////                                                        if (flag2==-1){
+////                                                            Log.i(TAG,"失败了~~~");
+////                                                        }
+////                                                        else
+////                                                        {Log.i(TAG,"成功了~~~");}
+////                                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+////                                                    }
+////                                                    Intent intent = new Intent(Register.this, Login.class);
+////                                                    startActivity(intent);
+////                                                    finish();
+////                                                }
+////                                            });
+//////                                dialog.setPositiveButton("是的，我要自定义",
+//////                                        new DialogInterface.OnClickListener() {
+//////                                            @Override
+//////                                            public void onClick(DialogInterface dialog, int which) {
+//////                                                askdr[0] = 2;
+//////                                                Intent intent = new Intent(Register.this, SetNutrition.class);
+//////                                                startActivity(intent);
+//////                                                finish();
+//////                                            }
+//////                                        });
+//////                                dialog.setNegativeButton("不，不再设置营养成分阈值",
+//////                                        new DialogInterface.OnClickListener() {
+//////                                            @Override
+//////                                            public void onClick(DialogInterface dialog, int which) {
+//////                                                //calnutri(bmi);
+//////                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+//////                                                        userHeight, BMI, 0, 0, 0, 0);
+//////                                                mUserDataManager.openDataBase();
+//////                                                long flag = mUserDataManager.insertUserData(mUser);
+//////                                                if (flag == -1) {
+//////                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+//////                                                } else {
+//////                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+//////                                                }
+//////                                                Intent intent = new Intent(Register.this, Login.class);
+//////                                                startActivity(intent);
+//////                                                finish();
+//////                                            }
+//////                                        });
+////                                    dialog.show();
+////                                    //break;
+////                                }
+////                                //太胖 不设置阈值
+////                                if (status == 3) {
+////                                    AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+////                                    dialog.setTitle("亲，您有点超重了呢");
+////                                    dialog.setMessage("本APP将不提供建议营养成分摄入量");
+////                                    dialog.setCancelable(false);
+////                                    dialog.setNegativeButton("确认",
+////                                            new DialogInterface.OnClickListener() {
+////                                                @Override
+////                                                public void onClick(DialogInterface dialog, int which) {
+////                                                    UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+////                                                            height, BMI, 0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0,
+////                                                            0, 0, 0, 0);
+////                                                    mUserDataManager.openDataBase();
+////                                                    long flag = mUserDataManager.insertUserData(mUser);
+////                                                    if (flag == -1) {
+////                                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+////                                                    } else {
+////                                                        long flag2 =  mUserDataManager.insert_userhw(userName,(float)userWeight,height,Reg_time);
+////                                                        if (flag2==-1){
+////                                                            Log.i(TAG,"失败了~~~");
+////                                                        }
+////                                                        else
+////                                                        {Log.i(TAG,"成功了~~~");}
+////                                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+////                                                    }
+////                                                    Intent intent = new Intent(Register.this, Login.class);
+////                                                    startActivity(intent);
+////                                                    finish();
+////                                                }
+////                                            });
+//////                                dialog.setMessage("是否已经咨询医生并自定义营养成分摄入量？");
+//////                                dialog.setCancelable(false);
+//////                                dialog.setPositiveButton("是的，我要自定义",
+//////                                        new DialogInterface.OnClickListener() {
+//////                                            @Override
+//////                                            public void onClick(DialogInterface dialog, int which) {
+//////                                                Intent intent = new Intent(Register.this, SetNutrition.class);
+//////                                                startActivity(intent);
+//////                                                finish();
+//////                                            }
+//////                                        });
+//////                                dialog.setNegativeButton("没有，不再设置营养成分阈值",
+//////                                        new DialogInterface.OnClickListener() {
+//////                                            @Override
+//////                                            public void onClick(DialogInterface dialog, int which) {
+//////                                                UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+//////                                                        userHeight, BMI, 0, 0, 0, 0);
+//////                                                mUserDataManager.openDataBase();
+//////                                                long flag = mUserDataManager.insertUserData(mUser);
+//////                                                if (flag == -1) {
+//////                                                    Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+//////                                                } else {
+//////                                                    Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+//////                                                }
+//////                                                Intent intent = new Intent(Register.this, Login.class);
+//////                                                startActivity(intent);
+//////                                                return;//finish();
+//////                                            }
+//////                                        });
+////                                    dialog.show();
+////                                    //break;
+////                                }
+////                                //如果正常bmi计算ibw 和营养成分
+////                                //正常体重 用ibw计算各种营养成分值
+////                                else if (status == 2) {
+////                                    ibw = mUserDataManager.IBWInfo(sex, age, days, height);
+////                                    kcal = calkcal(ibw);
+////                                    fats = calfats(age, kcal);
+////                                    CHO = calCHO(age, kcal);
+////                                    protein = calprotein(age, kcal);
+////                                    Log.i(TAG, "身高高" + userHeight + "+" + userheight);
+////                                    UserData mUser = new UserData(userName, days, Integer.toString(age), sex, userWeight,
+////                                            Double.parseDouble(userheight), BMI, kcal,protein, fats, CHO,
+////                                            0, 0, 0, 0,
+////                                            0, 0, 0, 0,
+////                                            0, 0, 0, 0,
+////                                            0, 0, 0, 0,
+////                                            0, 0, 0, 0,
+////                                            0, 0, 0, 0,
+////                                            0, 0, 0, 0);
+////                                    mUserDataManager.openDataBase();
+////                                    long flag = mUserDataManager.insertUserData(mUser);
+////                                    if (flag == -1) {
+////                                        Toast.makeText(Register.this, "注册失败，请重试", Toast.LENGTH_SHORT).show();
+////                                    } else {
+////                                        long flag2 =  mUserDataManager.insert_userhw(userName,(float)userWeight,height,Reg_time);
+////                                        if (flag2==-1){
+////                                            Log.i(TAG,"失败了~~~");
+////                                        }
+////                                        else
+////                                        {Log.i(TAG,"成功了~~~");}
+////                                        Toast.makeText(Register.this, "注册成功", Toast.LENGTH_SHORT).show();
+////                                    }
+////                                    Intent intent_Reg_to_Login = new Intent(Register.this, Login.class);
+////                                    startActivity(intent_Reg_to_Login);
+////                                    finish();
+////                                    break;
+////                                }
+////
+////                            }
+//                            }
+//                        }
+                   else if (age > 18) {
                                 Intent intent_reg_to_adultattri = new Intent(Register.this, AdultAttri.class);
                                 intent_reg_to_adultattri.putExtra("user_weight", userWeight);
                                 intent_reg_to_adultattri.putExtra("user_bmi", BMI);
@@ -395,15 +902,17 @@ public class Register extends AppCompatActivity {
                                 intent_reg_to_adultattri.putExtra("user_age", age);
                                 intent_reg_to_adultattri.putExtra("user_sex", sex);
                                 intent_reg_to_adultattri.putExtra("user_height", userheight);
+                                intent_reg_to_adultattri.putExtra("user_identity",identity);
                                 Log.i(TAG, "JWO" + days);
+                               // intent_reg_to_adultattri.putExtra("user_status",4);
                                 startActivity(intent_reg_to_adultattri);
                                 //finish();
                             }
 
 
-                        break;
+                       // break;
                     }
-                   // break;
+                    break;
 
                 case R.id.register_btn_cancel:
                     onBackPressed();

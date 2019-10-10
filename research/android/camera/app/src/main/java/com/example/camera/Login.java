@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +19,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Login extends AppCompatActivity {
@@ -38,10 +42,15 @@ public class Login extends AppCompatActivity {
     private TextView mChangepwdText;
     private UserDataManager mUserDataManager;
 
+
     //下拉框
     private TextView view;
     private Spinner user_spinner;
     public String choosed_user;
+    ////
+    private String DB_PATH = "data/data/com.example.camera/databases/";//android.os.Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
+    private static String DB_NAME ="user_data";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +81,22 @@ public class Login extends AppCompatActivity {
         mRegisterButton.setOnClickListener(mListener);
         mLoginButton.setOnClickListener(mListener);
 //        mChangepwdText.setOnClickListener(mListener);
+        ////////////////////////////////////////////////////////////////////////////////////
+//        UserDataManager.DataBaseManagementHelper helper =new UserDataManager.DataBaseManagementHelper(this);
+//        try {
+//            helper.createDataBase();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        Log.i(TAG,"DATABASE"+DB_PATH+DB_NAME);
+        //SQLiteDatabase database = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+
+       // Cursor cursor = database.query("users_info", null, null, null, null, null, null, null);
+      //  while (cursor.moveToNext()) {
+      //      String username = cursor.getString(cursor.getColumnIndex("USER_NAME"));
+       //     Log.i(TAG,"1111111111111"+ username);
+      //  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         if (mUserDataManager == null) {
             mUserDataManager = new UserDataManager(this);
@@ -138,9 +163,10 @@ public class Login extends AppCompatActivity {
                     break;
                 case R.id.login_btn_login:
                     String loginuser = login();
+                    mUserDataManager.closeDataBase();
                     Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
                     intent_Login_to_MainInterface.putExtra("user",loginuser);
-                    intent_Login_to_MainInterface.putExtra("roll",100);
+                    //intent_Login_to_MainInterface.putExtra("roll",100);
                     //Log.i(TAG,"asdas"+loginuser);
                     startActivity(intent_Login_to_MainInterface);
                     break;

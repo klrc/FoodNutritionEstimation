@@ -15,6 +15,8 @@ public class UserData {
     public int pwdresetFlag=0;
     private double Weight;
     private double Height;
+    private String  Identity;
+    private String Status;
     private double BMI;
     private double Kcal;
     private double Protein;
@@ -70,6 +72,8 @@ public class UserData {
     public double getWeight() {return Weight;}
     public double getHeight() {return Height;}
     public double getBMI() {return BMI;}
+    public String getIdentity(){return Identity;}
+    public String getStatus(){return Status;}
     public double getKcal() { return  Kcal; }
     public double getProtein() { return Protein;}
     public double getFats() { return Fats;}
@@ -120,7 +124,7 @@ public class UserData {
         this.userId = userId;
     }
 
-    public UserData(String userName,double days,String Birth,String Sex,double Weight,double Height,double BMI,
+    public UserData(String userName,double days,String Birth,String Sex,double Weight,double Height,double BMI,String Identity,String Status,
                     double Kcal,double Protein,double Fats,double CHO,
                     double D1Kcal,double D1CHO, double D1Protein,double D1Fats,
                     double D2Kcal,double D2CHO,double D2Protein,double D2Fats,
@@ -137,6 +141,8 @@ public class UserData {
         this.Weight = Weight;
         this.Height = Height;
         this.BMI = BMI;
+        this.Identity = Identity;
+        this.Status = Status;
         this.Kcal = Kcal;
         this.Protein = Protein;
         this.Fats = Fats;

@@ -4,16 +4,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 import android.util.Log;
-import android.widget.EditText;
 
-import java.lang.reflect.Array;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+
+import static java.lang.Runtime.getRuntime;
 
 public class UserDataManager {             //用户数据管理类
     //一些宏定义和声明
@@ -29,6 +34,8 @@ public class UserDataManager {             //用户数据管理类
     public static final String USER_WEIGHT = "Weight";
     public static final String USER_HEIGHT = "Height";
     public static final String USER_BMI = "BMI";
+    public static final String USER_IDENTITY = "Identity";
+    public static final String USER_STATUS = "Status";
     public static final String USER_KCAL = "Kcal";
     public static final String USER_PROTEIN = "Protein";
     public static final String USER_FATS = "Fats";
@@ -64,7 +71,23 @@ public class UserDataManager {             //用户数据管理类
 
     private static final int DB_VERSION = 2;
     private Context mContext = null;
+    /////////////////////////////////////////////////////////////
+    private static String DB_PATH = "data/data/com.example.camera/databases/";
 
+    /////////////////////////////////////////////////////////////
+    //创建用户身高体重表
+    private static final String DB_CREATE2 = "CREATE TABLE "+"user_hw" +" ("
+            + "ID integer primary key autoincrement,"
+            + "User_name  varchar(100),"
+            + "Weight varchar(40),"
+            + "Height varchar(40),"
+            + "Reg_time varchar(40))";
+//    private static final String DB_CREATE3 = "CREATE TABLE " + TABLE_NAME + " (" //TABLE NAME = "users_info"
+//            + "ID integer primary key autoincrement,"
+//            + "User_name  varchar(100),"
+//            + "Weight varchar(20),"
+//            + "Height varchar(20),"
+//            + "Reg_time varchar(20))";
     //创建用户info表
     private static final String DB_CREATE = "CREATE TABLE " + TABLE_NAME + " (" //TABLE NAME = "users_info"
             + "ID integer primary key autoincrement,"
@@ -75,6 +98,8 @@ public class UserDataManager {             //用户数据管理类
             + "Weight varchar(20),"
             + "Height varchar(20),"
             + "BMI double(20,3),"
+            + "Identity varchar(10),"
+            + "Status varchar(10),"
             + "Kcal varchar(20),"
             + "Protein varchar(20),"
             + "Fats varchar(20),"
@@ -110,23 +135,152 @@ public class UserDataManager {             //用户数据管理类
 
 
     private SQLiteDatabase mSQLiteDatabase = null;
+    SQLiteDatabase mdatabase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+
     private DataBaseManagementHelper mDatabaseHelper = null;
 
     //DataBaseManagementHelper继承自SQLiteOpenHelper
-    private static class DataBaseManagementHelper extends SQLiteOpenHelper {//继承字抽象类qoh，需要重写 oncreate和 onupgrade两个方法
-
+    //private static class DataBaseManagementHelper extends SQLiteOpenHelper {//继承字抽象类qoh，需要重写 oncreate和 onupgrade两个方法
+    public static class DataBaseManagementHelper extends SQLiteOpenHelper {
         DataBaseManagementHelper(Context context) {
             super(context, DB_NAME, null, DB_VERSION);
+            this.myContext = context;
         }
-//创建数据库
+        private Context myContext;
+        //The Android's default system path of your application database.
+        private static String ASSETS_NAME = "user_data";
+        private SQLiteDatabase myDataBase = null;
         @Override
         public void onCreate(SQLiteDatabase db) {
-            Log.i(TAG,"db.getVersion()="+db.getVersion());
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");
-            db.execSQL(DB_CREATE);
-            Log.i(TAG, "db.execSQL(DB_CREATE)");
-            Log.e(TAG, DB_CREATE);  //drop if 操作是为了删除原有的  创建新的，是一种常用的更新方法
+//            Log.i(TAG,"db.getVersion()="+db.getVersion());
+//            db.execSQL("DROP TABLE IF EXISTS " + "user_hw" + ";");
+//            db.execSQL(DB_CREATE3);
+//            Log.i(TAG, "db.execSQL(DB_CREATE)");
+//            Log.e(TAG, DB_CREATE3);  //drop if 操作是为了删除原有的  创建新的，是一种常用的更新方法
         }
+        public void createDataBase() throws IOException {
+            boolean dbExist = checkDataBase();
+
+            if (!dbExist) {
+                try {
+                    File dir = new File(DB_PATH);
+                    if (!dir.exists()) {
+                        dir.mkdir();
+                    }
+                    File dbf = new File(DB_PATH + DB_NAME);
+                    String dirPath = DB_PATH + DB_NAME;
+                    if (!dbf.exists()) {
+                        SQLiteDatabase.openOrCreateDatabase(dbf, null);
+                        copyDataBase();
+
+                    }
+                   // Runtime runtime = getRuntime();
+                    //String command = "chmod 777 " + dirPath;
+                   // String command2 = "chmod 777 " + DB_PATH;
+                   // String command3 = "chmod 777" + DB_PATH+"user_data-shm";
+                   // String command4 = "chmod 777" + DB_PATH+"user_data-wal";
+                    /////////////删除copy过来的wal等文件
+
+                    /////////////////////////////////////
+                 //   try {
+                      //  Process process2 = runtime.exec(command2);
+                      //  Process process = runtime.exec(command);
+                      //  Process process3 = runtime.exec(command3);
+                       // Process process4 = runtime.exec(command4);
+
+                      //  process.waitFor();
+                     //   int existValue = process.exitValue();
+                    //    if(existValue != 0){
+                     //       Log.i(TAG, "Change file permission failed.");
+                     //   }
+                  //  } catch (Exception e) {
+                 //       Log.i(TAG, "Command execute failed.");
+                  //  }
+
+//                    SQLiteDatabase.openOrCreateDatabase(dbf, null);
+//                    copyDataBase();
+                } catch (IOException e) {
+                    throw new Error("数据库创建失败");
+                }
+                File res_file =new File(DB_PATH+"user_data-shm");
+                File res_file2 =new File(DB_PATH+"user_data-wal");
+                Log.i(TAG,"开始del");
+                res_file.delete();
+                res_file2.delete();
+                Log.i(TAG,"完成del");
+            }
+        }
+
+        private void copyDataBase() throws IOException {
+//            InputStream myInput = null;
+////        try {
+//            myInput = myContext.getClass().getClassLoader().getResourceAsStream("assets/" + DB_NAME);//getAssets().open(ASSETS_NAME);
+//            String outFileName = DB_PATH + DB_NAME;
+//            OutputStream myOutput = new FileOutputStream(outFileName);
+//
+//            byte[] buffer = new byte[1024];
+//            int length;
+//            while ((length = myInput.read(buffer)) > 0) {
+//                myOutput.write(buffer, 0, length);
+//            }
+//            myOutput.flush();
+//            myOutput.close();
+//            myInput.close();
+            InputStream is = myContext.getResources().openRawResource(
+                    R.raw.user_data); //欲导入的数据库
+            String outFileName = DB_PATH + DB_NAME;
+            FileOutputStream fos = new FileOutputStream(outFileName);
+            byte[] buffer = new byte[400000];
+            int count = 0;
+            while ((count = is.read(buffer)) > 0) {
+                fos.write(buffer, 0, count);
+            }
+            fos.close();
+            is.close();
+
+            File dbf = new File(DB_PATH);
+            File[] files=dbf.listFiles();
+            Log.i(TAG,"文件长度"+files.length);
+            Log.i(TAG,"成功建库");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        }
+
+        private boolean checkDataBase() {
+            SQLiteDatabase checkDB = null;
+            String myPath = DB_PATH + DB_NAME;
+            try {
+                checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            } catch (SQLiteException e) { //database does't exist yet.
+            }
+            if (checkDB != null) {
+                checkDB.close();
+            }
+            return checkDB != null ? true : false;
+        }
+
+        @Override
+        public synchronized void close() {
+            if (myDataBase != null) {
+                myDataBase.close();
+            }
+            super.close();
+        }
+
+
+//创建数据库
+
+
+        // @Override
+  //      public void onCreate(SQLiteDatabase db) {
+//            Log.i(TAG,"db.getVersion()="+db.getVersion());
+//            db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME + ";");
+//            db.execSQL(DB_CREATE);
+//            Log.i(TAG, "db.execSQL(DB_CREATE)");
+//            Log.e(TAG, DB_CREATE);  //drop if 操作是为了删除原有的  创建新的，是一种常用的更新方法
+
+ //      }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -143,6 +297,7 @@ public class UserDataManager {             //用户数据管理类
     public void openDataBase() throws SQLException {
         mDatabaseHelper = new DataBaseManagementHelper(mContext);
         mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        mdatabase = mDatabaseHelper.getWritableDatabase();
     }
 
     //log
@@ -151,6 +306,15 @@ public class UserDataManager {             //用户数据管理类
     public void closeDataBase() throws SQLException {
         mDatabaseHelper.close();
     }
+    public long insert_userhw(String user_name,float weight,float height,String reg_time){
+        ContentValues values = new ContentValues();
+        values.put("User_name", user_name);
+        values.put("Weight",weight);
+        values.put("Height",height);
+        values.put("Reg_time",reg_time);
+        return mSQLiteDatabase.insert("user_hw", ID, values);
+    }
+
     //添加新用户，即注册
     public long insertUserData(UserData userData) {
         String userName=userData.getUserName();
@@ -160,6 +324,8 @@ public class UserDataManager {             //用户数据管理类
         double Weight = userData.getWeight();
         double Height = userData.getHeight();
         double BMI = userData.getBMI();
+        String Identity = userData.getIdentity();
+        String Status = userData.getStatus();
         double Kcal = userData.getKcal();
         double Protein = userData.getProtein();
         double Fats = userData.getFats();
@@ -205,7 +371,8 @@ public class UserDataManager {             //用户数据管理类
         values.put(USER_WEIGHT,Weight);
         values.put(USER_HEIGHT,Height);
         values.put(USER_BMI,BMI);
-
+        values.put(USER_IDENTITY,Identity);
+        values.put(USER_STATUS,Status);
         values.put(USER_KCAL,Kcal);
         values.put(USER_PROTEIN,Protein);
         values.put(USER_FATS,Fats);
@@ -276,7 +443,7 @@ public class UserDataManager {             //用户数据管理类
 //        double D7CHO = userData.getD7CHO();
 //        double D7Protein = userData.getD7Protein();
 //        double D7Fats = userData.getD7Fats();
-        ContentValues values = new ContentValues();
+        //ContentValues values = new ContentValues();
 //        int days = 0;
 //        long time1 = startTime.getTime();
 //        long time2 = endTime.getTime();
@@ -471,7 +638,8 @@ public class UserDataManager {             //用户数据管理类
     public int findUserByName(String userName){
         Log.i(TAG,"findUserByName , userName="+userName);
         int result=0;
-        Cursor mCursor=mSQLiteDatabase.query(TABLE_NAME, null, USER_NAME+"=?",new String[]{userName}, null, null, null);
+        Cursor mCursor = mdatabase.query(TABLE_NAME, null, USER_NAME+"=?",new String[]{userName}, null, null, null);
+        //Cursor mCursor=mSQLiteDatabase.query(TABLE_NAME, null, USER_NAME+"=?",new String[]{userName}, null, null, null);
         if(mCursor!=null){
             result=mCursor.getCount();
             mCursor.close();
@@ -492,9 +660,25 @@ public class UserDataManager {             //用户数据管理类
         }
         return result;
     }
+    public boolean is_num_enough(String identity){
+        Cursor cursor = mSQLiteDatabase.query("users_info",null,"Identity=?",new String[]{identity},null ,null,null,null);
+
+        boolean sat=true;
+        if(cursor!=null){
+            int count = cursor.getCount();
+            Log.i(TAG,"该身份："+identity+"用户人数："+count);
+            if (count<2&&count>=0) sat=true;
+            else if (count>=2) sat=false;
+        }
+        return sat;
+    }
+
     public void showList(String colunmName){
         mDatabaseHelper = new DataBaseManagementHelper(mContext);
-        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        mdatabase = mDatabaseHelper.getWritableDatabase();
+
+        //mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+       // Cursor cursor = mdatabase.query("users_info",null,null,null,null,null,null);
         Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
         List<String> userlist = new ArrayList<String>();
         if(cursor.moveToFirst()){
@@ -507,11 +691,14 @@ public class UserDataManager {             //用户数据管理类
         cursor.close();
 
     }
+
     //返回一个用户名的列表
     public List<String> showUserName(String colunmName){
         //mDatabaseHelper = new DataBaseManagementHelper(mContext);
         //mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
-        Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
+        //SQLiteDatabase database = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+        Cursor cursor = mdatabase.query("users_info",null,null,null,null,null,null);
+        //Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
         List<String> userlist = new ArrayList<String>();
         if(cursor.moveToFirst()){
             do{
@@ -523,29 +710,93 @@ public class UserDataManager {             //用户数据管理类
         cursor.close();
         return userlist;
     }
+    public String get_reg_usertime(String user_name){
+        Cursor cursor = mSQLiteDatabase.query("user_hw",null,"User_name=?",new String[]{user_name},null,null,null,"1");
+        String reg_time="";
+       // Log.i(TAG,"zhaodaole");
+        if(cursor.moveToFirst()){
+            do{
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                    reg_time = cursor.getString(cursor.getColumnIndex("Reg_time"));
+            }while (cursor.moveToNext());}
+        cursor.close();
+
+        return reg_time;
+    }
+    public String get_current_usertime(String user_name){
+        Cursor cursor = mSQLiteDatabase.query("user_hw",null,"User_name=?",new String[]{user_name},null,null,null,null);
+        String reg_time="";
+        // Log.i(TAG,"zhaodaole");
+        if(cursor.moveToFirst()){
+            do{
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                reg_time = cursor.getString(cursor.getColumnIndex("Reg_time"));
+                Log.i(TAG,"每次修改的时间为"+reg_time);
+            }while (cursor.moveToNext());}
+        cursor.close();
+
+        return reg_time;
+    }
+    public String get_current_userinfo(String user_name){
+        Cursor cursor = mSQLiteDatabase.query("user_hw",null,"User_name=?",new String[]{user_name},null,null,null,null);
+        //String weight_height="";
+        String weight="";
+        String height="";
+        Log.i(TAG,"zhaodaole");
+        if(cursor.moveToFirst()){
+            do{
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                weight = cursor.getString(cursor.getColumnIndex("Weight"));
+                height = cursor.getString(cursor.getColumnIndex("Height"));
+                Log.i(TAG,"每次修改的信息为:体重："+weight+",身高："+height);
+            }while (cursor.moveToNext());}
+        cursor.close();
+        //weight_height=weight+"-"+height;
+        return weight+"-"+height;
+    }
+
     //问题记录 现在是用户名是数字的可以找到 ， AA这个字符类型的找不到。
-    public List<Float> findFoodInfo(String foodName){
-        Cursor cursor = mSQLiteDatabase.query("foods_info",null,"Food_Name=?",new String[]{foodName},null,null,null,null);
+    public List<Float> findFoodInfo(String foodname){
+        Cursor cursor = mSQLiteDatabase.query("foods_info",null,"Food_Name=?",new String[]{foodname},null,null,null,null);
         List<Float> foodinfo = new ArrayList<Float>();
         Log.i(TAG,"foodinfostart");
         if(cursor.moveToFirst()){
             do{
                 if (cursor.getCount()==0){Log.i(TAG,"NULL");}
             Float vol = cursor.getFloat(cursor.getColumnIndex("Vol"));
-            Float Energy = cursor.getFloat(cursor.getColumnIndex("Energy"))/vol;
-            Float CHO = cursor.getFloat(cursor.getColumnIndex("CHO"))/vol;
-            Float Protein = cursor.getFloat(cursor.getColumnIndex("Protein"))/vol;
-            Float Fats = cursor.getFloat(cursor.getColumnIndex("Fats"))/vol;
+            Float Energy = cursor.getFloat(cursor.getColumnIndex("Energy"));
+            Float CHO = cursor.getFloat(cursor.getColumnIndex("CHO"));
+            Float Protein = cursor.getFloat(cursor.getColumnIndex("Protein"));
+            Float Fats = cursor.getFloat(cursor.getColumnIndex("Fats"));
             foodinfo.add(Energy);
             foodinfo.add(CHO);
             foodinfo.add(Protein);
             foodinfo.add(Fats);
+            foodinfo.add(vol);
                 Log.i(TAG,"FOODNUTRI"+Energy+"+"+CHO+"+"+Protein+"+"+Fats);
         }while (cursor.moveToNext());}
         cursor.close();
 
         return foodinfo;
 
+    }
+    public List<String> findFoodMaterial(String foodname) {
+        Cursor cursor = mSQLiteDatabase.query("foods_material",null,"Food_Name=?",new String[]{foodname},null,null,null);
+        List<String> foodmaterial = new ArrayList<String>();
+        String mat;
+        String weight;
+        String sum;
+        if(cursor.moveToFirst()){
+            do{
+                if(cursor.getCount()==0){Log.i(TAG,"莫得");}
+            mat = cursor.getString(cursor.getColumnIndex("Material"));
+            weight = cursor.getString(cursor.getColumnIndex("Weight"));
+            sum = mat+"-"+weight;
+            foodmaterial.add(sum);
+            Log.i(TAG,"原料有："+foodmaterial);
+        }while (cursor.moveToNext());}
+        cursor.close();
+        return  foodmaterial;
     }
     public List<String> findUserInfo(String userName){
         int result=0;
@@ -710,10 +961,43 @@ public class UserDataManager {             //用户数据管理类
         cursor.close();
         return daynutriinfo;
     }
+    public int new_BMIInfo(String usersex,int days,double BMI){
+        float p3 =0;
+        float p50=0;
+        float overweight=0;
+        float fat=0;
+        int status = -1;
+        int userage=days/365;
+        float usermonth =(days-userage*365)/30;
+        float real_age=0;
+        if(usermonth>=0&&usermonth<=4) real_age=userage;
+        if(usermonth>4&&usermonth<=8) real_age=userage+0.5f;
+        if(usermonth>8&&usermonth<=12) real_age=userage+1;
+        Log.i(TAG,"计算好的年龄:"+real_age);
+        //Log.i(TAG,"整数年："+userage);
+        //Log.i(TAG,"整数月份："+usermonth);
+        Cursor cursor = mSQLiteDatabase.query(usersex+"_bmi",null,"Age=?",new String[]{Float.toString(real_age)},null,null,null,null);
+        if(cursor.moveToFirst()) {
+            do {
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                 p3= Float.parseFloat(cursor.getString(cursor.getColumnIndex("P3")));
+                 //p50 = Float.parseFloat(cursor.getString(cursor.getColumnIndex("P50")));
+                 overweight = Float.parseFloat(cursor.getString(cursor.getColumnIndex("Overweight")));
+                 fat= Float.parseFloat(cursor.getString(cursor.getColumnIndex("Fat")));
+                //bmiinfo = p15+"-"+p85;
+                //return bmiinfo;
+            } while (cursor.moveToNext());}
+        cursor.close();
+        Log.i(TAG,"各个指标"+p3+","+overweight+","+fat);
+        if(BMI<=p3) status=0;
+        if (BMI>p3&&BMI<=overweight) status=1;
+        if(BMI>overweight&&BMI<=fat) status=2;
+        if(BMI>fat) status=3;
+        return status;
+    }
     public int BMIInfo(String usersex,int age,int days,double BMI){
         Log.i(TAG,"BMIInfo");
         Cursor cursor;
-        int a= 0;
         String p15="";
         String p85="";
         String bmiinfo="";
@@ -827,69 +1111,68 @@ public class UserDataManager {             //用户数据管理类
         float adultweight = 0;
         String weight="";
         String strsex="";
-        if(sex=="男"){
-            strsex="boy";
-            if(height>183.9){
-                overtall = (height-100)*0.9f;
-            }
-        }
-
-        if(sex=="女"){
-            strsex="girl";
-            if(height>170.7){
-                overtall= (height-100)*0.9f-2.5f;
-            }
-        }
+//        if(sex=="男"){
+//            strsex="boy";
+//            if(height>183.9){
+//                overtall = (height-100)*0.9f;
+//            }
+//        }
+//
+//        if(sex=="女"){
+//            strsex="girl";
+//            if(height>170.7){
+//                overtall= (height-100)*0.9f-2.5f;
+//            }
+//        }
 
             if(month<24) {
                 agecol = month/12f;
             Log.i(TAG, "agecol" + String.valueOf(agecol));
             if (agecol < 0.166)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 0.166 && agecol < 0.333)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.166",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.166",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 0.333 && agecol < 0.5)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.333",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.333",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 0.5 && agecol < 0.75)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.5",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.5",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 0.75 && agecol < 1)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.75",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"0.75",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 1 && agecol < 1.25)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 1.25 && agecol < 1.5)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.25",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.25",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 1.5 && agecol < 1.75)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.5",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.5",Float.toString(height)}, null, null, null, "1");
             if (agecol >= 1.75 && agecol < 2)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.75",Float.toString(height)}, null, null, null, "1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=? AND P_height>=?", new String[]{"1.75",Float.toString(height)}, null, null, null, "1");
         }
         if(month>=24&&month<=216){
             int age_low = month/12;
             float age_mid = age_low+1f/2f;
             int age_high = age_low+1;
             agecol = month/12f;
-
             Log.i(TAG,"agelow"+String.valueOf(age_low));
             Log.i(TAG,"agemid"+String.valueOf(age_mid));
             Log.i(TAG,"agehigh"+String.valueOf(age_high));
             if(agecol>=age_low&&agecol<age_mid){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_low),Float.toString(height)},null,null,null,"1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_low),Float.toString(height)},null,null,null,"1");
                 Log.i(TAG,"chossedcursor low"); }
             if(agecol>=age_mid&&agecol<age_high){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_mid),Float.toString(height)},null,null,null,"1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_mid),Float.toString(height)},null,null,null,"1");
                 Log.i(TAG,"chossedcursor mid");}
             if(agecol==age_high){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_high),Float.toString(height)},null,null,null,"1");
+                cursor = mSQLiteDatabase.query(sex+"_ibw",null,"Age>=? AND P_height>=?", new String[]{Float.toString(age_high),Float.toString(height)},null,null,null,"1");
                 Log.i(TAG,"chossedcursor high");}
 
             Log.i(TAG,"agecol"+agecol);
 
         }
         if(month>216){
-            if(sex=="男")
-                adultweight = (height-100)*0.9f;
-            if(sex=="女")
-                adultweight = (height-100)*0.9f-2.5f;
+            if(sex=="boy")
+                ibw = (height-100)*0.9f;
+            if(sex=="girl")
+                ibw = (height-100)*0.9f-2.5f;
         }
         if(cursor.moveToFirst()) {
             do {
@@ -899,23 +1182,20 @@ public class UserDataManager {             //用户数据管理类
             cursor.close();
 //        Log.i(TAG,"USER_HEIGHT"+height);
         Log.i(TAG,"USER_IBW"+weight);
-        if(sex=="男"){
-            if(month>216)
-                ibw = adultweight;
+
+        if(sex=="boy"){
             if(month<=216){
-                if(height>183.9)
-                    ibw = overtall;
-                else
-                    ibw = Float.parseFloat(weight);
+                if(height>183.9){
+                    ibw = (height-100)*0.9f;}
+                else if(height>0&&height<=183.9){
+                    ibw = Float.parseFloat(weight);}
             }
         }
 
-        if(sex=="女"){
-            if(month>216)
-                ibw = adultweight;
+        if(sex=="girl"){
             if(month<=216){
                 if(height>170.7)
-                    ibw = overtall;
+                    ibw = (height-100)*0.9f-2.5f;
                 else
                     ibw = Float.parseFloat(weight);
             }
@@ -930,32 +1210,32 @@ public class UserDataManager {             //用户数据管理类
         float agecol=0;
         int status = 0;
         String weight="";
-        String strsex="";
-        if(sex=="男")
-            strsex="boy";
-        if(sex=="女")
-            strsex="girl";
+//        String strsex="";
+//        if(sex=="男")
+//            strsex="boy";
+//        if(sex=="女")
+//            strsex="girl";
         if(month<24) {
             agecol = month/12f;
             Log.i(TAG, "agecol" + String.valueOf(agecol));
             if (agecol < 0.166)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"0"}, null, null, null, "2");
             if (agecol >= 0.166 && agecol < 0.333)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.166"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"0.166"}, null, null, null, "2");
             if (agecol >= 0.333 && agecol < 0.5)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.333"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"0.333"}, null, null, null, "2");
             if (agecol >= 0.5 && agecol < 0.75)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.5"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"0.5"}, null, null, null, "2");
             if (agecol >= 0.75 && agecol < 1)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"0.75"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"0.75"}, null, null, null, "2");
             if (agecol >= 1 && agecol < 1.25)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"1"}, null, null, null, "2");
             if (agecol >= 1.25 && agecol < 1.5)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1.25"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"1.25"}, null, null, null, "2");
             if (agecol >= 1.5 && agecol < 1.75)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1.5"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"1.5"}, null, null, null, "2");
             if (agecol >= 1.75 && agecol < 2)
-                cursor = mSQLiteDatabase.query(strsex+"_ibw", null, "Age>=?", new String[]{"1.75"}, null, null, null, "2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw", null, "Age>=?", new String[]{"1.75"}, null, null, null, "2");
         }
         if(month>=24){
             int age_low = month/12;
@@ -967,13 +1247,13 @@ public class UserDataManager {             //用户数据管理类
             Log.i(TAG,"agemid"+String.valueOf(age_mid));
             Log.i(TAG,"agehigh"+String.valueOf(age_high));
             if(agecol>=age_low&&agecol<age_mid){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age=?", new String[]{Float.toString(age_low)},null,null,null,"2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw",null,"Age=?", new String[]{Float.toString(age_low)},null,null,null,"2");
                 Log.i(TAG,"chossedcursor low"); }
             if(agecol>=age_mid&&agecol<age_high){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=?", new String[]{Float.toString(age_mid)},null,null,null,"2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw",null,"Age>=?", new String[]{Float.toString(age_mid)},null,null,null,"2");
                 Log.i(TAG,"chossedcursor mid");}
             if(agecol==age_high){
-                cursor = mSQLiteDatabase.query(strsex+"_ibw",null,"Age>=?", new String[]{Float.toString(age_high)},null,null,null,"2");
+                cursor = mSQLiteDatabase.query(sex+"_ibw",null,"Age>=?", new String[]{Float.toString(age_high)},null,null,null,"2");
                 Log.i(TAG,"chossedcursor high");}
                 Log.i(TAG,"agecol"+agecol);
 
@@ -1000,6 +1280,23 @@ public class UserDataManager {             //用户数据管理类
         ContentValues values = new ContentValues();
         values.put(columnName, changed_value);
         mSQLiteDatabase.update(TABLE_NAME, values, "USER_NAME=?", new String[]{userName});
+    }
+    public List<String> showFoodName(String colunmName){
+        mDatabaseHelper = new DataBaseManagementHelper(mContext);
+        mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+        Cursor cursor = mSQLiteDatabase.query("foods_info",null,null,null,null,null,null);
+        List<String> foodlist = new ArrayList<String>();
+        if(cursor.moveToFirst()){
+            do{
+                // Log.i(TAG,"show1");
+                String foodname = cursor.getString(cursor.getColumnIndex(colunmName));
+                // Log.i(TAG,foodname);
+                foodlist.add(foodname);
+
+            }while (cursor.moveToNext());
+        }
+        cursor.close();
+        return foodlist;
     }
 }
 

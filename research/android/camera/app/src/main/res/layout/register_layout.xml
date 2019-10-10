@@ -38,18 +38,46 @@
         android:hint="请输入身高（CM）"
         android:inputType="numberDecimal"
         android:layout_below="@+id/user_weight" />
+
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_marginLeft="160dp"
-    android:layout_marginTop="46dp"
-    android:layout_marginBottom="339dp">
-    <Spinner
-        android:id="@+id/sex_choose"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content">
-    </Spinner>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="160dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginBottom="257dp">
+
+        <Spinner
+            android:id="@+id/sex_choose"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"></Spinner>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_day">
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:id="@+id/child"
+                android:text="儿童"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:id="@+id/adult"
+                android:text="成人"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/elder"
+                android:text="老人"/>
+        </RadioGroup>
     </LinearLayout>
 
     <TextView
@@ -80,6 +108,7 @@
         android:layout_marginTop="2dp"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="16"
+        android:inputType="numberDecimal"
         android:hint="年" />
     <EditText
         android:id="@+id/user_month"
@@ -87,6 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_year"
         android:layout_marginTop="2dp"
+        android:inputType="numberDecimal"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="16"
         android:hint="月" />
@@ -96,6 +126,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_month"
         android:layout_marginTop="2dp"
+        android:inputType="numberDecimal"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="16"
         android:hint="日" />
