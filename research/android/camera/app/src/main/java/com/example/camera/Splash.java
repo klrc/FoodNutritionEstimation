@@ -3,10 +3,12 @@ package com.example.camera;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import java.io.IOException;
 
@@ -22,6 +24,8 @@ public class Splash extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //ImageView img = (ImageView)findViewById(R.id.imageView2);
+       // Bitmap bitmap = getLocalBitmap
         getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
         UserDataManager.DataBaseManagementHelper helper = new UserDataManager.DataBaseManagementHelper(this);
@@ -52,7 +56,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    sleep(500);
+                    sleep(20);
                     Intent it = new Intent(getApplicationContext(), Login.class);
                     startActivity(it);
                     Log.i(TAG,"splash over");

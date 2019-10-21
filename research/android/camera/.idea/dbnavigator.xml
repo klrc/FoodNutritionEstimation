@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="c122548b-f231-4569-8ced-15dc87e05a11">
-        <schema name="main" object-types="view, table" />
+        <schema name="main" object-types="column, dataset trigger, index, constraint, view, table" />
       </connection>
     </loaded-nodes>
   </component>
@@ -44,7 +44,10 @@
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="c122548b-f231-4569-8ced-15dc87e05a11" object-ref="schemas/main/tables/foods_info" />
+      <object connection-id="c122548b-f231-4569-8ced-15dc87e05a11" object-ref="schemas/main/tables/users_info" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="c122548b-f231-4569-8ced-15dc87e05a11" />
@@ -53,6 +56,9 @@
     <connection id="c6125b98-c497-4be8-a6c0-dcfac06f1276" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="c122548b-f231-4569-8ced-15dc87e05a11" dataset="main.foods_info" active-filter-id="4f4b0209-5434-49c5-b8c6-d69826d2ec6e">
+      <filter id="4f4b0209-5434-49c5-b8c6-d69826d2ec6e" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
+    </filter-actions>
     <filter-actions connection-id="c122548b-f231-4569-8ced-15dc87e05a11" dataset="main.boy_2_5" active-filter-id="84e87181-3f04-47b3-942c-0fafb392214c">
       <filter id="84e87181-3f04-47b3-942c-0fafb392214c" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND" />
     </filter-actions>

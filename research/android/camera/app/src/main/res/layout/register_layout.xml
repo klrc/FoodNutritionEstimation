@@ -6,90 +6,173 @@
     tools:context="com.example.camera.Register"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:paddingLeft="40dp"
-    android:paddingRight="40dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@drawable/loading_1_background_image"
+
     android:weightSum="1">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="46dp"
+        android:src="@drawable/logo" />
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:id="@+id/register_edit_name"
+        android:layout_marginTop="147dp"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:hint="请输入用户名"
+        android:textColorHint="@color/saswell_white"
+        android:background="@drawable/signup_1_holder_1"
         android:inputType="textPersonName"
+        android:textColor="@color/saswell_white"
         android:ems="16"
         android:layout_centerHorizontal="true"
         />
+
     <EditText
         android:id="@+id/user_weight"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginTop="217dp"
+        android:background="@drawable/signup_1_holder_1"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="16"
         android:hint="请输入体重（KG)"
         android:inputType="numberDecimal"
-        android:layout_below ="@+id/register_edit_name" />
+        android:textColor="@color/saswell_white"
+        android:textColorHint="@color/saswell_white" />
 
     <EditText
         android:id="@+id/user_height"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+
+        android:layout_marginTop="287dp"
+        android:background="@drawable/signup_1_holder_1"
         android:drawableLeft="@android:drawable/ic_menu_edit"
         android:ems="16"
         android:hint="请输入身高（CM）"
         android:inputType="numberDecimal"
-        android:layout_below="@+id/user_weight" />
+        android:textColor="@color/saswell_white"
+        android:textColorHint="@color/saswell_white" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="160dp"
-        android:layout_marginTop="46dp"
-        android:layout_marginBottom="257dp">
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginBottom="167dp"
+        android:background="@drawable/signup_1_holder_2"
+        android:gravity="center_vertical">
 
-        <Spinner
-            android:id="@+id/sex_choose"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"></Spinner>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_day">
-        <RadioGroup
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/sexual"
+            android:layout_width="148dp"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/user_day"
+            android:layout_gravity="center_vertical"
+
+            android:ems="16"
+            android:text="请选择你的性别:"
+            android:textColor="@color/saswell_white"
+            android:textSize="20dp" />
+
+        <RadioGroup
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="20dp"
             android:orientation="horizontal">
+
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/boy"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:id="@+id/child"
-                android:text="儿童"/>
+                android:text="男"
+                android:textColor="@color/saswell_white" />
+
             <RadioButton
-                android:layout_width="wrap_content"
+                android:id="@+id/girl"
+                android:layout_width="127dp"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:id="@+id/adult"
-                android:text="成人"/>
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/elder"
-                android:text="老人"/>
+                android:text="女"
+                android:textColor="@color/saswell_white" />
+
         </RadioGroup>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/sexual"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_day"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="120dp"
-        android:ems="16"
-        android:text="请选择你的性别:"
-        android:textSize="20dp" />
+    <LinearLayout
+        android:layout_width="392dp"
+        android:layout_height="52dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginBottom="239dp"
+
+        android:background="@drawable/signup_1_holder_1"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/identi"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_ymd"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="120dp"
+            android:ems="16"
+            android:text="请选择你的身份:"
+            android:textColor="@color/saswell_white"
+
+            android:textSize="20dp" />
+
+        <RadioGroup
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="-120dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/child"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:checked="false"
+                android:text="儿童"
+                android:textColor="@color/saswell_white" />
+
+            <RadioButton
+                android:id="@+id/adult"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="成人"
+                android:textColor="@color/saswell_white" />
+
+            <RadioButton
+                android:id="@+id/elder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="老人"
+                android:textColor="@color/saswell_white" />
+        </RadioGroup>
+    </LinearLayout>
+
+
+
 
     <!--<EditText-->
         <!--android:id="@+id/user_sex"-->
@@ -99,64 +182,90 @@
         <!--android:layout_marginTop="117dp"-->
         <!--android:ems="16"-->
         <!--android:hint="请选择你的性别" />-->
+    <RelativeLayout
+        android:id="@+id/user_ymd"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
 
-    <EditText
-        android:id="@+id/user_year"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_height"
-        android:layout_marginTop="2dp"
-        android:drawableLeft="@android:drawable/ic_menu_edit"
-        android:ems="16"
-        android:inputType="numberDecimal"
-        android:hint="年" />
-    <EditText
-        android:id="@+id/user_month"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_year"
-        android:layout_marginTop="2dp"
-        android:inputType="numberDecimal"
-        android:drawableLeft="@android:drawable/ic_menu_edit"
-        android:ems="16"
-        android:hint="月" />
-    <EditText
-        android:id="@+id/user_day"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/user_month"
-        android:layout_marginTop="2dp"
-        android:inputType="numberDecimal"
-        android:drawableLeft="@android:drawable/ic_menu_edit"
-        android:ems="16"
-        android:hint="日" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/layout_reg_sure"
-    android:layout_below="@+id/user_day"
-    android:layout_marginTop="105dp">
-    <Button
-        android:id="@+id/register_btn_sure"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="355dp"
 
-        android:text="确认"
-        android:textColor="#ffffff"
-        android:textSize="20dp" />
-</LinearLayout>
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/user_year"
+            android:layout_width="142dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/signup_1_holder_3"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:ems="16"
+            android:hint="年"
+
+            android:inputType="numberDecimal"
+            android:textColor="@color/saswell_white"
+            android:textColorHint="@color/saswell_white" />
+
+        <EditText
+            android:id="@+id/user_month"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/user_year"
+            android:background="@drawable/signup_1_holder_3"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:ems="16"
+            android:hint="月"
+            android:inputType="numberDecimal"
+            android:textColor="@color/saswell_white"
+            android:textColorHint="@color/saswell_white" />
+
+        <EditText
+            android:id="@+id/user_day"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/user_month"
+            android:background="@drawable/signup_1_holder_3"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:ems="16"
+            android:hint="日"
+            android:inputType="numberDecimal"
+            android:textColor="@color/saswell_white"
+            android:textColorHint="@color/saswell_white" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_reg_sure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_day"
+        android:layout_marginTop="560dp">
+
+        <Button
+            android:id="@+id/register_btn_sure"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/login_1_button"
+            android:text="确认"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_reg_sure">
-    <Button
-        android:id="@+id/register_btn_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#f53434"
-        android:text="取消"
-        android:textColor="#ffffff"
-        android:textSize="20dp"
-        />
+        android:layout_below="@+id/layout_reg_sure"
+        android:layout_marginTop="23dp">
+
+        <Button
+            android:id="@+id/register_btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/login_1_button"
+            android:text="取消"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
     </LinearLayout>
 </RelativeLayout>

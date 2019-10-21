@@ -55,8 +55,8 @@ public class LoginList extends AppCompatActivity {
 //下拉框
         mRegisterButton.setOnClickListener(mListener);
         mLoginButton.setOnClickListener(mListener);
-        view = (TextView) findViewById(R.id.spinnerText);
-        user_spinner = (Spinner) findViewById(R.id.user_choose);
+        //view = (TextView) findViewById(R.id.spinnerText);
+        //user_spinner = (Spinner) findViewById(R.id.user_choose);
         //将可选内容与ArrayAdapter连接起来
         List<String> ul = mUserDataManager.showUserName("USER_NAME");
         String[] user_list2 = new String[ul.size()];

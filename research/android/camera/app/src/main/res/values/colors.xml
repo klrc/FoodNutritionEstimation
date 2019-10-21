@@ -16,7 +16,7 @@
 
     <color name="saswell_grey_line">#FF808080</color>
     <color name="saswell_setpoint_temp">#FFFF9500</color>
-    <color name="saswell_indoor_temp">#FFffffff</color>
+    <color name="saswell_indoor_temp">#FFFFFF</color>
     <color name="saswell_protein_temp">#FFffffaf</color>
     <color name="saswell_fats_temp">#FFff5300</color>
 

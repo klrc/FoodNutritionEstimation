@@ -1,20 +1,32 @@
 package com.example.camera;
+import android.arch.lifecycle.SingleGeneratedAdapterObserver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.provider.Contacts;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 public class Login extends AppCompatActivity {
@@ -41,6 +54,8 @@ public class Login extends AppCompatActivity {
     private TextView loginSuccessShow;
     private TextView mChangepwdText;
     private UserDataManager mUserDataManager;
+    private Bitmap bitmap;
+    private String loginuser;
 
 
     //下拉框
@@ -50,18 +65,21 @@ public class Login extends AppCompatActivity {
     ////
     private String DB_PATH = "data/data/com.example.camera/databases/";//android.os.Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
     private static String DB_NAME ="user_data";
+    //recycle布局
+    private List<UserInformation> userList= new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.login_layout);
         ArrayAdapter<String> user_adapter;
+        ArrayAdapter<UserInformation> user_adapter2;
         mLoginButton = (Button) findViewById(R.id.login_btn_login);
         mRegisterButton = (Button) findViewById(R.id.login_btn_register);
         //  mCancelButton=(Button)findViewById(R.id.login_btn_cancel);  //登录界面注销
-
         loginView = findViewById(R.id.login_view);
         longinSuccessView = findViewById(R.id.login_success_view);
         loginSuccessShow = (TextView) findViewById(R.id.login_success_show);
@@ -105,29 +123,60 @@ public class Login extends AppCompatActivity {
 
 
         //下拉框
-        view = (TextView) findViewById(R.id.spinnerText);
-        user_spinner = (Spinner) findViewById(R.id.user_choose);
+//        view = (TextView) findViewById(R.id.spinnerText);
+//        user_spinner = (Spinner) findViewById(R.id.user_choose);
+        //user_spinner.setDropDownWidth(400);
         /////////////////////////////////////////////
-        List<String> ul = mUserDataManager.showUserName("USER_NAME");
+        final List<String> ul = mUserDataManager.showUserName("USER_NAME");
+        final List<String> user_id_list = mUserDataManager.showUserName("Identity");
         String[] user_list2 = new String[ul.size()];
         ul.toArray(user_list2);
+
         //////////////////////////////////////////////////
-//        Log.i(TAG,user_list2[2]);
+
+        ///recycle布局
+        initUser(ul,user_id_list);
+//        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.rec_user);
+        final UserAdapter adapter = new UserAdapter(Login.this,R.layout.user_item,userList);
+        final ListView listView = (ListView)findViewById(R.id.list_user);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener (new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                UserInformation user = userList.get(position);
+                loginuser = user.getName().split("用")[0].trim();
+
+                Intent i = new Intent(Login.this,MainInterface.class);
+                i.putExtra("user",loginuser);
+                startActivity(i);
+                Log.i(TAG,"选择的用户是："+loginuser);
+
+            }
+        });
+        //listView.setOnItemClickListener(listItemClickListener);
+      //  LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+      //  recyclerView.setLayoutManager(layoutManager);
+        //UserAdapter adapter = new UserAdapter(userList);
+      //  recyclerView.setAdapter(adapter);
         //将可选内容与ArrayAdapter连接起来
 
-        user_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ul);
-
+     //   user_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ul);
+        //user_adapter2 = new UserAdapter(Login.this,R.layout.user_item,userList);
         //设置下拉列表的风格
-        user_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
+     //   user_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //user_adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //将adapter 添加到spinner中
-        user_spinner.setAdapter(user_adapter);
-
+        //user_spinner.setAdapter(user_adapter);
+        //user_spinner.setAdapter(user_adapter2);
         //添加事件Spinner事件监听
-        user_spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
+        //user_spinner.setOnItemSelectedListener(new SpinnerSelectedListener());
 
         //设置默认值
-        user_spinner.setVisibility(View.VISIBLE);
+        //user_spinner.setVisibility(View.VISIBLE);
+
+
+
 
         Log.i(TAG, "Login_onCreate()");
     }
@@ -149,6 +198,27 @@ public class Login extends AppCompatActivity {
         public void onNothingSelected(AdapterView<?> arg0) {
         }
     }
+    private void initUser(List<String> userlist,List<String> user_id_list){
+        Log.i(TAG,"asda"+userlist.toString());
+
+        String id="null";
+        for(int i=0;i<userlist.size();i++){
+            Log.i(TAG,"用户都有："+userlist.get(i));
+            if(user_id_list.get(i).equals("1")){
+                id="儿童";
+            }
+            if(user_id_list.get(i).equals("2")){
+                id="成人";
+            }
+            if(user_id_list.get(i).equals("3")){
+                id="老人";
+            }
+            UserInformation u = new UserInformation(userlist.get(i),R.drawable.login_1_temp_icon,id);
+            userList.add(u);
+        }
+    }
+
+
 
 
     OnClickListener mListener = new OnClickListener() {
@@ -162,15 +232,15 @@ public class Login extends AppCompatActivity {
                     //finish();
                     break;
                 case R.id.login_btn_login:
-                    String loginuser = login();
+                    //String loginuser = login();
                     mUserDataManager.closeDataBase();
                     Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
                     intent_Login_to_MainInterface.putExtra("user",loginuser);
                     //intent_Login_to_MainInterface.putExtra("roll",100);
-                    //Log.i(TAG,"asdas"+loginuser);
+                    Log.i(TAG,"登录用户为"+loginuser);
                     startActivity(intent_Login_to_MainInterface);
                     break;
-                case R.id.user_choose:
+            //    case R.id.user_choose:
 
                 //case R.id.login_btn_cancel:
                 //   cancel();

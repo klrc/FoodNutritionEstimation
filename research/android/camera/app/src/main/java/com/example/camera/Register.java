@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.database.SQLException;
@@ -11,6 +13,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,18 +43,33 @@ public class Register extends AppCompatActivity {
     private RadioButton mChild;
     private RadioButton mAdult;
     private RadioButton mElder;
+    private RadioButton mBoy;
+    private RadioButton mGirl;
     private UserDataManager mUserDataManager;
     private int identity=0;
     //下拉框
-    private Spinner sex_spinner;
-    public String choosed_sex;
-    private static final String[] sex_list = {"男","女"};
-    private ArrayAdapter<String>sex_adapter;
+   // private Spinner sex_spinner;
+    public String choosed_sex="null";
+   // private static final String[] sex_list = {"男","女"};
+  //  private ArrayAdapter<String>sex_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
+        getSupportActionBar().hide();
+        if (Build.VERSION.SDK_INT >= 21) {//21表示5.0
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= 19) {//19表示4.4
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            //虚拟键盘也透明
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
         Log.i(TAG, "onCteate()");
         mUsername = (EditText) findViewById(R.id.register_edit_name);
         mWeight = (EditText)findViewById(R.id.user_weight);
@@ -58,12 +77,17 @@ public class Register extends AppCompatActivity {
         mUseryear = (EditText)findViewById(R.id.user_year);
         mUsermonth = (EditText)findViewById(R.id.user_month);
         mUserday = (EditText)findViewById(R.id.user_day);
+        mBoy = (RadioButton)findViewById(R.id.boy);
+        mGirl=(RadioButton)findViewById(R.id.girl);
         mChild = (RadioButton) findViewById(R.id.child);
         mAdult = (RadioButton) findViewById(R.id.adult);
         mElder = (RadioButton) findViewById(R.id.elder);
         mChild.setOnClickListener(mListener);
         mAdult.setOnClickListener(mListener);
         mElder.setOnClickListener(mListener);
+        mBoy.setOnClickListener(mListener2);
+        mGirl.setOnClickListener(mListener2);
+
 
         //mSex = (EditText)findViewById(R.id.user_sex);
 
@@ -78,15 +102,16 @@ public class Register extends AppCompatActivity {
             mUserDataManager.openDataBase();
 
         }
-        //下拉框
-        sex_spinner = (Spinner)findViewById(R.id.sex_choose);
-        sex_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,sex_list);
-        sex_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sex_spinner.setOnItemSelectedListener(new SpinnerSexSelectedListener());
+        //性别
 
-        sex_spinner.setAdapter(sex_adapter);
-        //sex_spinner.setOnItemClickListener(new SpinnerSexSelectedListener());
-        sex_spinner.setVisibility(View.VISIBLE);
+//        sex_spinner = (Spinner)findViewById(R.id.sex_choose);
+//        sex_adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,sex_list);
+//        sex_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        sex_spinner.setOnItemSelectedListener(new SpinnerSexSelectedListener());
+//
+//        sex_spinner.setAdapter(sex_adapter);
+//        //sex_spinner.setOnItemClickListener(new SpinnerSexSelectedListener());
+//        sex_spinner.setVisibility(View.VISIBLE);
         Log.i(TAG,"Register_onCreate()");
     }
 
@@ -109,16 +134,29 @@ public class Register extends AppCompatActivity {
             }
         }
     };
-    class SpinnerSexSelectedListener implements AdapterView.OnItemSelectedListener {
-        public void onItemSelected(AdapterView<?>arg0,View arg1,int arg2,long arg3){
-            choosed_sex = sex_list[arg2];
-        }
-
+    View.OnClickListener mListener2 = new View.OnClickListener() {
         @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
+        public void onClick(View v) {
+            switch (v.getId()){
+                case R.id.girl:
+                    choosed_sex="女";
+                    break;
+                case R.id.boy:
+                    choosed_sex="男";
+                    break;
+            }
         }
-    }
+    };
+//    class SpinnerSexSelectedListener implements AdapterView.OnItemSelectedListener {
+//        public void onItemSelected(AdapterView<?>arg0,View arg1,int arg2,long arg3){
+//            choosed_sex = sex_list[arg2];
+//        }
+
+//        @Override
+//        public void onNothingSelected(AdapterView<?> parent) {
+//
+//        }
+  //  }
     View.OnClickListener m_register_listener=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -128,6 +166,10 @@ public class Register extends AppCompatActivity {
                     if(register_check()) {
                         if(identity==0){
                             Toast.makeText(Register.this,"请选择用户身份",Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        if(choosed_sex.equals("null")){
+                            Toast.makeText(Register.this,"请选择用户性别",Toast.LENGTH_SHORT).show();
                             break;
                         }
                         Log.i(TAG,"用户身份："+identity);

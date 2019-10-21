@@ -710,6 +710,24 @@ public class UserDataManager {             //用户数据管理类
         cursor.close();
         return userlist;
     }
+//    public List<String> showUserIdentity(String colunmName){
+//        //mDatabaseHelper = new DataBaseManagementHelper(mContext);
+//        //mSQLiteDatabase = mDatabaseHelper.getWritableDatabase();
+//        //SQLiteDatabase database = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+//        Cursor cursor = mdatabase.query("users_info",null,null,null,null,null,null);
+//        //Cursor cursor = mSQLiteDatabase.query("users_info",null,null,null,null,null,null);
+//        List<String> user_id_list = new ArrayList<String>();
+//        if(cursor.moveToFirst()){
+//            do{
+//                String username = cursor.getString(cursor.getColumnIndex(colunmName));
+//                user_id_list.add(username);
+//
+//            }while (cursor.moveToNext());
+//        }
+//        cursor.close();
+//        return user_id_list;
+//    }
+
     public String get_reg_usertime(String user_name){
         Cursor cursor = mSQLiteDatabase.query("user_hw",null,"User_name=?",new String[]{user_name},null,null,null,"1");
         String reg_time="";
@@ -1102,6 +1120,29 @@ public class UserDataManager {             //用户数据管理类
         return status;
     }
     //查ibw表，如果身高高于表内最高值，按成人算ibw。
+    public List<String> today_nutri_import(String prefix,String username){
+        List<String> nutri_str=new ArrayList<String>();
+        String nutri_kcal;
+        String nutri_cho;
+        String nutri_protein;
+        String nutri_fats;
+        Cursor cursor = mSQLiteDatabase.query("users_info",null ,"USER_NAME=?",new String[]{username},null,null,null,null);
+        if(cursor.moveToFirst()){
+            do{
+                if (cursor.getCount()==0){Log.i(TAG,"NULL");}
+                nutri_kcal=cursor.getString(cursor.getColumnIndex(prefix+"Kcal"));
+                nutri_cho = cursor.getString(cursor.getColumnIndex(prefix+"CHO"));
+                nutri_protein=cursor.getString(cursor.getColumnIndex(prefix+"Protein"));
+                nutri_fats=cursor.getString(cursor.getColumnIndex(prefix+"Fats"));
+            }while (cursor.moveToNext());
+            cursor.close();
+            nutri_str.add(nutri_kcal);
+            nutri_str.add(nutri_cho);
+            nutri_str.add(nutri_protein);
+            nutri_str.add(nutri_fats);
+        }
+        return  nutri_str;
+    }
     public float IBWInfo(String sex,int userage,int days,float height){
         Cursor cursor=mSQLiteDatabase.query("boy_ibw", null, "Age=?", new String[]{"0"}, null, null, null, null);
         int month = days/30;
@@ -1297,6 +1338,45 @@ public class UserDataManager {             //用户数据管理类
         }
         cursor.close();
         return foodlist;
+    }
+    public List<Float> cal_nutripercent(String prefix,String username) {
+        List<Float> list = new ArrayList<>();
+        Cursor cursor = mSQLiteDatabase.query("users_info", null, "USER_NAME=?", new String[]{username}, null, null, null, null);
+        String nutri_kcal;
+        String nutri_cho;
+        String nutri_protein;
+        String nutri_fats;
+        String sum_kcal;
+        String sum_cho;
+        String sum_protein;
+        String sum_fats;
+        float percent;
+
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getCount() == 0) {
+                    Log.i(TAG, "NULL");
+                }
+                nutri_kcal = cursor.getString(cursor.getColumnIndex(prefix + "Kcal"));
+                nutri_cho = cursor.getString(cursor.getColumnIndex(prefix + "CHO"));
+                nutri_protein = cursor.getString(cursor.getColumnIndex(prefix + "Protein"));
+                nutri_fats = cursor.getString(cursor.getColumnIndex(prefix + "Fats"));
+                sum_kcal = cursor.getString(cursor.getColumnIndex("Kcal"));
+                sum_cho = cursor.getString(cursor.getColumnIndex("CHO"));
+                sum_protein=cursor.getString(cursor.getColumnIndex("Protein"));
+                sum_fats = cursor.getString(cursor.getColumnIndex("Fats"));
+
+            } while (cursor.moveToNext());
+            percent = Float.parseFloat(nutri_kcal)/Float.parseFloat(sum_kcal)*100;
+            list.add(percent);
+            percent = Float.parseFloat(nutri_cho)/Float.parseFloat(sum_cho)*100;
+            list.add(percent);
+            percent = Float.parseFloat(nutri_protein)/Float.parseFloat(sum_protein)*100;
+            list.add(percent);
+            percent = Float.parseFloat(nutri_fats)/Float.parseFloat(sum_fats)*100;
+            list.add(percent);
+        }
+        return list;
     }
 }
 
