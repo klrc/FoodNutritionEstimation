@@ -5,8 +5,17 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -16,7 +25,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AllWrong"></activity>
+        <activity android:name=".NewPhoto"></activity>
+        <activity android:name=".MainInterface2" />
+        <activity android:name=".AllWrong" />
         <activity android:name=".ResultOthers" />
         <activity android:name=".ResultShow" />
         <activity android:name=".fragment" />
@@ -32,6 +43,7 @@
         <activity android:name=".FoodDetection" />
         <activity android:name=".MainInterface" />
         <activity android:name=".LoginList" />
+        <activity android:name=".SydCameraActivity"/>
         <activity android:name=".SetNutrition" />
         <activity android:name=".UserAttr" />
         <activity android:name=".Splash">
