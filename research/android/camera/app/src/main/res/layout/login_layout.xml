@@ -44,33 +44,33 @@
 
 
 
-        <Button
-            android:id="@+id/login_btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/list_user"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="38dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="-339dp"
-            android:background="@drawable/login_1_button"
-            android:onClick="finish_login"
-            android:text="登录"
-            android:textColor="#ffffff"
-            android:textSize="20dp" />
+        <!--<Button-->
+            <!--android:id="@+id/login_btn_login"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/list_user"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginStart="0dp"-->
+            <!--android:layout_marginLeft="0dp"-->
+            <!--android:layout_marginTop="38dp"-->
+            <!--android:layout_marginRight="0dp"-->
+            <!--android:layout_marginBottom="-339dp"-->
+            <!--android:background="@drawable/login_1_button"-->
+            <!--android:onClick="finish_login"-->
+            <!--android:text="登录"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:textSize="20dp" />-->
 
         <Button
             android:id="@+id/login_btn_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/login_btn_login"
+
             android:layout_alignParentLeft="true"
             android:layout_alignParentRight="true"
             android:layout_marginLeft="0dp"
-            android:layout_marginTop="117dp"
+            android:layout_marginTop="450dp"
             android:layout_marginRight="0dp"
             android:layout_marginBottom="-139dp"
             android:background="@drawable/login_1_button"

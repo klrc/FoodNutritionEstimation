@@ -41,7 +41,7 @@ public class LoginList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        mLoginButton = (Button)findViewById(R.id.login_btn_login);
+        //mLoginButton = (Button)findViewById(R.id.login_btn_login);
         mRegisterButton = (Button)findViewById(R.id.login_btn_register);
         loginView = findViewById(R.id.login_view);
         longinSuccessView = findViewById(R.id.login_success_view);
@@ -97,9 +97,6 @@ public class LoginList extends AppCompatActivity {
                     Intent intent_Login_to_Register = new Intent(LoginList.this, Register.class);
                     startActivity(intent_Login_to_Register);
                     finish();
-                    break;
-                case R.id.login_btn_login:
-                    login();
                     break;
             }
             Log.i(TAG, "Login_OnClickListener()");

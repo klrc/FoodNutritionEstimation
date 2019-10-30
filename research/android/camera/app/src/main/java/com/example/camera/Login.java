@@ -44,7 +44,7 @@ public class Login extends AppCompatActivity {
     private EditText mAccount;//账号
     private EditText mPwd;//密码
     private Button mRegisterButton;//注册
-    private Button mLoginButton;//登陆
+ //   private Button mLoginButton;//登陆
     private Button mCancelButton;//注销
     private CheckBox mRememberCheck;//记住密码
     private SharedPreferences login_sp;
@@ -77,7 +77,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.login_layout);
         ArrayAdapter<String> user_adapter;
         ArrayAdapter<UserInformation> user_adapter2;
-        mLoginButton = (Button) findViewById(R.id.login_btn_login);
+       // mLoginButton = (Button) findViewById(R.id.login_btn_login);
         mRegisterButton = (Button) findViewById(R.id.login_btn_register);
         //  mCancelButton=(Button)findViewById(R.id.login_btn_cancel);  //登录界面注销
         loginView = findViewById(R.id.login_view);
@@ -97,7 +97,7 @@ public class Login extends AppCompatActivity {
         image.setImageResource(R.drawable.logo);
 
         mRegisterButton.setOnClickListener(mListener);
-        mLoginButton.setOnClickListener(mListener);
+//        mLoginButton.setOnClickListener(mListener);
 //        mChangepwdText.setOnClickListener(mListener);
         ////////////////////////////////////////////////////////////////////////////////////
 //        UserDataManager.DataBaseManagementHelper helper =new UserDataManager.DataBaseManagementHelper(this);
@@ -231,15 +231,15 @@ public class Login extends AppCompatActivity {
                     startActivity(intent_Login_to_Register);
                     //finish();
                     break;
-                case R.id.login_btn_login:
-                    //String loginuser = login();
-                    mUserDataManager.closeDataBase();
-                    Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
-                    intent_Login_to_MainInterface.putExtra("user",loginuser);
-                    //intent_Login_to_MainInterface.putExtra("roll",100);
-                    Log.i(TAG,"登录用户为"+loginuser);
-                    startActivity(intent_Login_to_MainInterface);
-                    break;
+//                case R.id.login_btn_login:
+//                    //String loginuser = login();
+//                    mUserDataManager.closeDataBase();
+//                    Intent intent_Login_to_MainInterface = new Intent(Login.this, MainInterface.class);
+//                    intent_Login_to_MainInterface.putExtra("user",loginuser);
+//                    //intent_Login_to_MainInterface.putExtra("roll",100);
+//                    Log.i(TAG,"登录用户为"+loginuser);
+//                    startActivity(intent_Login_to_MainInterface);
+//                    break;
             //    case R.id.user_choose:
 
                 //case R.id.login_btn_cancel:

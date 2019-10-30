@@ -786,11 +786,13 @@ public class UserDataManager {             //用户数据管理类
             Float CHO = cursor.getFloat(cursor.getColumnIndex("CHO"));
             Float Protein = cursor.getFloat(cursor.getColumnIndex("Protein"));
             Float Fats = cursor.getFloat(cursor.getColumnIndex("Fats"));
+            Float Weight = cursor.getFloat(cursor.getColumnIndex("Weight"));
             foodinfo.add(Energy);
             foodinfo.add(CHO);
             foodinfo.add(Protein);
             foodinfo.add(Fats);
             foodinfo.add(vol);
+            foodinfo.add(Weight);
                 Log.i(TAG,"FOODNUTRI"+Energy+"+"+CHO+"+"+Protein+"+"+Fats);
         }while (cursor.moveToNext());}
         cursor.close();
@@ -1338,6 +1340,32 @@ public class UserDataManager {             //用户数据管理类
         }
         cursor.close();
         return foodlist;
+    }
+    public List<Float> cal_static_nutri_per(String username){
+        List<Float> list = new ArrayList<>();
+        String kcal;
+        String cho;
+        String protein,fats;
+        float percent;
+        Cursor cursor = mSQLiteDatabase.query("users_info", null, "USER_NAME=?", new String[]{username}, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getCount() == 0) {
+                    Log.i(TAG, "NULL");
+                }
+                kcal = cursor.getString(cursor.getColumnIndex( "Kcal"));
+                cho = cursor.getString(cursor.getColumnIndex("CHO"));
+                protein = cursor.getString(cursor.getColumnIndex("Protein"));
+                fats = cursor.getString(cursor.getColumnIndex("Fats"));
+            } while (cursor.moveToNext());
+            percent = Float.parseFloat(cho)/Float.parseFloat(kcal)*100;
+            list.add(percent);
+            percent = Float.parseFloat(protein)/Float.parseFloat(kcal)*100;
+            list.add(percent);
+            percent = Float.parseFloat(fats)/Float.parseFloat(kcal)*100;
+            list.add(percent);
+            }
+        return list;
     }
     public List<Float> cal_nutripercent(String prefix,String username) {
         List<Float> list = new ArrayList<>();
