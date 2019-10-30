@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="0dip"
+    android:background="#565758"
+    android:orientation="horizontal">
+    <!--
+    iconifiedByDefault="false" //false:searchview初始即是展开的，true:searchview初始即是关闭的,仅显示一个放大镜
+
+    queryHint="@string/title_search_hint" :默认显示的提示文字
+
+       以上属性都可以在代码中通过方法：setIconifiedByDefault()和setQueryHint()直接设置
+
+    -->
+    <SearchView
+        android:id="@+id/search_view"
+        android:layout_width="0px"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:iconifiedByDefault="false"
+        android:inputType="textFilter"
+        android:queryHint="请输入关键词查询" >
+    </SearchView>
+</LinearLayout>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/recipe_background"
+    tools:context=".AllWrong">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_menu_all_wrong"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu_text"
+            android:text="菜单列表"
+            android:textSize="30dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@+id/layout_menu"
+        >
+
+        <android.support.v7.widget.SearchView
+
+            android:id="@+id/menu_search_all_wrong"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/search_selector"
+            android:queryHint="请输入物品名称"
+            app:queryHint="请输入菜品名"
+            tools:background="@drawable/recipe_search_bar">
+
+        </android.support.v7.widget.SearchView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/layout_menu">
+
+        <ListView
+            android:id="@+id/food_menu_all_wrong"
+            android:layout_width="match_parent"
+            android:layout_height="750dp"
+            android:layout_below="@+id/menu_search"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="0dp"></ListView>
+    </LinearLayout>
+
+
+</android.widget.RelativeLayout>

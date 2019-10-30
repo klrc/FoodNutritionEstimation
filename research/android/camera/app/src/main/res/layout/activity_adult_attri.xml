@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:background="@drawable/loading_1_background_image"
+    tools:context=".AdultAttri">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="51dp"
+        android:src="@drawable/logo"/>
+
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:text="     成年人活动水平评价表"
+        android:textColor="@color/saswell_white"
+        android:textSize="30dp" />
+
+    <TextView
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:text="此信息是用来计算用户每日能力供给量，请认真选择"
+        android:textColor="@color/saswell_white"
+        android:textSize="20dp" />
+
+    <RadioGroup
+        android:layout_width="350dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/signup_1_holder_2"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/light_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:checked="false"
+            android:text="低，75%的时间坐或站立，25%的时间站着活动，例如售货员、办公室工作、酒店服务员、讲课等"
+            android:textColor="@color/saswell_white"
+            android:textSize="15dp" />
+
+        <RadioButton
+            android:id="@+id/mid_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:checked="false"
+            android:text="中，40%的时间坐或站立，60%的时间特殊职业活动，例如学生日常活动、机动车驾驶、电工安装、车床操作等"
+            android:textColor="@color/saswell_white" />
+
+        <RadioButton
+            android:id="@+id/heavy_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:checked="false"
+            android:text="高，25%的时间站着活动，75%的时间特殊职业活动，例如非机械化农业劳动，炼钢、舞蹈、体育运动、采矿等"
+            android:textColor="@color/saswell_white" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/adult_attri_sure"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/login_1_button"
+        android:text="确定" />
+
+    <Button
+        android:id="@+id/adult_attri_cancel"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_1_button"
+        android:text="返回" />
+
+</LinearLayout>

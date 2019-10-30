@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".MainInterface">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:id="@+id/user_title"
+        android:textSize="30dp"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_title"
+        android:layout_marginTop="10dp"
+        android:id="@+id/divier"
+        android:src ="@drawable/homepage_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/user_title"
+        android:id="@+id/maininter_part2"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_maininter_attri"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/saswell_blue"
+            android:textSize="30dp"
+             />
+
+        <TextView
+            android:id="@+id/user_maininter_attri_static"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_maininter_attri"
+            android:layout_marginTop="-50dp"
+            android:gravity="center"
+            android:text="已使用天数    身高（cm）    体重    身体状态"
+            android:textSize="15dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/maininter_part2"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/divider2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="15dp"
+            android:text="今日营养成分分配比"
+            android:textSize="20dp"
+            android:textColor="@color/saswell_black"/>
+        <!--<com.example.camera.MyPieChart-->
+            <!--android:id="@+id/mypiechat"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="230dp"/>-->
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/mPieChart"
+            android:layout_width="match_parent"
+            android:layout_height="182dp" />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="430dp">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:textSize="20dp"
+            android:textColor="@color/saswell_black"
+            android:text="今日营养成分摄入比"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:layout_marginTop="460dp"
+        android:orientation="horizontal"
+        tools:layout_height="80dp">
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/mPieChart2"
+            android:layout_width="140dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="-15dp"
+
+            android:layout_marginTop="25dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/mPieChart3"
+            android:layout_width="140dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="-15dp"
+
+            android:layout_marginTop="25dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/mPieChart4"
+            android:layout_width="140dp"
+            android:layout_height="150dp"
+            android:layout_marginLeft="-15dp"
+
+            android:layout_marginTop="25dp" />
+    </LinearLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+
+
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/menu_button" />
+
+</RelativeLayout>

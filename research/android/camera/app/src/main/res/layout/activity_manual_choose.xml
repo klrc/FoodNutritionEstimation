@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ManualChoose"
+    android:orientation="vertical">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/input_background_img"
+        android:layout_centerHorizontal="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="手动输入你的食物："
+        android:layout_marginTop="330dp"
+        android:textColor="@color/saswell_black"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_marginTop="350dp">
+
+        <Spinner
+            android:id="@+id/food_spinner"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp "></Spinner>
+
+
+        <EditText
+            android:id="@+id/food_number"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/manual_text"
+            android:layout_centerHorizontal="true"
+            android:inputType="number"
+            android:layout_marginTop="60dp"
+            android:hint="重量（g）"></EditText>
+    </RelativeLayout>
+
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/food_spinner"
+        android:id="@+id/layout_sure"
+        android:layout_marginTop="450dp">
+
+
+        <Button
+            android:id="@+id/manual_sure"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:gravity="center_horizontal"
+
+            android:layout_marginLeft="170dp"
+            android:background="@drawable/result_check_icon"
+            android:layout_marginTop="130dp" />
+    </LinearLayout>
+
+
+
+</android.widget.RelativeLayout>

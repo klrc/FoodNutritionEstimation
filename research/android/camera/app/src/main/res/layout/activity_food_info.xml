@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/recipe_background"
+    tools:context=".FoodInfo">
+    <LinearLayout
+        android:layout_width="343dp"
+        android:layout_height="585dp"
+        android:orientation="vertical"
+        android:background="@drawable/foodinfobg"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:id="@+id/foodinfo_foodname"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/saswell_black"
+            android:layout_marginTop="20dp"/>
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:id="@+id/foodinfo_image"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            />
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="330dp"-->
+        <!--android:id="@+id/layout_foodinfo_mat"-->
+        <!--android:orientation="vertical"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_below="@+id/info">-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/result_divier"
+            android:layout_gravity="center_horizontal"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="菜品信息"-->
+            <!--android:textStyle="bold"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:layout_marginTop="20dp"-->
+            <!--android:id="@+id/info"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:id="@+id/food_energy"-->
+            <!--/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:id="@+id/food_CHO"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:id="@+id/food_protein"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="18dp"-->
+            <!--android:id="@+id/food_fats"/>-->
+
+        <!--</LinearLayout>-->
+        <TableLayout
+            android:id="@+id/food_nutri_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="0dp"
+            android:stretchColumns="1">
+            <TableRow
+                android:layout_alignTop="@+id/food_nutri_table">
+                <TextView
+                    android:layout_width="100dp"
+                    android:padding="3dip"
+                    android:id="@+id/food_nutri"
+                    android:text="菜品营养成分"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:padding="3dip"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/food_nutr_weight"
+                    android:text="营养成分含量"
+                    android:textStyle="bold" />
+
+            </TableRow>
+            />
+        </TableLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/result_divier"
+            android:layout_gravity="center_horizontal"/>
+        <TableLayout
+            android:id="@+id/food_table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="0dp"
+            android:stretchColumns="1">
+
+            <TableRow android:layout_alignTop="@+id/foodinfo">
+
+                <TextView
+                    android:layout_width="80dp"
+
+                    android:padding="3dip"
+                    android:id="@+id/food_mat"
+                    android:text="菜品原料"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:padding="3dip"
+                    android:layout_marginLeft="15dp"
+                    android:id="@+id/food_matweight"
+                    android:text="原料质量"
+                    android:textStyle="bold" />
+            </TableRow>
+            />
+        </TableLayout>
+    </LinearLayout>
+
+</android.widget.RelativeLayout>

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.widget.RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    tools:context=".MainInterface2">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:id="@+id/user_title2"
+        android:textSize="30dp"
+        />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_title"
+        android:layout_marginTop="10dp"
+        android:id="@+id/divier2"
+        android:src ="@drawable/homepage_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_below="@+id/user_title"
+        android:id="@+id/maininter_part22"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/user_maininter_attri2"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/saswell_blue"
+            android:textSize="30dp"
+            />
+
+        <TextView
+            android:id="@+id/user_maininter_attri_static2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_maininter_attri"
+            android:layout_marginTop="-50dp"
+            android:gravity="center"
+            android:text="已使用天数    身高（cm）    体重    身体状态"
+            android:textSize="15dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/maininter_part2"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/divider2" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="15dp"
+            android:text="今日营养成分分配比"
+            android:textSize="20dp"
+            android:textColor="@color/saswell_black"/>
+
+    </LinearLayout>
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_gravity="bottom">-->
+    <!--<Button-->
+    <!--android:id="@+id/food_detection"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+
+
+    <!--android:layout_marginLeft="209dp"-->
+    <!--android:layout_marginBottom="0dp"-->
+    <!--android:background="#f53434"-->
+    <!--android:text="菜品识别"-->
+    <!--android:textColor="#ffffff" />-->
+    <!--</LinearLayout>-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--&gt;-->
+    <!--<Button-->
+    <!--android:id="@+id/nutrition_intake"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+
+    <!--android:layout_marginLeft="106dp"-->
+    <!--android:layout_marginBottom="0dp"-->
+    <!--android:background="#f53434"-->
+    <!--android:text="营养摄入"-->
+    <!--android:textColor="#ffffff" />-->
+    <!--</LinearLayout>-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentBottom="true">-->
+    <!--<Button-->
+    <!--android:id="@+id/food_list"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+
+    <!--android:background="#f53434"-->
+    <!--android:text="菜谱"-->
+    <!--android:textColor="#ffffff"-->
+    <!--/>-->
+    <!--</LinearLayout>-->
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_gravity="bottom"-->
+    <!--&gt;-->
+    <!--<Button-->
+    <!--android:id="@+id/setting"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+
+
+    <!--android:layout_marginLeft="320dp"-->
+    <!--android:layout_marginTop="20dp"-->
+    <!--android:layout_marginBottom="0dp"-->
+    <!--android:background="#f53434"-->
+    <!--android:text="设置"-->
+    <!--android:textColor="#ffffff" /></LinearLayout>-->
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="650dp"
+        android:layout_marginBottom="0dp"
+
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/menu_button" />
+
+</android.widget.RelativeLayout>
